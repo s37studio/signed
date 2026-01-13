@@ -1,6 +1,7 @@
 import { protectedProcedure, publicProcedure, router } from "../index";
 
 import { leadController } from "../controllers/lead.controller";
+import { proposalController } from "../controllers/proposal.controller";
 
 export const appRouter = router({
   healthCheck: publicProcedure.query(() => {
@@ -13,5 +14,6 @@ export const appRouter = router({
     };
   }),
   lead: leadController,
+  proposal: proposalController,
 });
 export type AppRouter = typeof appRouter;

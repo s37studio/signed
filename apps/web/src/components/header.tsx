@@ -18,6 +18,9 @@ export default function Header() {
           <Link href="/dashboard/leads" className="text-sm hover:underline">
             Leads
           </Link>
+          <Link href="/dashboard/proposals" className="text-sm hover:underline">
+            Propositions
+          </Link>
         </nav>
         <div className="flex items-center gap-2">
           <ModeToggle />

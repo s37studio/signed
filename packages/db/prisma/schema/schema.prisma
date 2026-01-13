@@ -34,13 +34,14 @@ model Lead {
 }
 
 model Proposal {
-  id           String         @id @default(cuid())
-  title        String
-  templateId   String
-  customData   Json
-  password     String?
-  token        String         @unique
-  status       ProposalStatus @default(PENDING)
+  id              String         @id @default(cuid())
+  title           String
+  templateId      String
+  customData      Json
+  password        String?
+  token           String         @unique
+  status          ProposalStatus @default(PENDING)
+  revisionMessage String?
   
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
