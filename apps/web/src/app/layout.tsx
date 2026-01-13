@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "my-better-t-app",
-  description: "my-better-t-app",
+  title: "Signed - Propositions Commerciales",
+  description: "Outil de création et suivi de propositions commerciales",
 };
 
 export default function RootLayout({
@@ -28,7 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <Providers>
           <div className="grid grid-rows-[auto_1fr] h-svh">
             <Header />
