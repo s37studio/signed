@@ -8,6 +8,7 @@ import { LeadListSkeleton } from "@/components/leads/lead-list-skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCreateLead } from "@/features/leads/hooks/use-create-lead";
 import { useDeleteLead } from "@/features/leads/hooks/use-delete-lead";
+import { useUpdateLead } from "@/features/leads/hooks/use-update-lead";
 import { useLeads } from "@/features/leads/hooks/use-leads";
 
 export default function LeadsPage() {
@@ -21,6 +22,7 @@ export default function LeadsPage() {
   // Custom hooks
   const leads = useLeads();
   const createLead = useCreateLead();
+  const updateLead = useUpdateLead();
   const deleteLead = useDeleteLead();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,6 +32,10 @@ export default function LeadsPage() {
         setNewLead({ name: "", email: "", company: "", phone: "" });
       },
     });
+  };
+
+  const handleUpdate = (id: string, data: any) => {
+    updateLead.mutate({ id, ...data });
   };
 
   const handleDelete = (id: string) => {
@@ -69,7 +75,9 @@ export default function LeadsPage() {
           {leads.data && (
             <LeadList
               leads={leads.data}
+              onUpdate={handleUpdate}
               onDelete={handleDelete}
+              isUpdating={updateLead.isPending}
               isDeleting={deleteLead.isPending}
             />
           )}

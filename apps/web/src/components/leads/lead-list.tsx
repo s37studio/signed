@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-// Pas besoin de typer leads[] - tRPC infère automatiquement depuis le backend !
+import { LeadEditDialog } from "./lead-edit-dialog";
+
 export function LeadList({
   leads,
   onDelete,
+  onUpdate,
   isDeleting,
+  isUpdating,
 }: {
   leads: any[];
   onDelete: (id: string) => void;
+  onUpdate: (id: string, data: any) => void;
   isDeleting: boolean;
+  isUpdating: boolean;
 }) {
   if (leads.length === 0) {
     return (
@@ -29,7 +34,7 @@ export function LeadList({
         <Card key={lead.id}>
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
-              <div className="space-y-1">
+              <div className="space-y-1 flex-1">
                 <h3 className="text-lg font-semibold">{lead.name}</h3>
                 {lead.company && (
                   <p className="text-sm text-muted-foreground">
@@ -47,14 +52,21 @@ export function LeadList({
                   {lead.createdBy?.name || "Inconnu"}
                 </p>
               </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => onDelete(lead.id)}
-                disabled={isDeleting}
-              >
-                Supprimer
-              </Button>
+              <div className="flex gap-2">
+                <LeadEditDialog
+                  lead={lead}
+                  onUpdate={onUpdate}
+                  isUpdating={isUpdating}
+                />
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => onDelete(lead.id)}
+                  disabled={isDeleting}
+                >
+                  Supprimer
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
