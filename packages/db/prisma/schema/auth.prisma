@@ -8,6 +8,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  leads         Lead[]
+  proposals     Proposal[]
 
   @@unique([email])
   @@map("user")

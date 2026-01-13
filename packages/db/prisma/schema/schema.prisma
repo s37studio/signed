@@ -8,3 +8,55 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum ProposalStatus {
+  PENDING
+  WON
+  LOST
+  REVISION
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  company   String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  proposals Proposal[]
+
+  @@index([userId])
+  @@map("lead")
+}
+
+model Proposal {
+  id           String         @id @default(cuid())
+  title        String
+  templateId   String
+  customData   Json
+  password     String?
+  token        String         @unique
+  status       ProposalStatus @default(PENDING)
+  
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  sentAt       DateTime?
+  openedAt     DateTime?
+  lastOpenedAt DateTime?
+  
+  viewCount    Int            @default(0)
+
+  leadId       String
+  lead         Lead           @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@index([userId])
+  @@index([token])
+  @@map("proposal")
+}
