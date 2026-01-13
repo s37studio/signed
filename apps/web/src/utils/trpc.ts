@@ -1,4 +1,4 @@
-import type { AppRouter } from "@my-better-t-app/api/routers/index";
+import type { AppRouter } from "@my-better-t-app/api/controllers/index";
 
 import { env } from "@my-better-t-app/env/web";
 import { QueryCache, QueryClient } from "@tanstack/react-query";

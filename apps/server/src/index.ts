@@ -1,6 +1,6 @@
 import { trpcServer } from "@hono/trpc-server";
 import { createContext } from "@my-better-t-app/api/context";
-import { appRouter } from "@my-better-t-app/api/routers/index";
+import { appRouter } from "@my-better-t-app/api/controllers/index";
 import { auth } from "@my-better-t-app/auth";
 import { env } from "@my-better-t-app/env/server";
 import { Hono } from "hono";
