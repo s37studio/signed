@@ -95,14 +95,13 @@ export default function PublicProposalPage() {
 
   // Main content
   return (
-    <div className="min-h-screen bg-linear-to-br from-background to-muted py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
-        <Card className="shadow-xl">
-          <CardHeader className="bg-linear-to-r from-primary/10 to-primary/5">
-            <PublicProposalContent proposal={proposal} />
-          </CardHeader>
-
-          <CardContent className="p-6">
+    <div className="min-h-screen">
+      <PublicProposalContent proposal={proposal} />
+      
+      {/* Actions floating button */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <Card className="shadow-2xl">
+          <CardContent className="p-4">
             <PublicProposalActions
               token={token}
               status={proposal?.status}

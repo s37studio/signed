@@ -18,28 +18,17 @@ export function PublicProposalContent({
 }: PublicProposalContentProps) {
   const template = getTemplate(proposal.templateId);
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold mb-2">{proposal.title}</h1>
-        <p className="text-lg text-muted-foreground">
-          {STATUS_LABELS[proposal.status] || proposal.status}
-        </p>
+  if (!template) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8">
+        <div className="p-8 bg-muted rounded-lg text-center">
+          <p className="text-muted-foreground">
+            Template introuvable : {proposal.templateId}
+          </p>
+        </div>
       </div>
+    );
+  }
 
-      {/* Template content */}
-      <div className="border-t pt-6">
-        {template ? (
-          <template.component data={proposal.customData || {}} />
-        ) : (
-          <div className="p-8 bg-muted rounded-lg text-center">
-            <p className="text-muted-foreground">
-              Template introuvable : {proposal.templateId}
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <template.component data={proposal.customData || {}} />;
 }

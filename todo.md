@@ -1,5 +1,4 @@
 - page propal id
-- template et liaison avec propal
 - page lead Id
 - recherche filtre ameliorer dashboard
 - envoi par mail
