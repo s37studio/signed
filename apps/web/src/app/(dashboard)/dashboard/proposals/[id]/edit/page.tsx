@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { TemplateEditorProvider } from "@/contexts/template-editor-context";
 import { useUpdateProposal } from "@/features/proposals/hooks/use-update-proposal";
+import { useUpdateStatus } from "@/features/proposals/hooks/use-update-status";
 import { trpc } from "@/utils/trpc";
 
 import { TemplateForm } from "@/components/proposals/template-form";
@@ -24,6 +25,7 @@ export default function EditProposalPage() {
   );
 
   const updateProposal = useUpdateProposal();
+  const updateStatus = useUpdateStatus();
   const [isSaving, setIsSaving] = useState(false);
 
   // Pre-fill data from lead
@@ -61,10 +63,20 @@ export default function EditProposalPage() {
   const handleSave = async (customData: Record<string, any>) => {
     setIsSaving(true);
     try {
+      // Update customData
       await updateProposal.mutateAsync({
         id: proposalId,
         customData,
       });
+
+      // Si la proposition était en révision, la remettre en PENDING
+      if (proposal?.status === "REVISION") {
+        await updateStatus.mutateAsync({
+          id: proposalId,
+          status: "PENDING",
+        });
+      }
+
       router.push("/dashboard/proposals");
     } catch (error) {
       console.error("Error saving:", error);
@@ -121,6 +133,26 @@ export default function EditProposalPage() {
             </div>
           </div>
         </div>
+
+        {/* Revision Banner */}
+        {proposal.status === "REVISION" && proposal.revisionMessage && (
+          <div className="bg-blue-500 text-white">
+            <div className="container mx-auto py-4 px-4">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">💬</div>
+                <div>
+                  <p className="font-semibold mb-1">
+                    Demande de révision du client
+                  </p>
+                  <p className="text-blue-50">{proposal.revisionMessage}</p>
+                  <p className="text-sm text-blue-100 mt-2">
+                    Lorsque vous enregistrerez, la proposition sera automatiquement remise en attente.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Split view */}
         <div className="container mx-auto py-8 px-4">

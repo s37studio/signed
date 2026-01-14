@@ -151,15 +151,27 @@ export function ProposalList({ proposals }: ProposalListProps) {
 
               {/* Actions statut */}
               <div className="flex gap-2 pt-2 border-t">
-                <Link
-                  href={`/dashboard/proposals/${proposal.id}/edit`}
-                  className="flex-1"
-                >
-                  <Button size="sm" variant="outline" className="w-full">
-                    <Edit className="h-4 w-4 mr-2" />
-                    Éditer
-                  </Button>
-                </Link>
+                {proposal.status === "REVISION" ? (
+                  <Link
+                    href={`/dashboard/proposals/${proposal.id}/edit`}
+                    className="flex-1"
+                  >
+                    <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Répondre à la révision
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link
+                    href={`/dashboard/proposals/${proposal.id}/edit`}
+                    className="flex-1"
+                  >
+                    <Button size="sm" variant="outline" className="w-full">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Éditer
+                    </Button>
+                  </Link>
+                )}
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     render={
