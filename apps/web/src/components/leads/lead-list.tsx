@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Eye } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -31,10 +34,13 @@ export function LeadList({
   return (
     <div className="space-y-4">
       {leads.map((lead) => (
-        <Card key={lead.id}>
+        <Card key={lead.id} className="hover:shadow-md transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-start justify-between">
-              <div className="space-y-1 flex-1">
+              <Link
+                href={`/dashboard/leads/${lead.id}`}
+                className="space-y-1 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+              >
                 <h3 className="text-lg font-semibold">{lead.name}</h3>
                 {lead.company && (
                   <p className="text-sm text-muted-foreground">
@@ -51,8 +57,14 @@ export function LeadList({
                   {lead._count.proposals} proposition(s) • Créé par{" "}
                   {lead.createdBy?.name || "Inconnu"}
                 </p>
-              </div>
+              </Link>
               <div className="flex gap-2">
+                <Link href={`/dashboard/leads/${lead.id}`}>
+                  <Button variant="outline" size="sm">
+                    <Eye className="h-4 w-4 mr-2" />
+                    Voir
+                  </Button>
+                </Link>
                 <LeadEditDialog
                   lead={lead}
                   onUpdate={onUpdate}
