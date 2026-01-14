@@ -1,7 +1,9 @@
 "use client";
 
-import { Eye, Edit, ExternalLink } from "lucide-react";
+import { Edit, ExternalLink } from "lucide-react";
 import Link from "next/link";
+
+import { ProposalViewsModal } from "./proposal-views-modal";
 
 import {
   Table,
@@ -99,10 +101,10 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                         {proposal.templateId}
                       </TableCell>
                       <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Eye className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm">{proposal.viewCount}</span>
-                        </div>
+                        <ProposalViewsModal
+                          proposalId={proposal.id}
+                          viewCount={proposal._count?.views || 0}
+                        />
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {new Date(proposal.createdAt).toLocaleDateString(

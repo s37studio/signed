@@ -48,16 +48,34 @@ model Proposal {
   sentAt       DateTime?
   openedAt     DateTime?
   lastOpenedAt DateTime?
-  
-  viewCount    Int            @default(0)
 
   leadId      String
   lead        Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
   createdById String?
   createdBy   User?   @relation("ProposalCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  
+  views       ProposalView[]
 
   @@index([leadId])
   @@index([createdById])
   @@index([token])
   @@map("proposal")
+}
+
+model ProposalView {
+  id         String   @id @default(cuid())
+  proposalId String
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+
+  viewedAt  DateTime @default(now())
+  duration  Int?     // durée en secondes
+  
+  ipAddress String?
+  city      String?
+  country   String?
+  region    String?
+
+  @@index([proposalId])
+  @@index([viewedAt])
+  @@map("proposal_view")
 }

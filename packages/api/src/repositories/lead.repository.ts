@@ -46,8 +46,12 @@ export const leadRepository = {
             sentAt: true,
             openedAt: true,
             lastOpenedAt: true,
-            viewCount: true,
             revisionMessage: true,
+            _count: {
+              select: {
+                views: true,
+              },
+            },
           },
         },
       },

@@ -1,6 +1,8 @@
 import { Calendar, FileText } from "lucide-react";
 import Link from "next/link";
 
+import { ProposalViewsModal } from "../proposals/proposal-views-modal";
+
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
@@ -73,24 +75,30 @@ export function LeadProposalsHistory({
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          {new Date(proposal.createdAt).toLocaleDateString(
-                            "fr-FR"
-                          )}
-                        </div>
-                        <div>Template: {proposal.templateId}</div>
-                        <div>Vues: {proposal.viewCount}</div>
-                        {proposal.lastOpenedAt && (
-                          <div>
-                            Dernière vue:{" "}
-                            {new Date(proposal.lastOpenedAt).toLocaleDateString(
-                              "fr-FR"
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-muted-foreground items-center">
+                            <div className="flex items-center gap-2">
+                              <Calendar className="h-4 w-4" />
+                              {new Date(proposal.createdAt).toLocaleDateString(
+                                "fr-FR"
+                              )}
+                            </div>
+                            <div>Template: {proposal.templateId}</div>
+                            <div className="flex items-center gap-2">
+                              <span>Vues:</span>
+                              <ProposalViewsModal
+                                proposalId={proposal.id}
+                                viewCount={proposal._count?.views || 0}
+                              />
+                            </div>
+                            {proposal.lastOpenedAt && (
+                              <div>
+                                Dernière vue:{" "}
+                                {new Date(proposal.lastOpenedAt).toLocaleDateString(
+                                  "fr-FR"
+                                )}
+                              </div>
                             )}
                           </div>
-                        )}
-                      </div>
 
                       {proposal.revisionMessage && (
                         <div className="mt-2 p-2 bg-blue-500/10 border border-blue-500/20 rounded text-sm">

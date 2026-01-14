@@ -21,6 +21,11 @@ export const proposalRepository = {
             email: true,
           },
         },
+        _count: {
+          select: {
+            views: true,
+          },
+        },
       },
     });
   },
@@ -100,17 +105,6 @@ export const proposalRepository = {
     });
   },
 
-  // Tracker une vue
-  trackView: async (id: string, isFirstView: boolean) => {
-    return await prisma.proposal.update({
-      where: { id },
-      data: {
-        viewCount: { increment: 1 },
-        lastOpenedAt: new Date(),
-        ...(isFirstView && { openedAt: new Date() }),
-      },
-    });
-  },
 
   // Marquer comme envoyée
   markAsSent: async (id: string) => {

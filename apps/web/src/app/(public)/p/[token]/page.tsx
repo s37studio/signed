@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import { usePublicProposal } from "@/features/proposals/hooks/use-public-proposal";
-import { useTrackView } from "@/features/proposals/hooks/use-track-view";
+import { useTrackProposalView } from "@/features/proposals/hooks/use-track-proposal-view";
 
 import { PublicPasswordForm } from "@/components/proposals/public-password-form";
 import { PublicProposalActions } from "@/components/proposals/public-proposal-actions";
@@ -23,7 +23,6 @@ export default function PublicProposalPage() {
     token,
     password
   );
-  const trackView = useTrackView();
 
   // Check if password is required
   const requiresPassword =
@@ -32,12 +31,8 @@ export default function PublicProposalPage() {
   // Get the full proposal (when not requiring password)
   const proposal = requiresPassword ? null : (data as any);
 
-  // Track view once when proposal is loaded
-  useEffect(() => {
-    if (proposal && "id" in proposal && !trackView.isPending) {
-      trackView.mutate({ token });
-    }
-  }, [proposal?.id]);
+  // Track view with duration (only when proposal is loaded)
+  useTrackProposalView(proposal?.id || "");
 
   // Handle password submit
   const handlePasswordSubmit = (pwd: string) => {

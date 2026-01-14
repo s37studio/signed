@@ -106,7 +106,7 @@ export function ProposalList({ proposals }: ProposalListProps) {
                 </div>
                 <div>
                   <span className="text-muted-foreground">Vues:</span>{" "}
-                  {proposal.viewCount}
+                  {proposal._count?.views || 0}
                 </div>
                 {proposal.lastOpenedAt && (
                   <div>
