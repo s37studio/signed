@@ -9,6 +9,7 @@ import { useUpdateProposal } from "@/features/proposals/hooks/use-update-proposa
 import { useUpdateStatus } from "@/features/proposals/hooks/use-update-status";
 import { trpc } from "@/utils/trpc";
 
+import { ProposalPasswordSettings } from "@/components/proposals/proposal-password-settings";
 import { TemplateForm } from "@/components/proposals/template-form";
 import { TemplatePreview } from "@/components/proposals/template-preview";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ export default function EditProposalPage() {
 
   // Pre-fill data from lead
   const [initialData, setInitialData] = useState<Record<string, any>>({});
+  const [password, setPassword] = useState<string | null>(null);
 
   useEffect(() => {
     if (proposal && !Object.keys(initialData).length) {
@@ -63,11 +65,18 @@ export default function EditProposalPage() {
   const handleSave = async (customData: Record<string, any>) => {
     setIsSaving(true);
     try {
-      // Update customData
-      await updateProposal.mutateAsync({
+      // Update customData and password
+      const updateData: any = {
         id: proposalId,
         customData,
-      });
+      };
+
+      // Include password if it was changed
+      if (password !== null) {
+        updateData.password = password || undefined;
+      }
+
+      await updateProposal.mutateAsync(updateData);
 
       // Si la proposition était en révision, la remettre en PENDING
       if (proposal?.status === "REVISION") {
@@ -158,8 +167,14 @@ export default function EditProposalPage() {
         <div className="container mx-auto py-8 px-4">
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Form */}
-            <div className="bg-card border rounded-lg p-6">
-              <TemplateForm />
+            <div className="space-y-6">
+              <div className="bg-card border rounded-lg p-6">
+                <TemplateForm />
+              </div>
+              <ProposalPasswordSettings
+                hasPassword={!!proposal.password}
+                onPasswordChange={setPassword}
+              />
             </div>
 
             {/* Preview */}
