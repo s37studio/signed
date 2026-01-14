@@ -19,7 +19,10 @@ export default function PublicProposalPage() {
   const [password, setPassword] = useState<string>();
   const [passwordError, setPasswordError] = useState<string>();
 
-  const { data, isLoading, error, refetch } = usePublicProposal(token, password);
+  const { data, isLoading, error, refetch } = usePublicProposal(
+    token,
+    password
+  );
   const trackView = useTrackView();
 
   // Check if password is required
@@ -44,9 +47,12 @@ export default function PublicProposalPage() {
     refetch();
   };
 
+  // Détecter erreur password invalide
+  const isInvalidPassword = error?.message === "Invalid password";
+
   // Handle password error
   useEffect(() => {
-    if (error?.message === "Invalid password") {
+    if (isInvalidPassword) {
       setPasswordError("Mot de passe incorrect");
     }
   }, [error]);
@@ -60,8 +66,8 @@ export default function PublicProposalPage() {
     );
   }
 
-  // Password required
-  if (requiresPassword) {
+  // Password required OU password invalide
+  if (requiresPassword || isInvalidPassword) {
     return (
       <PublicPasswordForm
         onSubmit={handlePasswordSubmit}
@@ -71,7 +77,7 @@ export default function PublicProposalPage() {
     );
   }
 
-  // Not found
+  // Not found (vraie erreur)
   if (!proposal || error) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">

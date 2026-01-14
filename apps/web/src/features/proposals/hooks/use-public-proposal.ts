@@ -10,5 +10,8 @@ export function usePublicProposal(token: string, password?: string) {
     }),
     retry: false,
     staleTime: Infinity,
+    meta: {
+      errorHandler: () => {},
+    },
   });
 }

@@ -9,6 +9,10 @@ import { toast } from "sonner";
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
+      if (query.meta?.errorHandler) {
+        return;
+      }
+
       toast.error(error.message, {
         action: {
           label: "retry",
