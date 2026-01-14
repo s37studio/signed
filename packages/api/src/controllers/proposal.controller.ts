@@ -5,8 +5,6 @@ import { protectedProcedure, publicProcedure, router } from "../index";
 import { proposalService } from "../services/proposal.service";
 
 export const proposalController = router({
-  // 🔒 ROUTES PROTÉGÉES (authentification requise)
-
   // Liste toutes les propals
   getAll: protectedProcedure.query(async () => {
     return await proposalService.getAll();
@@ -123,7 +121,9 @@ export const proposalController = router({
     .input(
       z.object({
         token: z.string(),
-        message: z.string().min(10, "Le message doit faire au moins 10 caractères"),
+        message: z
+          .string()
+          .min(10, "Le message doit faire au moins 10 caractères"),
       })
     )
     .mutation(async ({ input }) => {
