@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useLeads } from "@/features/leads/hooks/use-leads";
 import { useCreateProposal } from "@/features/proposals/hooks/use-create-proposal";
+import { getAllTemplates } from "@/templates/registry";
 
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -11,6 +13,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 export function ProposalForm() {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [templateId, setTemplateId] = useState("");
   const [leadId, setLeadId] = useState("");
@@ -18,6 +21,7 @@ export function ProposalForm() {
 
   const { data: leads } = useLeads();
   const createProposal = useCreateProposal();
+  const templates = getAllTemplates();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +39,9 @@ export function ProposalForm() {
         password: password || undefined,
       },
       {
-        onSuccess: () => {
-          setTitle("");
-          setTemplateId("");
-          setLeadId("");
-          setPassword("");
+        onSuccess: (data) => {
+          // Redirect to edit page to configure template
+          router.push(`/dashboard/proposals/${data.id}/edit`);
         },
       }
     );
@@ -95,9 +97,11 @@ export function ProposalForm() {
               required
             >
               <option value="">Sélectionner un template</option>
-              <option value="template-1">Template Moderne</option>
-              <option value="template-2">Template Classique</option>
-              <option value="template-3">Template Minimaliste</option>
+              {templates.map((template) => (
+                <option key={template.id} value={template.id}>
+                  {template.name} - {template.description}
+                </option>
+              ))}
             </select>
           </div>
 

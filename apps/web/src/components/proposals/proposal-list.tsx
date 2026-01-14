@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown, Trash2 } from "lucide-react";
+import { ChevronDown, Trash2, Edit } from "lucide-react";
+import Link from "next/link";
 
 import { useDeleteProposal } from "@/features/proposals/hooks/use-delete-proposal";
 import { useUpdateStatus } from "@/features/proposals/hooks/use-update-status";
@@ -150,6 +151,15 @@ export function ProposalList({ proposals }: ProposalListProps) {
 
               {/* Actions statut */}
               <div className="flex gap-2 pt-2 border-t">
+                <Link
+                  href={`/dashboard/proposals/${proposal.id}/edit`}
+                  className="flex-1"
+                >
+                  <Button size="sm" variant="outline" className="w-full">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Éditer
+                  </Button>
+                </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger
                     render={

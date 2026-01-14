@@ -1,5 +1,7 @@
 "use client";
 
+import { getTemplate } from "@/templates/registry";
+
 type PublicProposalContentProps = {
   proposal: any;
 };
@@ -11,7 +13,11 @@ const STATUS_LABELS: Record<string, string> = {
   REVISION: "⏳ En révision",
 };
 
-export function PublicProposalContent({ proposal }: PublicProposalContentProps) {
+export function PublicProposalContent({
+  proposal,
+}: PublicProposalContentProps) {
+  const template = getTemplate(proposal.templateId);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -22,38 +28,17 @@ export function PublicProposalContent({ proposal }: PublicProposalContentProps) 
         </p>
       </div>
 
-      {/* Infos */}
+      {/* Template content */}
       <div className="border-t pt-6">
-        <h3 className="font-semibold mb-3">Informations</h3>
-        <div className="grid gap-3 text-sm">
-          <div>
-            <span className="text-muted-foreground">Date de création :</span>{" "}
-            {new Date(proposal.createdAt).toLocaleDateString("fr-FR", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })}
+        {template ? (
+          <template.component data={proposal.customData || {}} />
+        ) : (
+          <div className="p-8 bg-muted rounded-lg text-center">
+            <p className="text-muted-foreground">
+              Template introuvable : {proposal.templateId}
+            </p>
           </div>
-          {proposal.lead && (
-            <div>
-              <span className="text-muted-foreground">Client :</span>{" "}
-              {proposal.lead.name}
-              {proposal.lead.company && ` • ${proposal.lead.company}`}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Template content placeholder */}
-      <div className="border-t pt-6">
-        <div className="p-8 bg-muted rounded-lg text-center">
-          <p className="text-muted-foreground">
-            Le contenu de la proposition s'affichera ici
-          </p>
-          <p className="text-sm text-muted-foreground mt-2">
-            (Template : {proposal.templateId})
-          </p>
-        </div>
+        )}
       </div>
     </div>
   );
