@@ -1,3 +1,2 @@
-- recherche filtre ameliorer dashboard
 - envoi par mail
 - notif discord
