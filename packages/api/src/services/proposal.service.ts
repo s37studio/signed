@@ -50,10 +50,12 @@ export const proposalService = {
       throw new Error("Proposal not found");
     }
 
-    // Si la propal a un password, vérifier qu'il est fourni et correct
     if (proposal.password) {
       if (!password) {
-        throw new Error("Password required");
+        return {
+          requiresPassword: true,
+          token: proposal.token,
+        };
       }
 
       const isValid = await verifyPassword(proposal.password, password);
