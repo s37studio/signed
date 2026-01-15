@@ -1,4 +1,9 @@
 {
+  "runtime": {
+    "node": {
+      "packageManager": "bun"
+    }
+  },
   "steps": {
     "install": {
       "commands": ["bun install"]
