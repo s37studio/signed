@@ -133,16 +133,16 @@ export const proposalService = {
   },
 
   // Tracker une vue
-  trackView: async (token: string) => {
+  trackView: async (token: string, ipAddress?: string) => {
     const proposal = await proposalRepository.findByToken(token);
 
     if (!proposal) {
       throw new Error("Proposal not found");
     }
 
-    const isFirstView = !proposal.openedAt;
-
-    return await proposalRepository.trackView(proposal.id, isFirstView);
+    // Importer et utiliser proposalViewService au lieu d'appeler une méthode inexistante
+    const { proposalViewService } = await import("./proposal-view.service");
+    return await proposalViewService.trackView(proposal.id, ipAddress);
   },
 
   // Client valide la propal (bouton "Valider")

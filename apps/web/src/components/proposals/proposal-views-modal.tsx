@@ -22,18 +22,18 @@ type ProposalViewsModalProps = {
 
 function formatDuration(seconds: number | null) {
   if (!seconds) return "En cours...";
-  
+
   if (seconds < 60) return `${seconds}s`;
-  
+
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
-  
+
   if (minutes < 60) {
     return remainingSeconds > 0
       ? `${minutes}min ${remainingSeconds}s`
       : `${minutes}min`;
   }
-  
+
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
   return `${hours}h ${remainingMinutes}min`;
@@ -51,7 +51,7 @@ function formatRelativeTime(date: string) {
   if (diffMins < 60) return `Il y a ${diffMins}min`;
   if (diffHours < 24) return `Il y a ${diffHours}h`;
   if (diffDays < 7) return `Il y a ${diffDays}j`;
-  
+
   return viewDate.toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "short",
@@ -60,9 +60,10 @@ function formatRelativeTime(date: string) {
 }
 
 function ViewItem({ view }: { view: any }) {
-  const location = view.city && view.country 
-    ? `${view.city}, ${view.country}`
-    : view.country || "Localisation inconnue";
+  const location =
+    view.city && view.country
+      ? `${view.city}, ${view.country}`
+      : view.country || "Localisation inconnue";
 
   return (
     <div className="border rounded-lg p-4 hover:bg-accent/50 transition-colors">
@@ -76,12 +77,12 @@ function ViewItem({ view }: { view: any }) {
           <span>{formatDuration(view.duration)}</span>
         </div>
       </div>
-      
+
       <div className="flex items-center gap-2 text-sm">
         <MapPin className="h-4 w-4 text-muted-foreground" />
         <span>{location}</span>
       </div>
-      
+
       <div className="mt-2 text-xs text-muted-foreground">
         {new Date(view.viewedAt).toLocaleString("fr-FR", {
           day: "numeric",
@@ -103,17 +104,20 @@ export function ProposalViewsModal({
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <button className="inline-flex items-center justify-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-          <Eye className="h-3 w-3" />
-          <span>{viewCount}</span>
-        </button>
+      <DialogTrigger
+        render={
+          <button className="inline-flex items-center justify-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
+        }
+      >
+        <Eye className="h-3 w-3" />
+        <span>{viewCount}</span>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Historique des visites</DialogTitle>
           <DialogDescription>
-            {viewCount} visite{viewCount > 1 ? "s" : ""} enregistrée{viewCount > 1 ? "s" : ""}
+            {viewCount} visite{viewCount > 1 ? "s" : ""} enregistrée
+            {viewCount > 1 ? "s" : ""}
           </DialogDescription>
         </DialogHeader>
 
