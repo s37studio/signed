@@ -1,3 +1,6 @@
+// ⚠️ COMPOSANT DÉSACTIVÉ - Création de compte désactivée
+// Pour réactiver : décommenter ce fichier et login/page.tsx
+
 import { useForm } from "@tanstack/react-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
