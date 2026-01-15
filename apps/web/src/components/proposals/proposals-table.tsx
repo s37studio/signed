@@ -66,7 +66,9 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                 )
                 .map((proposal) => {
                   const statusConfig =
-                    STATUS_CONFIG[proposal.status as keyof typeof STATUS_CONFIG];
+                    STATUS_CONFIG[
+                      proposal.status as keyof typeof STATUS_CONFIG
+                    ];
                   return (
                     <TableRow key={proposal.id}>
                       <TableCell className="font-medium">
@@ -118,14 +120,15 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
-                          <Link
-                            href={`http://localhost:3001/p/${proposal.token}`}
+                          <a
+                            href={`${window.location.origin}/p/${proposal.token}`}
                             target="_blank"
+                            rel="noopener noreferrer"
                           >
                             <Button size="sm" variant="ghost">
                               <ExternalLink className="h-4 w-4" />
                             </Button>
-                          </Link>
+                          </a>
                           <Link
                             href={`/dashboard/proposals/${proposal.id}/edit`}
                           >

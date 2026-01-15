@@ -1,3 +1,5 @@
+"use client";
+
 import { Calendar, FileText } from "lucide-react";
 import Link from "next/link";
 
@@ -111,14 +113,15 @@ export function LeadProposalsHistory({
                     </div>
 
                     <div className="flex gap-2 ml-4">
-                      <Link
-                        href={`http://localhost:3001/p/${proposal.token}`}
+                      <a
+                        href={`${window.location.origin}/p/${proposal.token}`}
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <Button size="sm" variant="outline">
                           Voir
                         </Button>
-                      </Link>
+                      </a>
                       <Link href={`/dashboard/proposals/${proposal.id}/edit`}>
                         <Button size="sm" variant="outline">
                           Éditer
