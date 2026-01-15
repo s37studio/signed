@@ -49,11 +49,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Copy built files
-COPY --from=builder /app/apps/server/dist ./dist
+COPY --from=builder /app/apps/server/dist ./apps/server/dist
 COPY --from=builder /app/packages ./packages
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 3000
 
-CMD ["bun", "run", "dist/index.js"]
+CMD ["bun", "run", "apps/server/dist/index.js"]
