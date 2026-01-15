@@ -39,21 +39,19 @@ COPY turbo.json ./
 ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN cd packages/db && bun run prisma generate
 
-# Build server
-RUN cd apps/server && bun run build
-
 # Stage 3: Production
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy built files
-COPY --from=builder /app/apps/server/dist ./apps/server/dist
+# Copy all files (Bun can run TypeScript directly)
 COPY --from=builder /app/packages ./packages
+COPY --from=builder /app/apps/server ./apps/server
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
 EXPOSE 3000
 
-CMD ["bun", "run", "apps/server/dist/index.js"]
+# Run TypeScript directly with Bun
+CMD ["bun", "run", "apps/server/src/index.ts"]

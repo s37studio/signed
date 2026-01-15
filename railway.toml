@@ -3,6 +3,6 @@ builder = "DOCKERFILE"
 dockerfilePath = "apps/server/Dockerfile"
 
 [deploy]
-startCommand = "bun run apps/server/dist/index.js"
+startCommand = "bun run apps/server/src/index.ts"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
