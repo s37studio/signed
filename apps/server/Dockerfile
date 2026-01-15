@@ -35,7 +35,8 @@ COPY packages ./packages
 COPY apps/server ./apps/server
 COPY turbo.json ./
 
-# Generate Prisma Client
+# Generate Prisma Client (with dummy DATABASE_URL for build time)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 RUN cd packages/db && bun run prisma generate
 
 # Build server
