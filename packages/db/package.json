@@ -10,7 +10,7 @@
     }
   },
   "scripts": {
-    "build": "prisma generate --url=\"postgresql://dummy:dummy@localhost:5432/dummy\"",
+    "build": "prisma generate",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
