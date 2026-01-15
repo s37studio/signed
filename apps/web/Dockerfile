@@ -20,7 +20,7 @@ COPY packages/config/package.json ./packages/config/
 COPY apps/web/package.json ./apps/web/
 
 # Install dependencies
-RUN bun install --frozen-lockfile
+RUN bun install
 
 # Stage 2: Build
 FROM base AS builder
