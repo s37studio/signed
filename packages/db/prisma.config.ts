@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import path from "node:path";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 dotenv.config({
   path: "../../apps/server/.env",
@@ -12,6 +12,8 @@ export default defineConfig({
     path: path.join("prisma", "migrations"),
   },
   datasource: {
-    url: env("DATABASE_URL"),
+    // Use dummy URL for build time when DATABASE_URL is not available
+    // The actual connection will use the runtime env var
+    url: process.env.DATABASE_URL || "postgresql://user:password@localhost:5432/db?schema=public",
   },
 });
