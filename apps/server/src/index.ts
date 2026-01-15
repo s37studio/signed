@@ -17,7 +17,7 @@ app.use(
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-  })
+  }),
 );
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
@@ -29,14 +29,11 @@ app.use(
     createContext: (_opts, context) => {
       return createContext({ context });
     },
-  })
+  }),
 );
 
 app.get("/", (c) => {
   return c.text("OK");
 });
 
-export default {
-  port: process.env.PORT || 3000,
-  fetch: app.fetch,
-};
+export default app;
