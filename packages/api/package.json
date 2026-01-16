@@ -17,10 +17,12 @@
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "dotenv": "catalog:",
+    "node-cron": "^4.2.1",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@my-better-t-app/config": "workspace:*",
+    "@types/node-cron": "^3.0.11",
     "typescript": "catalog:"
   }
 }

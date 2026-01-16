@@ -94,6 +94,7 @@ export const proposalService = {
       token,
       leadId: input.leadId,
       createdById: userId,
+      sentAt: new Date(), // Marquer comme envoyée immédiatement
     });
   },
 
@@ -159,7 +160,18 @@ export const proposalService = {
     }
 
     // Changer le statut en WON
-    return await proposalRepository.updateStatus(proposal.id, "WON");
+    const updatedProposal = await proposalRepository.updateStatus(
+      proposal.id,
+      "WON"
+    );
+
+    // Notification Discord
+    const { discordNotificationService } = await import(
+      "./discord-notification.service"
+    );
+    await discordNotificationService.notifyProposalAccepted(proposal);
+
+    return updatedProposal;
   },
 
   // Client demande une révision
@@ -171,11 +183,19 @@ export const proposalService = {
     }
 
     // Changer le statut en REVISION avec le message du client
-    return await proposalRepository.updateStatus(
+    const updatedProposal = await proposalRepository.updateStatus(
       proposal.id,
       "REVISION",
       message
     );
+
+    // Notification Discord
+    const { discordNotificationService } = await import(
+      "./discord-notification.service"
+    );
+    await discordNotificationService.notifyRevisionRequested(proposal, message);
+
+    return updatedProposal;
   },
 
   // Supprimer une propal

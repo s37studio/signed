@@ -5,13 +5,13 @@ import { proposalViewRepository } from "../repositories/proposal-view.repository
 async function getLocationFromIP(ip: string) {
   try {
     const response = await fetch(`http://ip-api.com/json/${ip}`);
-    const data = await response.json() as {
+    const data = (await response.json()) as {
       status: string;
       city?: string;
       country?: string;
       regionName?: string;
     };
-    
+
     if (data.status === "success") {
       return {
         city: data.city,
@@ -22,7 +22,7 @@ async function getLocationFromIP(ip: string) {
   } catch (error) {
     console.error("Error fetching location:", error);
   }
-  
+
   return {
     city: undefined,
     country: undefined,
@@ -62,9 +62,15 @@ export const proposalViewService = {
         lastOpenedAt: new Date(),
       };
 
-      // Si première ouverture, set openedAt
+      // Si première ouverture, set openedAt et notifier
       if (!proposal.openedAt) {
         updateData.openedAt = new Date();
+
+        // Notification Discord
+        const { discordNotificationService } = await import(
+          "./discord-notification.service"
+        );
+        await discordNotificationService.notifyProposalView(proposal, location);
       }
 
       await proposalRepository.update(proposalId, updateData);

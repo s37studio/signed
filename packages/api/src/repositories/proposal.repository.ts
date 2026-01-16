@@ -73,6 +73,7 @@ export const proposalRepository = {
     token: string;
     leadId: string;
     createdById: string;
+    sentAt?: Date;
   }) => {
     return await prisma.proposal.create({
       data,

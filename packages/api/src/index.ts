@@ -23,3 +23,6 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
     },
   });
 });
+
+// Export des jobs planifiés
+export * from "./jobs";

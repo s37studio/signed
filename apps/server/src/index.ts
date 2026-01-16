@@ -1,6 +1,7 @@
 import { trpcServer } from "@hono/trpc-server";
 import { createContext } from "@my-better-t-app/api/context";
 import { appRouter } from "@my-better-t-app/api/controllers/index";
+import { startScheduler } from "@my-better-t-app/api";
 import { auth } from "@my-better-t-app/auth";
 import { env } from "@my-better-t-app/env/server";
 import { Hono } from "hono";
@@ -35,5 +36,8 @@ app.use(
 app.get("/", (c) => {
   return c.text("OK");
 });
+
+// Démarrer le scheduler de notifications
+startScheduler();
 
 export default app;
