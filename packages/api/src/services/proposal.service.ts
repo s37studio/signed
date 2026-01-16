@@ -1,8 +1,9 @@
-import { ProposalStatus } from "@my-better-t-app/db";
-import { randomBytes, randomUUID, scrypt } from "crypto";
+import prisma, { ProposalStatus } from "@my-better-t-app/db";
+import { randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
 
 import { proposalRepository } from "../repositories/proposal.repository";
+import { generateProposalSlug, generateShortToken } from "../utils/slug";
 
 const scryptAsync = promisify(scrypt);
 
@@ -42,9 +43,15 @@ export const proposalService = {
     return proposal;
   },
 
-  // Récupérer une propal par token (avec vérification password)
-  getByToken: async (token: string, password?: string) => {
-    const proposal = await proposalRepository.findByToken(token);
+  // Récupérer une propal par slug ou token (rétrocompatibilité)
+  getByToken: async (slugOrToken: string, password?: string) => {
+    // Essayer d'abord par slug
+    let proposal = await proposalRepository.findBySlug(slugOrToken);
+
+    // Si pas trouvé, essayer par token (ancien système)
+    if (!proposal) {
+      proposal = await proposalRepository.findByToken(slugOrToken);
+    }
 
     if (!proposal) {
       throw new Error("Proposal not found");
@@ -78,8 +85,19 @@ export const proposalService = {
     },
     userId: string
   ) => {
-    // Générer un token unique (UUID natif Node.js)
-    const token = randomUUID().replace(/-/g, "");
+    // Récupérer le lead pour générer le slug
+    const lead = await prisma.lead.findUnique({
+      where: { id: input.leadId },
+      select: { name: true, company: true },
+    });
+
+    if (!lead) {
+      throw new Error("Lead not found");
+    }
+
+    // Générer slug + token court
+    const slug = generateProposalSlug(lead);
+    const token = generateShortToken();
 
     // Hasher le password si présent
     const hashedPassword = input.password
@@ -92,6 +110,7 @@ export const proposalService = {
       customData: input.customData,
       password: hashedPassword,
       token,
+      slug,
       leadId: input.leadId,
       createdById: userId,
       sentAt: new Date(), // Marquer comme envoyée immédiatement

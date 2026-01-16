@@ -1,2 +1,1 @@
 - envoi par mail
-- notif discord

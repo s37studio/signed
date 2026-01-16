@@ -64,6 +64,23 @@ export const proposalRepository = {
     });
   },
 
+  // Récupérer une propal par slug
+  findBySlug: async (slug: string) => {
+    return await prisma.proposal.findFirst({
+      where: { slug },
+      include: {
+        lead: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            company: true,
+          },
+        },
+      },
+    });
+  },
+
   // Créer une propal
   create: async (data: {
     title: string;
@@ -71,6 +88,7 @@ export const proposalRepository = {
     customData: any;
     password: string | null;
     token: string;
+    slug: string;
     leadId: string;
     createdById: string;
     sentAt?: Date;

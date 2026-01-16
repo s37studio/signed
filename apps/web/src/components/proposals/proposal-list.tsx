@@ -124,14 +124,14 @@ export function ProposalList({ proposals }: ProposalListProps) {
               <div className="flex items-center gap-2 p-3 bg-muted rounded-md">
                 <code className="flex-1 text-xs">
                   {typeof window !== "undefined" &&
-                    `${window.location.origin}/p/${proposal.token}`}
+                    `${window.location.origin}/p/${proposal.slug || proposal.token}`}
                 </code>
                 <Button
                   size="sm"
                   variant="secondary"
                   onClick={() => {
                     navigator.clipboard.writeText(
-                      `${window.location.origin}/p/${proposal.token}`
+                      `${window.location.origin}/p/${proposal.slug || proposal.token}`
                     );
                   }}
                 >

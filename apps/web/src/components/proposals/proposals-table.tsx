@@ -121,7 +121,7 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                       <TableCell className="text-right">
                         <div className="flex gap-2 justify-end">
                           <a
-                            href={`${window.location.origin}/p/${proposal.token}`}
+                            href={`${window.location.origin}/p/${proposal.slug || proposal.token}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >

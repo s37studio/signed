@@ -114,7 +114,7 @@ export function LeadProposalsHistory({
 
                     <div className="flex gap-2 ml-4">
                       <a
-                        href={`${window.location.origin}/p/${proposal.token}`}
+                        href={`${window.location.origin}/p/${proposal.slug || proposal.token}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
