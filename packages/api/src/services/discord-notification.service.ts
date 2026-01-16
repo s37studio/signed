@@ -10,6 +10,7 @@ interface DiscordEmbed {
 }
 
 interface DiscordWebhookPayload {
+  content?: string;
   embeds: DiscordEmbed[];
 }
 
@@ -20,6 +21,9 @@ const COLORS = {
   ORANGE: 0xf97316, // Attention - Révision
   RED: 0xef4444, // Urgent - Rappel
 };
+
+// URL du dashboard
+const DASHBOARD_URL = "https://web-production-7dc7f.up.railway.app/dashboard";
 
 async function sendDiscordNotification(payload: DiscordWebhookPayload) {
   const webhookUrl = env.DISCORD_WEBHOOK_URL;
@@ -72,9 +76,15 @@ export const discordNotificationService = {
         value: locationText,
         inline: false,
       },
+      {
+        name: "Dashboard",
+        value: `[Ouvrir le dashboard](${DASHBOARD_URL})`,
+        inline: false,
+      },
     ];
 
     await sendDiscordNotification({
+      content: "@everyone",
       embeds: [
         {
           title: "👀 Proposition vue !",
@@ -101,9 +111,15 @@ export const discordNotificationService = {
         value: proposal.title,
         inline: true,
       },
+      {
+        name: "Dashboard",
+        value: `[Ouvrir le dashboard](${DASHBOARD_URL})`,
+        inline: false,
+      },
     ];
 
     await sendDiscordNotification({
+      content: "@everyone",
       embeds: [
         {
           title: "🎉 Proposition acceptée !",
@@ -135,9 +151,15 @@ export const discordNotificationService = {
         value: message || "Aucun message",
         inline: false,
       },
+      {
+        name: "Dashboard",
+        value: `[Ouvrir le dashboard](${DASHBOARD_URL})`,
+        inline: false,
+      },
     ];
 
     await sendDiscordNotification({
+      content: "@everyone",
       embeds: [
         {
           title: "💬 Demande de révision",
@@ -172,9 +194,15 @@ export const discordNotificationService = {
           : "Date inconnue",
         inline: false,
       },
+      {
+        name: "Dashboard",
+        value: `[Ouvrir le dashboard](${DASHBOARD_URL})`,
+        inline: false,
+      },
     ];
 
     await sendDiscordNotification({
+      content: "@everyone",
       embeds: [
         {
           title: "⚠️ Rappel : Proposition non ouverte",
