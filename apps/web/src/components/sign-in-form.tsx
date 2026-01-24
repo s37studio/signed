@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: () => void } = {}) {
+export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () => void }) {
   const router = useRouter();
   const { isPending } = authClient.useSession();
 
@@ -119,8 +119,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
         </form.Subscribe>
       </form>
 
-      {/* Création de compte désactivée */}
-      {/* <div className="mt-4 text-center">
+      <div className="mt-4 text-center">
         <Button
           variant="link"
           onClick={onSwitchToSignUp}
@@ -128,7 +127,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
         >
           Need an account? Sign Up
         </Button>
-      </div> */}
+      </div>
     </div>
   );
 }
