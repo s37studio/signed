@@ -10,10 +10,10 @@ export default function ProposalsPage() {
   const { data: proposals, isLoading } = useProposals();
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
+    <div className="container mx-auto px-8 py-8 space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Propositions Commerciales</h1>
-        <p className="text-muted-foreground mt-2">
+        <h1 className="text-3xl font-bold text-zinc-50">Propositions Commerciales</h1>
+        <p className="text-zinc-400 mt-2">
           Créez et gérez vos propositions commerciales
         </p>
       </div>

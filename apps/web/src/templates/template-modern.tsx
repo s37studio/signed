@@ -15,7 +15,7 @@ type TemplateModernProps = {
 export function TemplateModern({ data }: TemplateModernProps) {
   return (
     <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-screen p-8">
-      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-950 rounded-2xl shadow-2xl overflow-hidden">
+      <div className="w-full mx-auto bg-white dark:bg-slate-950 rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-12 text-white">
           <h1 className="text-5xl font-bold mb-4">
@@ -35,8 +35,8 @@ export function TemplateModern({ data }: TemplateModernProps) {
           {data.description && (
             <div className="space-y-3">
               <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                <span className="w-1 h-8 bg-blue-600 rounded-full"></span>
-                À propos du projet
+                <span className="w-1 h-8 bg-blue-600 rounded-full"></span>À
+                propos du projet
               </h2>
               <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
                 {data.description}

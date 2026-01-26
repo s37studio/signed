@@ -33,16 +33,24 @@ export default function UserMenu() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" />}>
-        {session.user.name}
+      <DropdownMenuTrigger render={<Button variant="ghost" className="w-full justify-start px-3 py-2 h-auto text-zinc-50 hover:bg-zinc-900" />}>
+        <div className="flex items-center gap-2 w-full">
+          <div className="h-8 w-8 rounded-full bg-zinc-800 flex items-center justify-center text-sm font-medium">
+            {session.user.name?.[0]?.toUpperCase() || "U"}
+          </div>
+          <span className="text-sm font-medium truncate">{session.user.name}</span>
+        </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-card">
+      <DropdownMenuContent className="bg-zinc-900 border-zinc-800 w-56" align="start">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>{session.user.email}</DropdownMenuItem>
+          <DropdownMenuLabel className="text-zinc-400">My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator className="bg-zinc-800" />
+          <DropdownMenuItem className="text-zinc-300 focus:bg-zinc-800 focus:text-zinc-50">
+            {session.user.email}
+          </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
+            className="focus:bg-red-900/20 focus:text-red-400"
             onClick={() => {
               authClient.signOut({
                 fetchOptions: {

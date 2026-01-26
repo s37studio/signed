@@ -13,7 +13,7 @@ type TemplateClassicProps = {
 export function TemplateClassic({ data }: TemplateClassicProps) {
   return (
     <div className="bg-white dark:bg-slate-950 min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full mx-auto">
         {/* Header */}
         <div className="border-b-4 border-slate-900 dark:border-slate-100 pb-8 mb-8">
           <h1 className="text-4xl font-serif font-bold text-slate-900 dark:text-slate-100 mb-4">
@@ -97,7 +97,8 @@ export function TemplateClassic({ data }: TemplateClassicProps) {
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
           <p className="text-sm text-slate-500 dark:text-slate-500 text-center">
-            Cette proposition est valable 30 jours à compter de sa date d'émission
+            Cette proposition est valable 30 jours à compter de sa date
+            d'émission
           </p>
         </div>
       </div>

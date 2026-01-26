@@ -19,10 +19,10 @@ export default function DashboardPage() {
 
   if (isPending) {
     return (
-      <div className="container mx-auto max-w-7xl px-4 py-8">
+      <div className="container mx-auto max-w-7xl px-8 py-8">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-8 bg-zinc-800 rounded w-1/4 mb-4"></div>
+          <div className="h-4 bg-zinc-800 rounded w-1/3"></div>
         </div>
       </div>
     );
@@ -33,10 +33,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
+    <div className="container mx-auto max-w-7xl px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Bienvenue, {session.user.name}</p>
+        <h1 className="text-3xl font-bold text-zinc-50">Dashboard</h1>
+        <p className="text-zinc-400">Bienvenue, {session.user.name}</p>
       </div>
       <Dashboard session={session} />
     </div>

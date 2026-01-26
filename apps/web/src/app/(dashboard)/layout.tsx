@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
 
 export default function DashboardLayout({
   children,
@@ -6,9 +6,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid grid-rows-[auto_1fr] h-svh">
-      <Header />
-      {children}
+    <div className="flex h-screen bg-zinc-950">
+      <Sidebar />
+      <main className="flex-1 overflow-auto">
+        {children}
+      </main>
     </div>
   );
 }

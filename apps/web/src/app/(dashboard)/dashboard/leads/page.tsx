@@ -43,10 +43,10 @@ export default function LeadsPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-8">
+    <div className="container mx-auto max-w-7xl px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Leads</h1>
-        <p className="text-muted-foreground">Gérer vos clients potentiels</p>
+        <h1 className="text-3xl font-bold text-zinc-50">Leads</h1>
+        <p className="text-zinc-400">Gérer vos clients potentiels</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

@@ -96,7 +96,7 @@ export default function EditProposalPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto px-8 py-8">
         <Skeleton className="h-[600px]" />
       </div>
     );
@@ -104,9 +104,9 @@ export default function EditProposalPage() {
 
   if (!proposal) {
     return (
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto px-8 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Proposition introuvable</h1>
+          <h1 className="text-2xl font-bold text-zinc-50 mb-2">Proposition introuvable</h1>
           <Button onClick={() => router.push("/dashboard/proposals")}>
             Retour
           </Button>
@@ -120,13 +120,13 @@ export default function EditProposalPage() {
       templateId={proposal.templateId}
       initialData={initialData}
     >
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-zinc-950">
         {/* Header */}
-        <div className="border-b bg-card">
-          <div className="container mx-auto py-4 px-4 flex items-center justify-between">
+        <div className="border-b border-zinc-800 bg-zinc-900">
+          <div className="container mx-auto py-4 px-8 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Édition de la proposition</h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <h1 className="text-2xl font-bold text-zinc-50">Édition de la proposition</h1>
+              <p className="text-sm text-zinc-400 mt-1">
                 {proposal.title}
               </p>
             </div>
@@ -145,8 +145,8 @@ export default function EditProposalPage() {
 
         {/* Revision Banner */}
         {proposal.status === "REVISION" && proposal.revisionMessage && (
-          <div className="bg-blue-500 text-white">
-            <div className="container mx-auto py-4 px-4">
+          <div className="bg-blue-600 text-white">
+            <div className="container mx-auto py-4 px-8">
               <div className="flex items-start gap-3">
                 <div className="text-2xl">💬</div>
                 <div>
@@ -164,11 +164,11 @@ export default function EditProposalPage() {
         )}
 
         {/* Split view */}
-        <div className="container mx-auto py-8 px-4">
+        <div className="container mx-auto py-8 px-8">
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Form */}
             <div className="space-y-6">
-              <div className="bg-card border rounded-lg p-6">
+              <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <TemplateForm />
               </div>
               <ProposalPasswordSettings
