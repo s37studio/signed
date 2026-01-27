@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
-import { TemplateClassic } from "./template-classic";
-import { TemplateModern } from "./template-modern";
+import { TemplateDesign } from "./template-design";
+import { TemplateGTM } from "./template-gtm";
 
 export type TemplateField = {
   key: string;
@@ -22,119 +22,90 @@ export type Template = {
 };
 
 export const TEMPLATE_REGISTRY: Record<string, Template> = {
-  modern: {
-    id: "modern",
-    name: "Moderne",
-    description: "Design moderne avec gradient et cards épurées",
-    thumbnail: "/templates/modern-thumb.png",
-    component: TemplateModern,
+  design: {
+    id: "design",
+    name: "S37 Design",
+    description: "Modern dark-themed design proposal with animations and case studies",
+    thumbnail: "/templates/design-thumb.png",
+    component: TemplateDesign,
     fields: [
       {
-        key: "clientName",
-        label: "Nom du client",
-        type: "text",
-        required: true,
-        placeholder: "Jean Dupont",
-        prefillFrom: "lead.name",
-      },
-      {
-        key: "companyName",
-        label: "Entreprise",
-        type: "text",
-        placeholder: "ACME Corp",
-        prefillFrom: "lead.company",
-      },
-      {
         key: "projectTitle",
-        label: "Titre du projet",
+        label: "Project Title",
         type: "text",
         required: true,
-        placeholder: "Refonte de votre site web",
+        placeholder: "Website Proposal",
       },
       {
-        key: "description",
-        label: "Description du projet",
+        key: "projectDescription",
+        label: "Project Description",
         type: "textarea",
-        placeholder:
-          "Décrivez les objectifs et les enjeux du projet...",
+        placeholder: "A custom proposal crafted specifically for your project needs.",
       },
       {
-        key: "services",
-        label: "Services inclus",
-        type: "textarea",
-        placeholder:
-          "• Analyse et audit\n• Design UX/UI\n• Développement\n• Formation",
-      },
-      {
-        key: "price",
-        label: "Prix (€)",
-        type: "number",
-        required: true,
-        placeholder: "5000",
-      },
-      {
-        key: "deliveryTime",
-        label: "Délai de livraison",
+        key: "brandName",
+        label: "Brand Name",
         type: "text",
-        placeholder: "4 semaines",
+        placeholder: "S37™",
+      },
+      {
+        key: "ctaText",
+        label: "CTA Text",
+        type: "text",
+        placeholder: "Ready to get started?",
+      },
+      {
+        key: "acceptUrl",
+        label: "Accept URL",
+        type: "text",
+        placeholder: "#contact",
       },
     ],
   },
 
-  classic: {
-    id: "classic",
-    name: "Classique",
-    description: "Présentation formelle et professionnelle",
-    thumbnail: "/templates/classic-thumb.png",
-    component: TemplateClassic,
+  gtm: {
+    id: "gtm",
+    name: "S37 GTM",
+    description: "Go-to-market proposal with process phases and video section",
+    thumbnail: "/templates/gtm-thumb.png",
+    component: TemplateGTM,
     fields: [
       {
-        key: "clientName",
-        label: "Nom du client",
+        key: "projectTitle",
+        label: "Project Title",
         type: "text",
         required: true,
-        placeholder: "Jean Dupont",
-        prefillFrom: "lead.name",
+        placeholder: "GTM Proposal",
       },
       {
-        key: "companyName",
-        label: "Entreprise",
-        type: "text",
-        placeholder: "ACME Corp",
-        prefillFrom: "lead.company",
-      },
-      {
-        key: "proposalTitle",
-        label: "Titre de la proposition",
-        type: "text",
-        required: true,
-        placeholder: "Refonte site web et stratégie digitale",
-      },
-      {
-        key: "introduction",
-        label: "Introduction",
+        key: "projectDescription",
+        label: "Project Description",
         type: "textarea",
-        placeholder:
-          "Présentation du contexte et des objectifs de la proposition...",
+        placeholder: "A custom go-to-market proposal crafted specifically for your needs.",
       },
       {
-        key: "scope",
-        label: "Périmètre du projet",
-        type: "textarea",
-        placeholder: "Détaillez les livrables et prestations incluses...",
-      },
-      {
-        key: "pricing",
-        label: "Tarification (€)",
-        type: "number",
-        required: true,
-        placeholder: "8000",
-      },
-      {
-        key: "timeline",
-        label: "Calendrier",
+        key: "brandName",
+        label: "Brand Name",
         type: "text",
-        placeholder: "6 semaines",
+        placeholder: "S37™",
+      },
+      {
+        key: "videoUrl",
+        label: "Video URL (optional)",
+        type: "text",
+        placeholder: "https://www.youtube.com/embed/...",
+      },
+      {
+        key: "ctaText",
+        label: "CTA Text",
+        type: "text",
+        placeholder: "Ready to get started?",
+      },
+      {
+        key: "acceptUrl",
+        label: "Accept URL",
+        type: "text",
+        placeholder: "#contact",
       },
     ],
   },
