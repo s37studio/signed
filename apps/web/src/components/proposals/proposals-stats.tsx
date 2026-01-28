@@ -16,7 +16,7 @@ export function ProposalsStats({ proposals }: ProposalsStatsProps) {
 
   return (
     <div className="grid gap-4 md:grid-cols-4">
-      <Card>
+      <Card className="bg-[#0E0E10] rounded-[16px] border-none">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
@@ -30,7 +30,7 @@ export function ProposalsStats({ proposals }: ProposalsStatsProps) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-[#0E0E10] rounded-[16px] border-none">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-green-100 dark:bg-green-950 rounded-lg">
@@ -46,7 +46,7 @@ export function ProposalsStats({ proposals }: ProposalsStatsProps) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-[#0E0E10] rounded-[16px] border-none">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-yellow-100 dark:bg-yellow-950 rounded-lg">
@@ -62,7 +62,7 @@ export function ProposalsStats({ proposals }: ProposalsStatsProps) {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-[#0E0E10] rounded-[16px] border-none">
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-blue-100 dark:bg-blue-950 rounded-lg">

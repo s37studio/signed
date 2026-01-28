@@ -23,7 +23,7 @@ export default function Dashboard({
       {/* Header */}
       <div className="flex items-center justify-end">
         <Link href="/dashboard/proposals">
-          <Button>
+          <Button className="rounded-full">
             <Plus className="h-4 w-4 mr-2" />
             Nouvelle proposition
           </Button>

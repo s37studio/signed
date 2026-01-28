@@ -30,7 +30,7 @@ type ProposalsTableProps = {
 export function ProposalsTable({ proposals }: ProposalsTableProps) {
   if (proposals.length === 0) {
     return (
-      <Card>
+      <Card className="bg-[#0E0E10] rounded-[16px] border-none">
         <CardContent className="py-12 text-center text-muted-foreground">
           <p>Aucune proposition. Créez-en une pour commencer !</p>
         </CardContent>
@@ -39,15 +39,15 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
   }
 
   return (
-    <Card>
+    <Card className="bg-[#0E0E10] rounded-[16px] border-none">
       <CardHeader>
         <CardTitle>Propositions récentes</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="hover:bg-transparent">
                 <TableHead>Titre</TableHead>
                 <TableHead>Client</TableHead>
                 <TableHead>Statut</TableHead>
@@ -62,7 +62,7 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                 .sort(
                   (a, b) =>
                     new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
+                    new Date(a.createdAt).getTime(),
                 )
                 .map((proposal) => {
                   const statusConfig =
@@ -70,7 +70,10 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                       proposal.status as keyof typeof STATUS_CONFIG
                     ];
                   return (
-                    <TableRow key={proposal.id}>
+                    <TableRow
+                      key={proposal.id}
+                      className="hover:bg-zinc-900/50"
+                    >
                       <TableCell className="font-medium">
                         {proposal.title}
                         {proposal.revisionMessage && (
@@ -115,7 +118,7 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
-                          }
+                          },
                         )}
                       </TableCell>
                       <TableCell className="text-right">

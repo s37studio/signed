@@ -41,15 +41,10 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-64 h-screen bg-zinc-950 border-r border-zinc-800 flex flex-col">
-      {/* User section at top */}
-      <div className="p-4 border-b border-zinc-800">
-        <UserMenu />
-      </div>
-
+    <aside className="w-20 h-screen bg-[#0E0E10] flex flex-col items-center py-6">
       {/* Navigation */}
-      <nav className="flex-1 p-4">
-        <ul className="space-y-2">
+      <nav className="flex-1 flex flex-col justify-center w-full">
+        <ul className="space-y-6 flex flex-col items-center">
           {navItems.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(item.href + "/");
@@ -60,20 +55,30 @@ export default function Sidebar() {
                 <Link
                   href={item.href as any}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    "flex items-center justify-center p-3 rounded-xl transition-all duration-200 group relative",
                     isActive
-                      ? "bg-zinc-800 text-zinc-50"
+                      ? "bg-zinc-50 text-zinc-950"
                       : "text-zinc-400 hover:text-zinc-50 hover:bg-zinc-900",
                   )}
+                  title={item.title}
                 >
-                  <Icon className="h-5 w-5" />
-                  {item.title}
+                  <Icon className={cn("h-6 w-6", isActive && "fill-current")} />
+                  {isActive && (
+                    <div className="absolute left-full ml-4 px-2 py-1 bg-zinc-900 text-zinc-50 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none border border-zinc-800">
+                      {item.title}
+                    </div>
+                  )}
                 </Link>
               </li>
             );
           })}
         </ul>
       </nav>
+
+      {/* User section at bottom */}
+      <div className="mt-auto">
+        <UserMenu collapsed />
+      </div>
     </aside>
   );
 }
