@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, FileText, Palette } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Squares2X2Icon,
+  UsersIcon,
+  SwatchIcon,
+} from "@heroicons/react/24/solid";
 
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
@@ -13,22 +18,17 @@ const navItems = [
   {
     title: "Dashboard",
     href: "/dashboard",
-    icon: LayoutDashboard,
+    icon: Squares2X2Icon,
   },
   {
     title: "Leads",
     href: "/dashboard/leads",
-    icon: Users,
-  },
-  {
-    title: "Propositions",
-    href: "/dashboard/proposals",
-    icon: FileText,
+    icon: UsersIcon,
   },
   {
     title: "Templates",
     href: "/dashboard/templates",
-    icon: Palette,
+    icon: SwatchIcon,
   },
 ];
 
@@ -44,30 +44,40 @@ export default function Sidebar() {
     <aside className="w-20 h-screen bg-[#0E0E10] flex flex-col items-center py-6">
       {/* Navigation */}
       <nav className="flex-1 flex flex-col justify-center w-full">
-        <ul className="space-y-6 flex flex-col items-center">
+        <ul className="space-y-2 flex flex-col items-center">
           {navItems.map((item) => {
-            const isActive =
-              pathname === item.href || pathname.startsWith(item.href + "/");
+            const isActive = pathname === item.href;
             const Icon = item.icon;
 
             return (
-              <li key={item.href}>
+              <li key={item.href} className="relative">
                 <Link
                   href={item.href as any}
                   className={cn(
-                    "flex items-center justify-center p-3 rounded-xl transition-all duration-200 group relative",
+                    "flex items-center justify-center p-3 rounded-full transition-colors duration-200 group relative z-10",
                     isActive
-                      ? "bg-zinc-50 text-zinc-950"
-                      : "text-zinc-400 hover:text-zinc-50 hover:bg-zinc-900",
+                      ? "text-white"
+                      : "text-zinc-400 hover:text-zinc-50",
                   )}
                   title={item.title}
                 >
-                  <Icon className={cn("h-6 w-6", isActive && "fill-current")} />
+                  <Icon className="h-[18px] w-[18px]" />
+
                   {isActive && (
-                    <div className="absolute left-full ml-4 px-2 py-1 bg-zinc-900 text-zinc-50 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none border border-zinc-800">
-                      {item.title}
-                    </div>
+                    <motion.div
+                      layoutId="sidebar-active"
+                      className="absolute inset-0 bg-[#0C0C0D] rounded-full -z-10"
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
                   )}
+
+                  <div className="absolute left-full ml-4 px-2 py-1 bg-zinc-900 text-zinc-50 text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none border border-zinc-800">
+                    {item.title}
+                  </div>
                 </Link>
               </li>
             );
