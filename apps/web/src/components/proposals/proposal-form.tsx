@@ -12,11 +12,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-export function ProposalForm() {
+export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [templateId, setTemplateId] = useState("");
-  const [leadId, setLeadId] = useState("");
+  const [leadId, setLeadId] = useState(initialLeadId || "");
   const [password, setPassword] = useState("");
 
   const { data: leads } = useLeads();
@@ -43,7 +43,7 @@ export function ProposalForm() {
           // Redirect to edit page to configure template
           router.push(`/dashboard/proposals/${data.id}/edit`);
         },
-      },
+      }
     );
   };
 

@@ -1,12 +1,21 @@
 "use client";
 
-import { Calendar, FileText } from "lucide-react";
+import { Calendar, FileText, Plus } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import { ProposalViewsModal } from "../proposals/proposal-views-modal";
 
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { ProposalForm } from "../proposals/proposal-form";
 
 const STATUS_CONFIG = {
   PENDING: { label: "En attente", color: "bg-yellow-500" },
@@ -24,6 +33,8 @@ export function LeadProposalsHistory({
   proposals,
   leadId,
 }: LeadProposalsHistoryProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   if (proposals.length === 0) {
     return (
       <Card>
@@ -34,9 +45,22 @@ export function LeadProposalsHistory({
           <div className="text-center py-12 text-muted-foreground">
             <FileText className="h-12 w-12 mx-auto mb-4 opacity-20" />
             <p>Aucune proposition envoyée à ce lead</p>
-            <Link href={`/dashboard/proposals?leadId=${leadId}`}>
-              <Button className="mt-4">Créer la première proposition</Button>
-            </Link>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger
+                render={
+                  <Button className="mt-4">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Créer la première proposition
+                  </Button>
+                }
+              />
+              <DialogContent className="sm:max-w-[600px]">
+                <DialogHeader>
+                  <DialogTitle>Créer une Proposition</DialogTitle>
+                </DialogHeader>
+                <ProposalForm initialLeadId={leadId} />
+              </DialogContent>
+            </Dialog>
           </div>
         </CardContent>
       </Card>
@@ -77,30 +101,30 @@ export function LeadProposalsHistory({
                         </span>
                       </div>
 
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-muted-foreground items-center">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              {new Date(proposal.createdAt).toLocaleDateString(
-                                "fr-FR"
-                              )}
-                            </div>
-                            <div>Template: {proposal.templateId}</div>
-                            <div className="flex items-center gap-2">
-                              <span>Vues:</span>
-                              <ProposalViewsModal
-                                proposalId={proposal.id}
-                                viewCount={proposal._count?.views || 0}
-                              />
-                            </div>
-                            {proposal.lastOpenedAt && (
-                              <div>
-                                Dernière vue:{" "}
-                                {new Date(proposal.lastOpenedAt).toLocaleDateString(
-                                  "fr-FR"
-                                )}
-                              </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-muted-foreground items-center">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          {new Date(proposal.createdAt).toLocaleDateString(
+                            "fr-FR"
+                          )}
+                        </div>
+                        <div>Template: {proposal.templateId}</div>
+                        <div className="flex items-center gap-2">
+                          <span>Vues:</span>
+                          <ProposalViewsModal
+                            proposalId={proposal.id}
+                            viewCount={proposal._count?.views || 0}
+                          />
+                        </div>
+                        {proposal.lastOpenedAt && (
+                          <div>
+                            Dernière vue:{" "}
+                            {new Date(proposal.lastOpenedAt).toLocaleDateString(
+                              "fr-FR"
                             )}
                           </div>
+                        )}
+                      </div>
 
                       {proposal.revisionMessage && (
                         <div className="mt-2 p-2 bg-blue-500/10 border border-blue-500/20 rounded text-sm">
@@ -114,7 +138,13 @@ export function LeadProposalsHistory({
 
                     <div className="flex gap-2 ml-4">
                       <a
-                        href={`${window.location.origin}/p/${proposal.slug || proposal.token}`}
+                        href={
+                          typeof window !== "undefined"
+                            ? `${window.location.origin}/p/${
+                                proposal.slug || proposal.token
+                              }`
+                            : "#"
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >

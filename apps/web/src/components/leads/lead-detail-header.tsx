@@ -1,8 +1,18 @@
-import { ArrowLeft, Mail, Building2, FileText } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+"use client";
 
-import { Button } from "../ui/button";
+import { ArrowLeft, Mail, Building2, FileText, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ProposalForm } from "@/components/proposals/proposal-form";
 
 type LeadDetailHeaderProps = {
   lead: {
@@ -15,6 +25,7 @@ type LeadDetailHeaderProps = {
 
 export function LeadDetailHeader({ lead }: LeadDetailHeaderProps) {
   const router = useRouter();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   return (
     <div className="mb-6">
@@ -51,12 +62,22 @@ export function LeadDetailHeader({ lead }: LeadDetailHeaderProps) {
           </div>
         </div>
 
-        <Link href={`/dashboard/proposals?leadId=${lead.id}`}>
-          <Button>
-            <FileText className="h-4 w-4 mr-2" />
-            Nouvelle proposition
-          </Button>
-        </Link>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger
+            render={
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Nouvelle proposition
+              </Button>
+            }
+          />
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Créer une Proposition</DialogTitle>
+            </DialogHeader>
+            <ProposalForm initialLeadId={lead.id} />
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

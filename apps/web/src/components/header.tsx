@@ -25,10 +25,7 @@ export default function Header() {
               <Link href="/dashboard/leads" className="text-sm hover:underline">
                 Leads
               </Link>
-              <Link
-                href="/dashboard/proposals"
-                className="text-sm hover:underline"
-              >
+              <Link href="/dashboard" className="text-sm hover:underline">
                 Propositions
               </Link>
             </>

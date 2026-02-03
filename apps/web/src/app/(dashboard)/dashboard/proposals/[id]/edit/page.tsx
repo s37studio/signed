@@ -86,7 +86,7 @@ export default function EditProposalPage() {
         });
       }
 
-      router.push("/dashboard/proposals");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error saving:", error);
     } finally {
@@ -106,10 +106,10 @@ export default function EditProposalPage() {
     return (
       <div className="container mx-auto px-8 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-zinc-50 mb-2">Proposition introuvable</h1>
-          <Button onClick={() => router.push("/dashboard/proposals")}>
-            Retour
-          </Button>
+          <h1 className="text-2xl font-bold text-zinc-50 mb-2">
+            Proposition introuvable
+          </h1>
+          <Button onClick={() => router.push("/dashboard")}>Retour</Button>
         </div>
       </div>
     );
@@ -125,15 +125,15 @@ export default function EditProposalPage() {
         <div className="border-b border-zinc-800 bg-zinc-900">
           <div className="container mx-auto py-4 px-8 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-zinc-50">Édition de la proposition</h1>
-              <p className="text-sm text-zinc-400 mt-1">
-                {proposal.title}
-              </p>
+              <h1 className="text-2xl font-bold text-zinc-50">
+                Édition de la proposition
+              </h1>
+              <p className="text-sm text-zinc-400 mt-1">{proposal.title}</p>
             </div>
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                onClick={() => router.push("/dashboard/proposals")}
+                onClick={() => router.push("/dashboard")}
                 disabled={isSaving}
               >
                 Annuler
@@ -155,7 +155,8 @@ export default function EditProposalPage() {
                   </p>
                   <p className="text-blue-50">{proposal.revisionMessage}</p>
                   <p className="text-sm text-blue-100 mt-2">
-                    Lorsque vous enregistrerez, la proposition sera automatiquement remise en attente.
+                    Lorsque vous enregistrerez, la proposition sera
+                    automatiquement remise en attente.
                   </p>
                 </div>
               </div>
