@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { ProposalLayout } from "@/components/proposals/proposal-layout";
 import { IntroSection } from "@/components/proposals/intro-section";
@@ -215,10 +214,12 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
   const introDescription = data.introDescription;
   const processSteps = data.processSteps || DEFAULT_PROCESS_STEPS;
   const designShots = data.designShots || DEFAULT_DESIGN_SHOTS;
-  const designCarouselTitle = data.designCarouselTitle || "Design Showcase";
+  const designCarouselTitle =
+    data.designCarouselTitle ||
+    `Website Design & Development – ${data.brandName || "Your Company"}`;
   const designCarouselDescription =
     data.designCarouselDescription ||
-    "Explore our design work and visual direction.";
+    "This proposal outlines a strategic branding process designed to clarify your positioning, strengthen your identity, and create a brand that drives long-term growth.";
   const caseStudies = data.caseStudies || DEFAULT_CASE_STUDIES;
   const teamMembers = data.teamMembers || [];
   const teamTitle = data.teamTitle || "Our Team";
@@ -230,7 +231,7 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
   const acceptUrl = data.acceptUrl || "#contact";
 
   const sidebarSections = [
-    ...(designShots.length > 0 ? [{ id: "designs", label: "Designs" }] : []),
+    ...(designShots.length > 0 ? [{ id: "designs", label: "Overview" }] : []),
     ...(videoUrl ? [{ id: "intro", label: "Introduction" }] : []),
     { id: "goals", label: "Project Goals" },
     { id: "scope", label: "Scope of Work" },
@@ -276,24 +277,16 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
 
       {/* Case Studies Section */}
       <section id="case-studies" className="scroll-mt-24">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="h-px flex-1 bg-zinc-800" />
-          <h2 className="text-2xl font-display font-medium text-zinc-100">
-            Case Studies
-          </h2>
-          <div className="h-px flex-1 bg-zinc-800" />
-        </div>
+        <h2 className="text-2xl font-display font-medium text-zinc-100 mb-8">
+          Case Studies
+        </h2>
 
         <div className="grid grid-cols-1 gap-6">
           {caseStudies.map((study, index) => (
-            <motion.a
+            <a
               key={index}
               href={`/work/${study.slug}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="group block bg-zinc-900/50 border border-zinc-800/50 rounded-2xl overflow-hidden hover:bg-zinc-900 transition-colors duration-300"
+              className="group block bg-zinc-900/50 rounded-2xl overflow-hidden hover:bg-zinc-900 transition-colors duration-300"
             >
               <div className="flex flex-col md:flex-row gap-6 p-6">
                 <div className="w-full md:w-[200px] shrink-0 aspect-video md:aspect-[4/3] relative rounded-lg overflow-hidden bg-zinc-800">
@@ -306,7 +299,7 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
                 </div>
                 <div className="flex flex-col flex-1">
                   <div className="flex items-start justify-between gap-4 mb-3">
-                    <h3 className="text-xl font-medium text-zinc-100">
+                    <h3 className="text-xl font-display font-medium text-zinc-100">
                       {study.title}
                     </h3>
                     <div className="flex flex-wrap gap-2 justify-end">
@@ -344,7 +337,7 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
                   </div>
                 </div>
               </div>
-            </motion.a>
+            </a>
           ))}
         </div>
       </section>
@@ -363,19 +356,15 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
 
       {/* FAQ Section */}
       <section id="faq" className="scroll-mt-24">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="h-px flex-1 bg-zinc-800" />
-          <h2 className="text-2xl font-display font-medium text-zinc-100">
-            Frequently Asked Questions
-          </h2>
-          <div className="h-px flex-1 bg-zinc-800" />
-        </div>
+        <h2 className="text-2xl font-display font-medium text-zinc-100 mb-8">
+          Frequently Asked Questions
+        </h2>
 
-        <p className="text-zinc-400 text-center max-w-2xl mx-auto mb-12">
+        <p className="text-zinc-400 text-left max-w-2xl mb-12">
           Everything you need to know before getting started.
         </p>
 
-        <div className="max-w-2xl mx-auto space-y-4">
+        <div className="w-full max-w-4xl space-y-4">
           {faqs.map((faq, index) => (
             <FAQItem
               key={index}

@@ -57,7 +57,7 @@ export function ProposalSidebarNav({ sections }: ProposalSidebarNavProps) {
               <li key={section.id}>
                 <button
                   onClick={() => handleClick(section.id)}
-                  className="relative w-full text-left px-3 py-2 text-[13px] font-medium rounded-lg transition-all duration-300 focus:outline-none group"
+                  className="relative w-full text-left px-3 py-2 text-[13px] font-medium rounded-full transition-all duration-300 focus:outline-none group"
                 >
                   <span
                     className={`relative z-10 transition-colors duration-300 ${
@@ -71,7 +71,7 @@ export function ProposalSidebarNav({ sections }: ProposalSidebarNavProps) {
                   {isActive && (
                     <motion.div
                       layoutId="activeSection"
-                      className="absolute inset-0 bg-white/5 rounded-lg"
+                      className="absolute inset-0 bg-white/5 rounded-full"
                       transition={{
                         type: "spring",
                         stiffness: 380,

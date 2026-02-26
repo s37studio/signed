@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 type DesignCarouselProps = {
@@ -13,8 +12,9 @@ type DesignCarouselProps = {
 
 export function DesignCarousel({
   images,
-  title = "Design Showcase",
-  description = "Explore our design work and visual direction.",
+  title = "Website Design & Development",
+  description =
+    "This proposal outlines a strategic branding process designed to clarify your positioning, strengthen your identity, and create a brand that drives long-term growth.",
 }: DesignCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -37,40 +37,31 @@ export function DesignCarousel({
   return (
     <section
       id="designs"
-      className="w-[98%] bg-[#0C0C0E] rounded-2xl flex flex-col items-center py-12 md:py-16"
+      className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-center">
+        <h2 className="text-xl md:text-2xl font-display font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-left">
           {title}
         </h2>
-        <p className="text-sm text-zinc-400 leading-relaxed mb-12 max-w-[650px] mx-auto text-center">
+        <p className="text-sm text-zinc-400 leading-relaxed mb-12 max-w-[650px] text-left">
           {description}
         </p>
 
         <div className="relative group/carousel">
           {/* Main Carousel Container */}
-          <div className="relative w-full overflow-hidden rounded-xl bg-[#0E0E10]">
-            <div className="aspect-[16/10] relative">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={currentIndex}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={images[currentIndex]}
-                    alt={`Design ${currentIndex + 1}`}
-                    fill
-                    className="object-cover"
-                    quality={90}
-                    sizes="(max-width: 768px) 100vw, 1200px"
-                    priority={currentIndex === 0}
-                  />
-                </motion.div>
-              </AnimatePresence>
+          <div className="relative w-full overflow-hidden rounded-xl bg-[#0E0E10] flex items-center justify-center">
+            <div className="relative w-full h-[min(55vh,552px)]">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Image
+                  src={images[currentIndex]}
+                  alt={`Design ${currentIndex + 1}`}
+                  fill
+                  className="object-contain rounded-xl"
+                  quality={90}
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  priority={currentIndex === 0}
+                />
+              </div>
             </div>
 
             {/* Navigation Arrows */}
@@ -92,13 +83,6 @@ export function DesignCarousel({
                 </button>
               </>
             )}
-
-            {/* Image Counter */}
-            <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-zinc-900/80 backdrop-blur-sm rounded-full">
-              <span className="text-[11px] font-medium text-zinc-300 tabular-nums">
-                {currentIndex + 1} / {images.length}
-              </span>
-            </div>
           </div>
 
           {/* Indicators */}

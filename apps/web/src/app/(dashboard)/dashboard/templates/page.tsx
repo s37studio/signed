@@ -5,12 +5,7 @@ import { getAllTemplates } from "@/templates/registry";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Eye, Code } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function TemplatesPage() {
   const templates = getAllTemplates();
@@ -161,29 +156,11 @@ export default function TemplatesPage() {
       {/* Preview Dialog - Full Screen */}
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
         <DialogContent
-          showCloseButton={false}
+          showCloseButton
           className="!max-w-none !w-screen !h-screen p-0 bg-zinc-900 border-0 rounded-none top-0 left-0 translate-x-0 translate-y-0"
         >
-          <DialogHeader className="sticky top-0 z-50 bg-zinc-900/95 backdrop-blur border-b border-zinc-800 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-zinc-50">
-                Aperçu: {selectedTemplateData?.name}
-              </DialogTitle>
-              <div className="flex items-center gap-4">
-                <p className="text-xs text-zinc-500">Données d'exemple</p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
-                  onClick={() => setPreviewOpen(false)}
-                >
-                  Fermer
-                </Button>
-              </div>
-            </div>
-          </DialogHeader>
           {selectedTemplateData && (
-            <div className="overflow-auto h-[calc(100vh-73px)]">
+            <div className="overflow-auto h-full">
               <selectedTemplateData.component
                 data={getExampleData(selectedTemplateData.id)}
               />

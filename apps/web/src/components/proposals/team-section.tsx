@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 type TeamMember = {
   name: string;
@@ -28,10 +27,10 @@ export function TeamSection({
   return (
     <section
       id="team"
-      className="w-[98%] bg-[#0C0C0E] rounded-2xl flex flex-col items-center py-12 md:py-16"
+      className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-center">
+        <h2 className="text-xl md:text-2xl font-display font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-center">
           {title}
         </h2>
         <p className="text-sm text-zinc-400 leading-relaxed mb-12 max-w-[650px] mx-auto text-center">
@@ -40,16 +39,8 @@ export function TeamSection({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 group">
           {teamMembers.map((member, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{
-                duration: 0.5,
-                delay: index * 0.1,
-                ease: [0.22, 1, 0.36, 1],
-              }}
               className="bg-[#0E0E10] rounded-xl overflow-hidden transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 focus-within:!opacity-100"
             >
               {/* Team Member Image */}
@@ -68,7 +59,7 @@ export function TeamSection({
               {/* Team Member Info */}
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-medium text-zinc-100">
+                  <h3 className="text-lg font-display font-medium text-zinc-100">
                     {member.name}
                   </h3>
                   <span className="text-sm text-zinc-400 font-display">
@@ -79,7 +70,7 @@ export function TeamSection({
                   {member.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { CheckIcon } from "@heroicons/react/24/outline";
 
 type PricingItem = {
@@ -33,34 +32,23 @@ export function PricingSection({
 }: PricingSectionProps) {
   return (
     <section id="pricing" className="scroll-mt-24">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="h-px flex-1 bg-zinc-800" />
-        <h2 className="text-2xl font-display font-medium text-zinc-100">
-          Pricing
-        </h2>
-        <div className="h-px flex-1 bg-zinc-800" />
-      </div>
+      <h2 className="text-2xl font-display font-medium text-zinc-100 mb-4">
+        Pricing
+      </h2>
 
-      <p className="text-zinc-400 text-center max-w-2xl mx-auto mb-12">
+      <p className="text-zinc-400 text-left max-w-2xl mb-12">
         Transparent pricing based on scope and complexity.
       </p>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        className="max-w-2xl mx-auto bg-zinc-950 border border-zinc-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden group"
-      >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-zinc-800 via-zinc-500 to-zinc-800 opacity-50" />
-
+      <div className="w-full max-w-4xl bg-zinc-900/50 rounded-2xl p-8 relative overflow-hidden group">
         <div className="mb-8">
-          <h3 className="text-lg font-medium text-zinc-100 uppercase tracking-wide mb-2">
+          <h3 className="text-lg font-display font-medium text-zinc-100 uppercase tracking-wide mb-2">
             {item.title}
           </h3>
           <p className="text-zinc-400 text-sm">{item.description}</p>
         </div>
 
-        <div className="mb-8 pb-8 border-b border-zinc-800">
+        <div className="mb-8 pb-8">
           <span className="text-4xl font-display font-bold text-zinc-100">
             {item.price}
           </span>
@@ -77,11 +65,11 @@ export function PricingSection({
 
         <button
           onClick={onAccept}
-          className="w-full py-3 bg-zinc-100 text-zinc-900 font-medium rounded-lg hover:bg-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-100 focus:ring-offset-2 focus:ring-offset-zinc-950"
+          className="w-full py-3 bg-zinc-100 text-zinc-900 font-medium rounded-full hover:bg-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-100 focus:ring-offset-2 focus:ring-offset-zinc-950"
         >
           Get Started
         </button>
-      </motion.div>
+      </div>
     </section>
   );
 }

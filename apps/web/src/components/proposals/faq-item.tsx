@@ -26,9 +26,9 @@ export function FAQItem({
     >
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full py-4 text-left group focus:outline-none rounded cursor-pointer"
+        className="flex items-center justify-between w-full py-4 px-4 text-left group focus:outline-none rounded-full cursor-pointer"
       >
-        <span className="text-base font-medium text-zinc-100">{question}</span>
+        <span className="text-base font-display font-medium text-zinc-100">{question}</span>
         <div className="relative w-5 h-5 text-zinc-500">
           <motion.span
             animate={{ rotate: isOpen ? 90 : 0, opacity: isOpen ? 0 : 1 }}
