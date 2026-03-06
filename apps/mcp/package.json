@@ -15,8 +15,7 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@my-better-t-app/config": "workspace:*",
-    "@types/bun": "catalog:",
-    "typescript": "catalog:"
+    "@types/bun": "^1.2.0",
+    "typescript": "^5.8.2"
   }
 }

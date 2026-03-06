@@ -2,14 +2,13 @@
   "$schema": "https://railway.com/railway.schema.json",
   "build": {
     "builder": "RAILPACK",
-    "buildCommand": "bun install && cd apps/mcp && bun run build",
+    "buildCommand": "cd apps/mcp && bun install --production && bun build src/index.ts --compile --outfile mcp-server",
     "watchPatterns": [
-      "apps/mcp/**",
-      "packages/**"
+      "apps/mcp/**"
     ]
   },
   "deploy": {
-    "startCommand": "cd apps/mcp && bun run start",
+    "startCommand": "apps/mcp/mcp-server",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
