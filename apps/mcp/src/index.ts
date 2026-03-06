@@ -8,10 +8,21 @@ import {
   listTemplates,
   listLeads,
   createLead,
+  getLead,
+  updateLead,
+  deleteLead,
+  getLeadProposals,
   listProposals,
   listProposalsNotViewed,
   listProposalsViewed,
   listProposalsRevision,
+  listProposalsWon,
+  listProposalsLost,
+  listProposalsPending,
+  listProposalsOpenedMultiple,
+  listProposalsRecentViews,
+  getProposal,
+  deleteProposal,
   createProposal,
   updateProposalStatus,
 } from "./client.js";
@@ -141,6 +152,186 @@ function buildMcpServer(apiKey: string): McpServer {
                 : `${proposals.length} proposition(s) en révision :\n${JSON.stringify(proposals, null, 2)}`,
           },
         ],
+      };
+    }
+  );
+
+  server.tool(
+    "list_proposals_won",
+    "Liste les propositions acceptées par le client (statut WON)",
+    {},
+    async () => {
+      const proposals = await listProposalsWon(client);
+      return {
+        content: [{
+          type: "text",
+          text: proposals.length === 0
+            ? "Aucune proposition acceptée."
+            : `${proposals.length} proposition(s) acceptée(s) :\n${JSON.stringify(proposals, null, 2)}`,
+        }],
+      };
+    }
+  );
+
+  server.tool(
+    "list_proposals_lost",
+    "Liste les propositions perdues (statut LOST)",
+    {},
+    async () => {
+      const proposals = await listProposalsLost(client);
+      return {
+        content: [{
+          type: "text",
+          text: proposals.length === 0
+            ? "Aucune proposition perdue."
+            : `${proposals.length} proposition(s) perdue(s) :\n${JSON.stringify(proposals, null, 2)}`,
+        }],
+      };
+    }
+  );
+
+  server.tool(
+    "list_proposals_pending",
+    "Liste les propositions en attente de réponse du client (statut PENDING)",
+    {},
+    async () => {
+      const proposals = await listProposalsPending(client);
+      return {
+        content: [{
+          type: "text",
+          text: proposals.length === 0
+            ? "Aucune proposition en attente."
+            : `${proposals.length} proposition(s) en attente :\n${JSON.stringify(proposals, null, 2)}`,
+        }],
+      };
+    }
+  );
+
+  server.tool(
+    "list_proposals_opened_multiple_times",
+    "Liste les propositions ouvertes plusieurs fois par le client — signe d'un fort intérêt",
+    {},
+    async () => {
+      const proposals = await listProposalsOpenedMultiple(client);
+      return {
+        content: [{
+          type: "text",
+          text: proposals.length === 0
+            ? "Aucune proposition ouverte plusieurs fois."
+            : `${proposals.length} proposition(s) très consultée(s) :\n${JSON.stringify(proposals, null, 2)}`,
+        }],
+      };
+    }
+  );
+
+  server.tool(
+    "list_proposals_recent_views",
+    "Liste les propositions vues récemment par le client (par défaut dernières 48h)",
+    {
+      hours: z.number().optional().describe("Nombre d'heures à remonter (défaut : 48)"),
+    },
+    async ({ hours }) => {
+      const proposals = await listProposalsRecentViews(client, hours ?? 48);
+      return {
+        content: [{
+          type: "text",
+          text: proposals.length === 0
+            ? `Aucune proposition vue dans les dernières ${hours ?? 48}h.`
+            : `${proposals.length} proposition(s) vues dans les dernières ${hours ?? 48}h :\n${JSON.stringify(proposals, null, 2)}`,
+        }],
+      };
+    }
+  );
+
+  server.tool(
+    "get_proposal",
+    "Récupère les détails complets d'une proposition par son ID",
+    {
+      id: z.string().describe("ID de la proposition"),
+    },
+    async ({ id }) => {
+      const proposal = await getProposal(client, id);
+      return {
+        content: [{ type: "text", text: JSON.stringify(proposal, null, 2) }],
+      };
+    }
+  );
+
+  server.tool(
+    "delete_proposal",
+    "Supprime définitivement une proposition",
+    {
+      id: z.string().describe("ID de la proposition à supprimer"),
+    },
+    async ({ id }) => {
+      await deleteProposal(client, id);
+      return {
+        content: [{ type: "text", text: `Proposition ${id} supprimée.` }],
+      };
+    }
+  );
+
+  server.tool(
+    "get_lead",
+    "Récupère les détails complets d'un lead par son ID, incluant ses propositions",
+    {
+      id: z.string().describe("ID du lead"),
+    },
+    async ({ id }) => {
+      const lead = await getLead(client, id);
+      return {
+        content: [{ type: "text", text: JSON.stringify(lead, null, 2) }],
+      };
+    }
+  );
+
+  server.tool(
+    "delete_lead",
+    "Supprime définitivement un lead et toutes ses propositions",
+    {
+      id: z.string().describe("ID du lead à supprimer"),
+    },
+    async ({ id }) => {
+      await deleteLead(client, id);
+      return {
+        content: [{ type: "text", text: `Lead ${id} supprimé.` }],
+      };
+    }
+  );
+
+  server.tool(
+    "update_lead",
+    "Modifie les informations d'un lead (nom, email, entreprise, téléphone)",
+    {
+      id: z.string().describe("ID du lead"),
+      name: z.string().min(1).optional().describe("Nouveau nom"),
+      email: z.string().email().optional().describe("Nouvel email"),
+      company: z.string().optional().describe("Nouvelle entreprise"),
+      phone: z.string().optional().describe("Nouveau téléphone"),
+    },
+    async ({ id, name, email, company, phone }) => {
+      const lead = await updateLead(client, id, { name, email, company, phone });
+      return {
+        content: [{ type: "text", text: `Lead mis à jour :\n${JSON.stringify(lead, null, 2)}` }],
+      };
+    }
+  );
+
+  server.tool(
+    "get_lead_proposals",
+    "Liste toutes les propositions envoyées à un lead spécifique",
+    {
+      id: z.string().describe("ID du lead"),
+    },
+    async ({ id }) => {
+      const proposals = await getLeadProposals(client, id);
+      return {
+        content: [{
+          type: "text",
+          text: proposals.length === 0
+            ? "Ce lead n'a aucune proposition."
+            : `${proposals.length} proposition(s) pour ce lead :\n${JSON.stringify(proposals, null, 2)}`,
+        }],
       };
     }
   );

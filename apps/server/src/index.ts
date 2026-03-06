@@ -39,7 +39,7 @@ app.use(
   "/*",
   cors({
     origin: env.CORS_ORIGIN,
-    allowMethods: ["GET", "POST", "OPTIONS", "PATCH"],
+    allowMethods: ["GET", "POST", "OPTIONS", "PATCH", "DELETE"],
     allowHeaders: ["Content-Type", "Authorization", "X-API-Key"],
     credentials: true,
   }),
@@ -118,6 +118,106 @@ app.get("/api/mcp/proposals/revision", async (c) => {
   const organizationId = c.get("organizationId");
   const proposals = await proposalService.getAll(organizationId);
   return c.json(proposals.filter((p) => p.status === "REVISION"));
+});
+
+// GET /api/mcp/proposals/won
+app.get("/api/mcp/proposals/won", async (c) => {
+  const organizationId = c.get("organizationId");
+  const proposals = await proposalService.getAll(organizationId);
+  return c.json(proposals.filter((p) => p.status === "WON"));
+});
+
+// GET /api/mcp/proposals/lost
+app.get("/api/mcp/proposals/lost", async (c) => {
+  const organizationId = c.get("organizationId");
+  const proposals = await proposalService.getAll(organizationId);
+  return c.json(proposals.filter((p) => p.status === "LOST"));
+});
+
+// GET /api/mcp/proposals/pending
+app.get("/api/mcp/proposals/pending", async (c) => {
+  const organizationId = c.get("organizationId");
+  const proposals = await proposalService.getAll(organizationId);
+  return c.json(proposals.filter((p) => p.status === "PENDING"));
+});
+
+// GET /api/mcp/proposals/opened-multiple
+app.get("/api/mcp/proposals/opened-multiple", async (c) => {
+  const organizationId = c.get("organizationId");
+  const proposals = await proposalService.getAll(organizationId);
+  return c.json(proposals.filter((p) => (p._count?.views ?? 0) > 1));
+});
+
+// GET /api/mcp/proposals/recent-views
+app.get("/api/mcp/proposals/recent-views", async (c) => {
+  const organizationId = c.get("organizationId");
+  const hoursParam = c.req.query("hours");
+  const hours = hoursParam ? parseInt(hoursParam, 10) : 48;
+  const since = new Date(Date.now() - hours * 60 * 60 * 1000);
+  const proposals = await proposalService.getAll(organizationId);
+  return c.json(proposals.filter((p) => p.lastOpenedAt && new Date(p.lastOpenedAt) >= since));
+});
+
+// GET /api/mcp/proposals/:id
+app.get("/api/mcp/proposals/:id", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  const proposal = await proposalService.getById(id, organizationId);
+  const publicUrl = `${env.APP_URL}/p/${proposal.slug}`;
+  return c.json({ ...proposal, publicUrl });
+});
+
+// DELETE /api/mcp/proposals/:id
+app.delete("/api/mcp/proposals/:id", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  await proposalService.getById(id, organizationId);
+  await proposalService.delete(id, organizationId);
+  return c.json({ success: true });
+});
+
+// GET /api/mcp/leads/:id
+app.get("/api/mcp/leads/:id", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  const lead = await leadService.getById(id, organizationId);
+  return c.json(lead);
+});
+
+// DELETE /api/mcp/leads/:id
+app.delete("/api/mcp/leads/:id", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  await leadService.getById(id, organizationId);
+  await leadService.delete(id, organizationId);
+  return c.json({ success: true });
+});
+
+const updateLeadSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  company: z.string().optional(),
+  phone: z.string().optional(),
+});
+
+// PATCH /api/mcp/leads/:id
+app.patch("/api/mcp/leads/:id", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  const raw = await c.req.json().catch(() => null);
+  const parsed = updateLeadSchema.safeParse(raw);
+  if (!parsed.success) return c.json({ error: "Invalid body", details: parsed.error.flatten() }, 400);
+  await leadService.getById(id, organizationId);
+  const lead = await leadService.update(id, organizationId, parsed.data);
+  return c.json(lead);
+});
+
+// GET /api/mcp/leads/:id/proposals
+app.get("/api/mcp/leads/:id/proposals", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  const lead = await leadService.getById(id, organizationId);
+  return c.json((lead as any).proposals ?? []);
 });
 
 const TEMPLATE_IDS = TEMPLATES.map((t) => t.id) as [string, ...string[]];

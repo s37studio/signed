@@ -71,6 +71,54 @@ export function listProposalsRevision(client: ApiClient) {
   return request<any[]>(client, "GET", "/api/mcp/proposals/revision");
 }
 
+export function listProposalsWon(client: ApiClient) {
+  return request<any[]>(client, "GET", "/api/mcp/proposals/won");
+}
+
+export function listProposalsLost(client: ApiClient) {
+  return request<any[]>(client, "GET", "/api/mcp/proposals/lost");
+}
+
+export function listProposalsPending(client: ApiClient) {
+  return request<any[]>(client, "GET", "/api/mcp/proposals/pending");
+}
+
+export function listProposalsOpenedMultiple(client: ApiClient) {
+  return request<any[]>(client, "GET", "/api/mcp/proposals/opened-multiple");
+}
+
+export function listProposalsRecentViews(client: ApiClient, hours = 48) {
+  return request<any[]>(client, "GET", `/api/mcp/proposals/recent-views?hours=${hours}`);
+}
+
+export function getProposal(client: ApiClient, id: string) {
+  return request<any>(client, "GET", `/api/mcp/proposals/${id}`);
+}
+
+export function deleteProposal(client: ApiClient, id: string) {
+  return request<{ success: boolean }>(client, "DELETE", `/api/mcp/proposals/${id}`);
+}
+
+export function getLead(client: ApiClient, id: string) {
+  return request<any>(client, "GET", `/api/mcp/leads/${id}`);
+}
+
+export function deleteLead(client: ApiClient, id: string) {
+  return request<{ success: boolean }>(client, "DELETE", `/api/mcp/leads/${id}`);
+}
+
+export function updateLead(
+  client: ApiClient,
+  id: string,
+  data: { name?: string; email?: string; company?: string; phone?: string }
+) {
+  return request<any>(client, "PATCH", `/api/mcp/leads/${id}`, data);
+}
+
+export function getLeadProposals(client: ApiClient, id: string) {
+  return request<any[]>(client, "GET", `/api/mcp/leads/${id}/proposals`);
+}
+
 export function createProposal(
   client: ApiClient,
   data: {
