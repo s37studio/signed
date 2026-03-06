@@ -7,6 +7,7 @@ import {
   Squares2X2Icon,
   UsersIcon,
   SwatchIcon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
 
 import { authClient } from "@/lib/auth-client";
@@ -29,6 +30,11 @@ const navItems = [
     title: "Templates",
     href: "/dashboard/templates",
     icon: SwatchIcon,
+  },
+  {
+    title: "Paramètres",
+    href: "/dashboard/settings",
+    icon: Cog6ToothIcon,
   },
 ];
 

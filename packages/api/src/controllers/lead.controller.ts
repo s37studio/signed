@@ -1,27 +1,20 @@
 import { z } from "zod";
 
-import { protectedProcedure, router } from "../index";
+import { orgProcedure, router } from "../index";
 import { leadService } from "../services/lead.service";
 
 export const leadController = router({
-  // Liste tous les leads
-  getAll: protectedProcedure.query(async () => {
-    return await leadService.getAll();
+  getAll: orgProcedure.query(async ({ ctx }) => {
+    return await leadService.getAll(ctx.organizationId);
   }),
 
-  // Détail d'un lead avec ses propals
-  getById: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      return await leadService.getById(input.id);
+  getById: orgProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      return await leadService.getById(input.id, ctx.organizationId);
     }),
 
-  // Créer un lead
-  create: protectedProcedure
+  create: orgProcedure
     .input(
       z.object({
         name: z.string().min(2, "Le nom doit faire au moins 2 caractères"),
@@ -31,36 +24,27 @@ export const leadController = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await leadService.create(input, ctx.session.user.id);
+      return await leadService.create(input, ctx.session.user.id, ctx.organizationId);
     }),
 
-  // Modifier un lead
-  update: protectedProcedure
+  update: orgProcedure
     .input(
       z.object({
         id: z.string(),
-        name: z
-          .string()
-          .min(2, "Le nom doit faire au moins 2 caractères")
-          .optional(),
+        name: z.string().min(2, "Le nom doit faire au moins 2 caractères").optional(),
         email: z.string().email("Email invalide").optional().or(z.literal("")),
         company: z.string().optional(),
         phone: z.string().optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
-      return await leadService.update(id, data);
+      return await leadService.update(id, ctx.organizationId, data);
     }),
 
-  // Supprimer un lead
-  delete: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      return await leadService.delete(input.id);
+  delete: orgProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return await leadService.delete(input.id, ctx.organizationId);
     }),
 });

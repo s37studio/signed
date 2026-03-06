@@ -1,87 +1,56 @@
 import prisma, { ProposalStatus } from "@my-better-t-app/db";
 
 export const proposalRepository = {
-  // Récupérer toutes les propals
-  findAll: async () => {
+  findAll: async (organizationId: string) => {
     return await prisma.proposal.findMany({
+      where: { organizationId },
       orderBy: { createdAt: "desc" },
       include: {
         lead: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            company: true,
-          },
+          select: { id: true, name: true, email: true, company: true },
         },
         createdBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
-        _count: {
-          select: {
-            views: true,
-          },
-        },
+        _count: { select: { views: true } },
       },
     });
   },
 
-  // Récupérer une propal par ID
-  findById: async (id: string) => {
-    return await prisma.proposal.findUnique({
-      where: { id },
+  findById: async (id: string, organizationId: string) => {
+    return await prisma.proposal.findFirst({
+      where: { id, organizationId },
       include: {
         lead: true,
         createdBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
       },
     });
   },
 
-  // Récupérer une propal par token
   findByToken: async (token: string) => {
     return await prisma.proposal.findUnique({
       where: { token },
       include: {
         lead: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            company: true,
-          },
+          select: { id: true, name: true, email: true, company: true },
         },
       },
     });
   },
 
-  // Récupérer une propal par slug
   findBySlug: async (slug: string) => {
     return await prisma.proposal.findFirst({
       where: { slug },
       include: {
         lead: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            company: true,
-          },
+          select: { id: true, name: true, email: true, company: true },
         },
       },
     });
   },
 
-  // Créer une propal
   create: async (data: {
     title: string;
     templateId: string;
@@ -91,41 +60,39 @@ export const proposalRepository = {
     slug: string;
     leadId: string;
     createdById: string;
+    organizationId: string;
     sentAt?: Date;
   }) => {
-    return await prisma.proposal.create({
-      data,
-    });
+    return await prisma.proposal.create({ data });
   },
 
-  // Mettre à jour une propal
   update: async (
     id: string,
+    organizationId: string,
     data: {
       title?: string;
       customData?: any;
       password?: string | null;
+      openedAt?: Date;
+      lastOpenedAt?: Date;
     }
   ) => {
     return await prisma.proposal.update({
-      where: { id },
+      where: { id, organizationId },
       data,
     });
   },
 
-  // Mettre à jour le statut
   updateStatus: async (id: string, status: ProposalStatus, revisionMessage?: string) => {
     return await prisma.proposal.update({
       where: { id },
-      data: { 
+      data: {
         status,
         ...(revisionMessage !== undefined && { revisionMessage }),
       },
     });
   },
 
-
-  // Marquer comme envoyée
   markAsSent: async (id: string) => {
     return await prisma.proposal.update({
       where: { id },
@@ -133,10 +100,9 @@ export const proposalRepository = {
     });
   },
 
-  // Supprimer une propal
-  delete: async (id: string) => {
+  delete: async (id: string, organizationId: string) => {
     return await prisma.proposal.delete({
-      where: { id },
+      where: { id, organizationId },
     });
   },
 };

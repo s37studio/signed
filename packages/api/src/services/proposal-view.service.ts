@@ -1,4 +1,4 @@
-import { proposalRepository } from "../repositories/proposal.repository";
+import prisma from "@my-better-t-app/db";
 import { proposalViewRepository } from "../repositories/proposal-view.repository";
 
 // API gratuite pour géolocalisation IP (1500 req/jour)
@@ -56,24 +56,22 @@ export const proposalViewService = {
     });
 
     // Mettre à jour openedAt/lastOpenedAt
-    const proposal = await proposalRepository.findById(proposalId);
+    const proposal = await prisma.proposal.findUnique({
+      where: { id: proposalId },
+      include: { lead: { select: { id: true, name: true, email: true, company: true } } },
+    });
     if (proposal) {
-      const updateData: any = {
+      const updateData: { lastOpenedAt: Date; openedAt?: Date } = {
         lastOpenedAt: new Date(),
       };
 
-      // Si première ouverture, set openedAt et notifier
       if (!proposal.openedAt) {
         updateData.openedAt = new Date();
-
-        // Notification Discord
-        const { discordNotificationService } = await import(
-          "./discord-notification.service"
-        );
+        const { discordNotificationService } = await import("./discord-notification.service");
         await discordNotificationService.notifyProposalView(proposal, location);
       }
 
-      await proposalRepository.update(proposalId, updateData);
+      await prisma.proposal.update({ where: { id: proposalId }, data: updateData });
     }
 
     return view;

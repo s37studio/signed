@@ -24,5 +24,21 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   });
 });
 
+export const orgProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "Authentication required" });
+  }
+  if (!ctx.organizationId) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "No active organization" });
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+      organizationId: ctx.organizationId,
+    },
+  });
+});
+
 // Export des jobs planifiés
 export * from "./jobs";

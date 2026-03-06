@@ -16,6 +16,57 @@ enum ProposalStatus {
   REVISION
 }
 
+// ─── Better Auth — Organization plugin ───────────────────────────────────────
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  logo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members     Member[]
+  invitations Invitation[]
+  leads       Lead[]
+  proposals   Proposal[]
+
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member")
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([userId])
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String       @default("member")
+  status         String       @default("pending")
+  expiresAt      DateTime?
+  inviterId      String
+  inviter        User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([email])
+  @@map("invitation")
+}
+
+// ─── App models ───────────────────────────────────────────────────────────────
+
 model Lead {
   id        String   @id @default(cuid())
   name      String
@@ -25,10 +76,13 @@ model Lead {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdById String?
-  createdBy   User?      @relation("LeadCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
-  proposals   Proposal[]
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdById    String?
+  createdBy      User?        @relation("LeadCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  proposals      Proposal[]
 
+  @@index([organizationId])
   @@index([createdById])
   @@map("lead")
 }
@@ -50,13 +104,16 @@ model Proposal {
   openedAt     DateTime?
   lastOpenedAt DateTime?
 
-  leadId      String
-  lead        Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  createdById String?
-  createdBy   User?   @relation("ProposalCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  leadId         String
+  lead           Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  createdById    String?
+  createdBy      User?        @relation("ProposalCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
   
   views       ProposalView[]
 
+  @@index([organizationId])
   @@index([leadId])
   @@index([createdById])
   @@index([token])
@@ -69,7 +126,7 @@ model ProposalView {
   proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
   viewedAt  DateTime @default(now())
-  duration  Int?     // durée en secondes
+  duration  Int?
   
   ipAddress String?
   city      String?

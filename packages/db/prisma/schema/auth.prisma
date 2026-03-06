@@ -8,23 +8,26 @@ model User {
   updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
-  leadsCreated  Lead[]     @relation("LeadCreatedBy")
-  proposalsCreated Proposal[] @relation("ProposalCreatedBy")
+  leadsCreated      Lead[]       @relation("LeadCreatedBy")
+  proposalsCreated  Proposal[]   @relation("ProposalCreatedBy")
+  memberships       Member[]
+  invitationsSent   Invitation[]
 
   @@unique([email])
   @@map("user")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                   String   @id
+  expiresAt            DateTime
+  token                String
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activeOrganizationId String?
 
   @@unique([token])
   @@index([userId])

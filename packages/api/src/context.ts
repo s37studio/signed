@@ -8,8 +8,12 @@ export async function createContext({ context }: CreateContextOptions) {
   const session = await auth.api.getSession({
     headers: context.req.raw.headers,
   });
+
+  const organizationId = (session?.session as any)?.activeOrganizationId ?? null;
+
   return {
     session,
+    organizationId,
     request: context.req.raw,
   };
 }

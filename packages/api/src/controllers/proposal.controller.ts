@@ -1,28 +1,21 @@
 import { z } from "zod";
 import { ProposalStatus } from "@my-better-t-app/db";
 
-import { protectedProcedure, publicProcedure, router } from "../index";
+import { orgProcedure, publicProcedure, router } from "../index";
 import { proposalService } from "../services/proposal.service";
 
 export const proposalController = router({
-  // Liste toutes les propals
-  getAll: protectedProcedure.query(async () => {
-    return await proposalService.getAll();
+  getAll: orgProcedure.query(async ({ ctx }) => {
+    return await proposalService.getAll(ctx.organizationId);
   }),
 
-  // Détail d'une propal
-  getById: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .query(async ({ input }) => {
-      return await proposalService.getById(input.id);
+  getById: orgProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      return await proposalService.getById(input.id, ctx.organizationId);
     }),
 
-  // Créer une propal
-  create: protectedProcedure
+  create: orgProcedure
     .input(
       z.object({
         title: z.string().min(2, "Le titre doit faire au moins 2 caractères"),
@@ -33,29 +26,24 @@ export const proposalController = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await proposalService.create(input, ctx.session.user.id);
+      return await proposalService.create(input, ctx.session.user.id, ctx.organizationId);
     }),
 
-  // Modifier une propal
-  update: protectedProcedure
+  update: orgProcedure
     .input(
       z.object({
         id: z.string(),
-        title: z
-          .string()
-          .min(2, "Le titre doit faire au moins 2 caractères")
-          .optional(),
+        title: z.string().min(2, "Le titre doit faire au moins 2 caractères").optional(),
         customData: z.any().optional(),
         password: z.string().optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { id, ...data } = input;
-      return await proposalService.update(id, data);
+      return await proposalService.update(id, ctx.organizationId, data);
     }),
 
-  // Changer le statut manuellement
-  updateStatus: protectedProcedure
+  updateStatus: orgProcedure
     .input(
       z.object({
         id: z.string(),
@@ -63,56 +51,34 @@ export const proposalController = router({
       })
     )
     .mutation(async ({ input }) => {
-      return await proposalService.updateStatus(
-        input.id,
-        input.status as ProposalStatus
-      );
+      return await proposalService.updateStatus(input.id, input.status as ProposalStatus);
     }),
 
-  // Supprimer une propal
-  delete: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      return await proposalService.delete(input.id);
+  delete: orgProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return await proposalService.delete(input.id, ctx.organizationId);
     }),
 
-  // 🔓 ROUTES PUBLIQUES (pas d'authentification)
+  // Routes publiques
 
-  // Récupérer une propal par token (page publique)
   getByToken: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-        password: z.string().optional(),
-      })
-    )
+    .input(z.object({ token: z.string(), password: z.string().optional() }))
     .query(async ({ input }) => {
       return await proposalService.getByToken(input.token, input.password);
     }),
 
-  // Client valide la propal
   validateProposal: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-      })
-    )
+    .input(z.object({ token: z.string() }))
     .mutation(async ({ input }) => {
       return await proposalService.validateProposal(input.token);
     }),
 
-  // Client demande une révision
   requestRevision: publicProcedure
     .input(
       z.object({
         token: z.string(),
-        message: z
-          .string()
-          .min(10, "Le message doit faire au moins 10 caractères"),
+        message: z.string().min(10, "Le message doit faire au moins 10 caractères"),
       })
     )
     .mutation(async ({ input }) => {

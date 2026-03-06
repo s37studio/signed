@@ -1,38 +1,27 @@
 import prisma from "@my-better-t-app/db";
 
 export const leadRepository = {
-  // Récupérer tous les leads
-  findAll: async () => {
+  findAll: async (organizationId: string) => {
     return await prisma.lead.findMany({
+      where: { organizationId },
       orderBy: { createdAt: "desc" },
       include: {
         createdBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
         _count: {
-          select: {
-            proposals: true,
-          },
+          select: { proposals: true },
         },
       },
     });
   },
 
-  // Récupérer un lead par ID
-  findById: async (id: string) => {
-    return await prisma.lead.findUnique({
-      where: { id },
+  findById: async (id: string, organizationId: string) => {
+    return await prisma.lead.findFirst({
+      where: { id, organizationId },
       include: {
         createdBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
         proposals: {
           orderBy: { createdAt: "desc" },
@@ -47,33 +36,27 @@ export const leadRepository = {
             openedAt: true,
             lastOpenedAt: true,
             revisionMessage: true,
-            _count: {
-              select: {
-                views: true,
-              },
-            },
+            _count: { select: { views: true } },
           },
         },
       },
     });
   },
 
-  // Créer un lead
   create: async (data: {
     name: string;
     email: string | null;
     company: string | null;
     phone: string | null;
     createdById: string;
+    organizationId: string;
   }) => {
-    return await prisma.lead.create({
-      data,
-    });
+    return await prisma.lead.create({ data });
   },
 
-  // Mettre à jour un lead
   update: async (
     id: string,
+    organizationId: string,
     data: {
       name?: string;
       email?: string | null;
@@ -82,15 +65,14 @@ export const leadRepository = {
     }
   ) => {
     return await prisma.lead.update({
-      where: { id },
+      where: { id, organizationId },
       data,
     });
   },
 
-  // Supprimer un lead
-  delete: async (id: string) => {
+  delete: async (id: string, organizationId: string) => {
     return await prisma.lead.delete({
-      where: { id },
+      where: { id, organizationId },
     });
   },
 };
