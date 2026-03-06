@@ -26,8 +26,12 @@ export default function SignInForm() {
           password: value.password,
         },
         {
-          onSuccess: () => {
-            router.push("/dashboard");
+          onSuccess: (ctx) => {
+            if (!ctx.data.user.emailVerified) {
+              router.push("/verify-email");
+            } else {
+              router.push("/dashboard");
+            }
             toast.success("Sign in successful");
           },
           onError: (error) => {

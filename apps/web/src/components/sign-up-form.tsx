@@ -29,8 +29,8 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
         },
         {
           onSuccess: () => {
-            router.push("/dashboard");
-            toast.success("Sign up successful");
+            router.push("/verify-email");
+            toast.success("Compte créé ! Vérifie ta boîte mail.");
           },
           onError: (error) => {
             toast.error(error.error.message || error.error.statusText);
