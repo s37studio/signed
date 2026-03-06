@@ -18,7 +18,7 @@ export const auth = betterAuth({
     requireEmailVerification: false, // TODO: réactiver quand domaine Resend configuré
   },
   emailVerification: {
-    sendOnSignUp: true,
+    sendOnSignUp: false,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       const result = await resend.emails.send({

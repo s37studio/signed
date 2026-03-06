@@ -26,10 +26,21 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
           password: value.password,
         },
         {
-          onSuccess: () => {
-            // TODO: réactiver redirect /verify-email quand domaine Resend configuré
+          onSuccess: async () => {
+            // Récupère l'org de l'user et la set comme active
+            try {
+              const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/trpc/organization.hasOrganization`, {
+                credentials: "include",
+              });
+              const json = await res.json() as { result?: { data?: { organizationId?: string } | null } };
+              const orgId = json?.result?.data?.organizationId;
+              if (orgId) {
+                await authClient.organization.setActive({ organizationId: orgId });
+              }
+            } catch {}
             router.push("/dashboard");
-            toast.success("Sign in successful");
+            router.refresh();
+            toast.success("Connexion réussie");
           },
           onError: (error) => {
             toast.error(error.error.message || error.error.statusText);
