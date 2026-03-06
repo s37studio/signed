@@ -23,10 +23,11 @@ export const queryClient = new QueryClient({
   }),
 });
 
+// /trpc/* est proxifié vers le backend via next.config.ts (même domaine = cookies OK)
 const trpcClient = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: `${env.NEXT_PUBLIC_SERVER_URL}/trpc`,
+      url: "/trpc",
       fetch(url, options) {
         return fetch(url, {
           ...options,

@@ -4,22 +4,6 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { organization } from "better-auth/plugins";
 
-// Extrait le domaine parent pour partager le cookie entre web et server
-// ex: "https://web-production-7dc7f.up.railway.app" → ".railway.app"
-// ex: "https://www.s37.studio" → ".s37.studio"
-function getCookieDomain(origin: string): string | undefined {
-  try {
-    const host = new URL(origin).hostname;
-    const parts = host.split(".");
-    if (parts.length >= 2) {
-      return "." + parts.slice(-2).join(".");
-    }
-  } catch {}
-  return undefined;
-}
-
-const cookieDomain = getCookieDomain(env.CORS_ORIGIN);
-
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -31,10 +15,9 @@ export const auth = betterAuth({
   },
   advanced: {
     defaultCookieAttributes: {
-      sameSite: "none",
+      sameSite: "lax",
       secure: true,
       httpOnly: true,
-      ...(cookieDomain ? { domain: cookieDomain } : {}),
     },
   },
   plugins: [
