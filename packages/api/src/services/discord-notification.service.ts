@@ -22,8 +22,7 @@ const COLORS = {
   RED: 0xef4444, // Urgent - Rappel
 };
 
-// URL du dashboard
-const DASHBOARD_URL = "https://web-production-7dc7f.up.railway.app/dashboard";
+const DASHBOARD_URL = `${env.APP_URL ?? "https://web-production-7dc7f.up.railway.app"}/dashboard`;
 
 async function sendDiscordNotification(payload: DiscordWebhookPayload) {
   const webhookUrl = env.DISCORD_WEBHOOK_URL;

@@ -1,3 +1,5 @@
+import { TRPCError } from "@trpc/server";
+
 import { leadRepository } from "../repositories/lead.repository";
 
 export const leadService = {
@@ -11,7 +13,7 @@ export const leadService = {
     const lead = await leadRepository.findById(id);
 
     if (!lead) {
-      throw new Error("Lead not found");
+      throw new TRPCError({ code: "NOT_FOUND", message: "Lead not found" });
     }
 
     return lead;

@@ -94,17 +94,6 @@ export const proposalController = router({
       return await proposalService.getByToken(input.token, input.password);
     }),
 
-  // Tracker une vue
-  trackView: publicProcedure
-    .input(
-      z.object({
-        token: z.string(),
-      })
-    )
-    .mutation(async ({ input }) => {
-      return await proposalService.trackView(input.token);
-    }),
-
   // Client valide la propal
   validateProposal: publicProcedure
     .input(

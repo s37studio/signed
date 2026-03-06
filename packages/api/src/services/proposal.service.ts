@@ -1,4 +1,5 @@
 import prisma, { ProposalStatus } from "@my-better-t-app/db";
+import { TRPCError } from "@trpc/server";
 import { randomBytes, scrypt } from "crypto";
 import { promisify } from "util";
 
@@ -37,7 +38,7 @@ export const proposalService = {
     const proposal = await proposalRepository.findById(id);
 
     if (!proposal) {
-      throw new Error("Proposal not found");
+      throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
     }
 
     return proposal;
@@ -54,7 +55,7 @@ export const proposalService = {
     }
 
     if (!proposal) {
-      throw new Error("Proposal not found");
+      throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
     }
 
     if (proposal.password) {
@@ -67,7 +68,7 @@ export const proposalService = {
 
       const isValid = await verifyPassword(proposal.password, password);
       if (!isValid) {
-        throw new Error("Invalid password");
+        throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid password" });
       }
     }
 
@@ -92,7 +93,7 @@ export const proposalService = {
     });
 
     if (!lead) {
-      throw new Error("Lead not found");
+      throw new TRPCError({ code: "NOT_FOUND", message: "Lead not found" });
     }
 
     // Générer slug + token court
@@ -152,25 +153,12 @@ export const proposalService = {
     return await proposalRepository.updateStatus(id, status);
   },
 
-  // Tracker une vue
-  trackView: async (token: string, ipAddress?: string) => {
-    const proposal = await proposalRepository.findByToken(token);
-
-    if (!proposal) {
-      throw new Error("Proposal not found");
-    }
-
-    // Importer et utiliser proposalViewService au lieu d'appeler une méthode inexistante
-    const { proposalViewService } = await import("./proposal-view.service");
-    return await proposalViewService.trackView(proposal.id, ipAddress);
-  },
-
   // Client valide la propal (bouton "Valider")
   validateProposal: async (token: string) => {
     const proposal = await proposalRepository.findByToken(token);
 
     if (!proposal) {
-      throw new Error("Proposal not found");
+      throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
     }
 
     // Marquer comme envoyée si pas déjà fait
@@ -198,7 +186,7 @@ export const proposalService = {
     const proposal = await proposalRepository.findByToken(token);
 
     if (!proposal) {
-      throw new Error("Proposal not found");
+      throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
     }
 
     // Changer le statut en REVISION avec le message du client
