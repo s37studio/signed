@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+import { authClient } from "@/lib/auth-client";
 import Sidebar from "@/components/sidebar";
 
 export default function DashboardLayout({
@@ -5,6 +9,26 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { data: session, isPending } = authClient.useSession();
+
+  useEffect(() => {
+    if (!isPending && !session?.user) {
+      window.location.replace("/login");
+    }
+  }, [session, isPending]);
+
+  if (isPending) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#0E0E10]">
+        <div className="text-zinc-400 text-sm">Chargement...</div>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return null;
+  }
+
   return (
     <div className="flex h-screen bg-[#0E0E10]">
       <Sidebar />
