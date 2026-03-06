@@ -67,6 +67,10 @@ export function listProposalsViewed(client: ApiClient) {
   return request<any[]>(client, "GET", "/api/mcp/proposals/viewed");
 }
 
+export function listProposalsRevision(client: ApiClient) {
+  return request<any[]>(client, "GET", "/api/mcp/proposals/revision");
+}
+
 export function createProposal(
   client: ApiClient,
   data: {

@@ -11,6 +11,7 @@ import {
   listProposals,
   listProposalsNotViewed,
   listProposalsViewed,
+  listProposalsRevision,
   createProposal,
   updateProposalStatus,
 } from "./client.js";
@@ -118,6 +119,26 @@ function buildMcpServer(apiKey: string): McpServer {
               proposals.length === 0
                 ? "Aucune proposition n'a encore été vue."
                 : `${proposals.length} proposition(s) vue(s) :\n${JSON.stringify(proposals, null, 2)}`,
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "list_proposals_revision",
+    "Liste les propositions pour lesquelles le client a demandé une révision (statut REVISION)",
+    {},
+    async () => {
+      const proposals = await listProposalsRevision(client);
+      return {
+        content: [
+          {
+            type: "text",
+            text:
+              proposals.length === 0
+                ? "Aucune proposition en attente de révision."
+                : `${proposals.length} proposition(s) en révision :\n${JSON.stringify(proposals, null, 2)}`,
           },
         ],
       };

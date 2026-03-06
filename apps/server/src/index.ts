@@ -113,6 +113,13 @@ app.get("/api/mcp/proposals/viewed", async (c) => {
   return c.json(proposals.filter((p) => !!p.openedAt));
 });
 
+// GET /api/mcp/proposals/revision
+app.get("/api/mcp/proposals/revision", async (c) => {
+  const organizationId = c.get("organizationId");
+  const proposals = await proposalService.getAll(organizationId);
+  return c.json(proposals.filter((p) => p.status === "REVISION"));
+});
+
 const TEMPLATE_IDS = TEMPLATES.map((t) => t.id) as [string, ...string[]];
 
 const createProposalSchema = z.object({
