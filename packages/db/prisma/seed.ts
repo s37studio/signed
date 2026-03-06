@@ -1,161 +1,140 @@
 /**
  * Seed de développement local
  * Usage: bun run db:seed
- *
- * Crée 3 organisations isolées avec membres, leads et propositions.
- * Mot de passe pour tous les comptes : password123
+ * Prérequis: le serveur doit tourner sur localhost:3000
  */
 
-import { PrismaClient } from "../generated/client.js";
+import { Client } from "pg";
 import { randomBytes } from "crypto";
 
-const prisma = new PrismaClient();
+const DATABASE_URL =
+  process.env.DATABASE_URL ??
+  "postgresql://postgres:password@localhost:5432/postgres";
+
+const SERVER_URL = "http://localhost:3000";
+
+const db = new Client({ connectionString: DATABASE_URL });
 
 function tok() {
   return randomBytes(32).toString("hex");
 }
 
 function ago(days: number) {
-  return new Date(Date.now() - days * 864e5);
+  return new Date(Date.now() - days * 864e5).toISOString();
 }
 
-// Better Auth utilise scrypt. Pour le seed local on appelle directement
-// l'API de signup qui hash correctement le mot de passe.
-async function signUp(name: string, email: string) {
-  const res = await fetch("http://localhost:3000/api/auth/sign-up/email", {
+async function signUp(name: string, email: string): Promise<string> {
+  const res = await fetch(`${SERVER_URL}/api/auth/sign-up/email`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, password: "password123" }),
   });
-  const data = (await res.json()) as { user?: { id: string } };
-  if (!data.user?.id) throw new Error(`Signup failed for ${email}: ${JSON.stringify(data)}`);
+  const data = (await res.json()) as { user?: { id: string }; message?: string };
+  if (!data.user?.id) throw new Error(`Signup échoué pour ${email}: ${data.message}`);
   return data.user.id;
 }
 
 async function main() {
-  console.log("🌱 Début du seed...\n");
+  await db.connect();
+  console.log("✅ Connecté à la DB\n");
 
-  // Nettoyage complet
-  await prisma.proposalView.deleteMany();
-  await prisma.proposal.deleteMany();
-  await prisma.lead.deleteMany();
-  await prisma.member.deleteMany();
-  await prisma.invitation.deleteMany();
-  await prisma.organization.deleteMany();
-  await prisma.session.deleteMany();
-  await prisma.account.deleteMany();
-  await prisma.user.deleteMany();
-  console.log("🗑️  Base de données nettoyée");
+  // Nettoyage
+  await db.query("DELETE FROM proposal_view");
+  await db.query("DELETE FROM proposal");
+  await db.query("DELETE FROM lead");
+  await db.query("DELETE FROM member");
+  await db.query("DELETE FROM invitation");
+  await db.query("DELETE FROM organization");
+  await db.query("DELETE FROM session");
+  await db.query("DELETE FROM account");
+  await db.query('DELETE FROM "user"');
+  console.log("🗑️  Base nettoyée\n");
 
-  // ─── Comptes utilisateurs ────────────────────────────────────────────────────
-  // On crée via l'API pour que Better Auth hash les mots de passe correctement
+  // Création des users via l'API (Better Auth hash scrypt)
   console.log("👤 Création des utilisateurs...");
-  const [u1, u2, u3, u4, u5, u6] = await Promise.all([
-    signUp("Alice Dupont",   "alice@studio-pixel.com"),
-    signUp("Bob Martin",     "bob@studio-pixel.com"),
-    signUp("Clara Nova",     "clara@freelance-nova.com"),
-    signUp("David Leroy",    "david@agence-bolt.com"),
-    signUp("Emma Petit",     "emma@agence-bolt.com"),
-    signUp("Thomas Bernard", "thomas@agence-bolt.com"),
-  ]);
-  console.log("✅ 6 utilisateurs créés");
+  const u1 = await signUp("Alice Dupont",   "alice@studio-pixel.com");   await Bun.sleep(500);
+  const u2 = await signUp("Bob Martin",     "bob@studio-pixel.com");     await Bun.sleep(500);
+  const u3 = await signUp("Clara Nova",     "clara@freelance-nova.com"); await Bun.sleep(500);
+  const u4 = await signUp("David Leroy",    "david@agence-bolt.com");    await Bun.sleep(500);
+  const u5 = await signUp("Emma Petit",     "emma@agence-bolt.com");     await Bun.sleep(500);
+  const u6 = await signUp("Thomas Bernard", "thomas@agence-bolt.com");
+  console.log("✅ 6 utilisateurs créés\n");
 
-  // ─── Org 1 : Studio Pixel ────────────────────────────────────────────────────
-  const org1 = await prisma.organization.create({
-    data: {
-      name: "Studio Pixel",
-      slug: "studio-pixel",
-      members: {
-        create: [
-          { userId: u1, role: "owner" },
-          { userId: u2, role: "member" },
-        ],
-      },
-    },
-  });
+  // Org 1 — Studio Pixel
+  await db.query(`INSERT INTO organization (id,name,slug,"createdAt","updatedAt") VALUES('org1','Studio Pixel','studio-pixel',NOW(),NOW())`);
+  await db.query(`INSERT INTO member (id,"organizationId","userId",role,"createdAt") VALUES('m1','org1',$1,'owner',NOW()),('m2','org1',$2,'member',NOW())`, [u1, u2]);
 
-  const [l1, l2, l3] = await Promise.all([
-    prisma.lead.create({ data: { name: "Jean-Luc Renard", email: "jl@techcorp.fr",   company: "TechCorp",   organizationId: org1.id, createdById: u1 } }),
-    prisma.lead.create({ data: { name: "Sophie Lambert",  email: "sophie@agence.io", company: "Agence.io",  organizationId: org1.id, createdById: u1 } }),
-    prisma.lead.create({ data: { name: "Marc Girard",     email: "marc@startup.co",  company: "Startup.co", organizationId: org1.id, createdById: u2 } }),
-  ]);
+  const { rows: [l1] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l1','Jean-Luc Renard','jl@techcorp.fr','TechCorp','org1',$1,NOW(),NOW()) RETURNING id`, [u1]);
+  const { rows: [l2] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l2','Sophie Lambert','sophie@agence.io','Agence.io','org1',$1,NOW(),NOW()) RETURNING id`, [u1]);
+  const { rows: [l3] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l3','Marc Girard','marc@startup.co','Startup.co','org1',$1,NOW(),NOW()) RETURNING id`, [u2]);
 
-  await prisma.proposal.createMany({
-    data: [
-      { title: "Refonte site TechCorp",        templateId: "tpl", customData: { budget: 8500  }, token: tok(), slug: "refonte-techcorp",    status: "WON",      organizationId: org1.id, leadId: l1.id, createdById: u1, sentAt: ago(10), openedAt: ago(9)  },
-      { title: "Identité visuelle Agence.io",  templateId: "tpl", customData: { budget: 3200  }, token: tok(), slug: "identite-agenceio",   status: "PENDING",  organizationId: org1.id, leadId: l2.id, createdById: u1, sentAt: ago(2)                       },
-      { title: "App mobile Startup.co",        templateId: "tpl", customData: { budget: 15000 }, token: tok(), slug: "app-startupco",       status: "REVISION", organizationId: org1.id, leadId: l3.id, createdById: u2, sentAt: ago(5),  openedAt: ago(4), revisionMessage: "Budget à revoir" },
-      { title: "SEO TechCorp",                 templateId: "tpl", customData: { budget: 2100  }, token: tok(), slug: "seo-techcorp",        status: "LOST",     organizationId: org1.id, leadId: l1.id, createdById: u1, sentAt: ago(20), openedAt: ago(19) },
-    ],
-  });
+  for (const [title, slug, status, lid, uid, sentD, openD, rev] of [
+    ["Refonte site TechCorp",       "refonte-techcorp",   "WON",      l1.id, u1, 10, 9,    null],
+    ["Identite visuelle Agence.io", "identite-agenceio",  "PENDING",  l2.id, u1, 2,  null, null],
+    ["App mobile Startup.co",       "app-startupco",      "REVISION", l3.id, u2, 5,  4,    "Budget a revoir"],
+    ["SEO TechCorp",                "seo-techcorp",       "LOST",     l1.id, u1, 20, 19,   null],
+  ] as const) {
+    await db.query(
+      `INSERT INTO proposal (id,title,"templateId","customData",token,slug,status,"revisionMessage","organizationId","leadId","createdById","createdAt","updatedAt","sentAt","openedAt")
+       VALUES(gen_random_uuid(),$1,'tpl','{}'::jsonb,$2,$3,$4::"ProposalStatus",$5,'org1',$6,$7,NOW(),NOW(),$8,$9)`,
+      [title, tok(), slug, status, rev, lid, uid, ago(sentD as number), openD ? ago(openD as number) : null]
+    );
+  }
   console.log("✅ Org 1 — Studio Pixel (2 membres, 3 leads, 4 propals)");
 
-  // ─── Org 2 : Freelance Nova ──────────────────────────────────────────────────
-  const org2 = await prisma.organization.create({
-    data: {
-      name: "Freelance Nova",
-      slug: "freelance-nova",
-      members: { create: [{ userId: u3, role: "owner" }] },
-    },
-  });
+  // Org 2 — Freelance Nova
+  await db.query(`INSERT INTO organization (id,name,slug,"createdAt","updatedAt") VALUES('org2','Freelance Nova','freelance-nova',NOW(),NOW())`);
+  await db.query(`INSERT INTO member (id,"organizationId","userId",role,"createdAt") VALUES('m3','org2',$1,'owner',NOW())`, [u3]);
 
-  const [l4, l5] = await Promise.all([
-    prisma.lead.create({ data: { name: "Paul Dumont",   email: "paul@restaurant.fr", company: "Les Silos",  organizationId: org2.id, createdById: u3 } }),
-    prisma.lead.create({ data: { name: "Isabelle Roy",  email: "i.roy@cabinet.fr",   company: "Cabinet RH", organizationId: org2.id, createdById: u3 } }),
-  ]);
+  const { rows: [l4] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l4','Paul Dumont','paul@restaurant.fr','Les Silos','org2',$1,NOW(),NOW()) RETURNING id`, [u3]);
+  const { rows: [l5] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l5','Isabelle Roy','i.roy@cabinet.fr','Cabinet RH','org2',$1,NOW(),NOW()) RETURNING id`, [u3]);
 
-  await prisma.proposal.createMany({
-    data: [
-      { title: "Site Restaurant Les Silos", templateId: "tpl", customData: { budget: 1800 }, token: tok(), slug: "site-les-silos",      status: "WON",     organizationId: org2.id, leadId: l4.id, createdById: u3, sentAt: ago(15), openedAt: ago(14) },
-      { title: "Newsletter Cabinet RH",     templateId: "tpl", customData: { budget: 950  }, token: tok(), slug: "newsletter-cabinet",  status: "PENDING", organizationId: org2.id, leadId: l5.id, createdById: u3, sentAt: ago(1)                       },
-    ],
-  });
+  for (const [title, slug, status, lid, sentD, openD] of [
+    ["Site Restaurant Les Silos", "site-les-silos",     "WON",     l4.id, 15, 14],
+    ["Newsletter Cabinet RH",     "newsletter-cabinet", "PENDING",  l5.id, 1,  null],
+  ] as const) {
+    await db.query(
+      `INSERT INTO proposal (id,title,"templateId","customData",token,slug,status,"organizationId","leadId","createdById","createdAt","updatedAt","sentAt","openedAt")
+       VALUES(gen_random_uuid(),$1,'tpl','{}'::jsonb,$2,$3,$4::"ProposalStatus",'org2',$5,$6,NOW(),NOW(),$7,$8)`,
+      [title, tok(), slug, status, lid, u3, ago(sentD as number), openD ? ago(openD as number) : null]
+    );
+  }
   console.log("✅ Org 2 — Freelance Nova (1 membre, 2 leads, 2 propals)");
 
-  // ─── Org 3 : Agence Bolt ─────────────────────────────────────────────────────
-  const org3 = await prisma.organization.create({
-    data: {
-      name: "Agence Bolt",
-      slug: "agence-bolt",
-      members: {
-        create: [
-          { userId: u4, role: "owner" },
-          { userId: u5, role: "admin" },
-          { userId: u6, role: "member" },
-        ],
-      },
-    },
-  });
+  // Org 3 — Agence Bolt
+  await db.query(`INSERT INTO organization (id,name,slug,"createdAt","updatedAt") VALUES('org3','Agence Bolt','agence-bolt',NOW(),NOW())`);
+  await db.query(`INSERT INTO member (id,"organizationId","userId",role,"createdAt") VALUES('m4','org3',$1,'owner',NOW()),('m5','org3',$2,'admin',NOW()),('m6','org3',$3,'member',NOW())`, [u4, u5, u6]);
 
-  const [l6, l7, l8] = await Promise.all([
-    prisma.lead.create({ data: { name: "Nathan Fabre", email: "n.fabre@luxe-immo.fr", company: "Luxe Immo",         organizationId: org3.id, createdById: u4 } }),
-    prisma.lead.create({ data: { name: "Lucie Morel",  email: "lucie@sport-elite.fr", company: "Sport Elite",        organizationId: org3.id, createdById: u5 } }),
-    prisma.lead.create({ data: { name: "Romain Blanc", email: "r.blanc@fintech.io",   company: "FinTech Solutions",  organizationId: org3.id, createdById: u4 } }),
-  ]);
+  const { rows: [l6] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l6','Nathan Fabre','n.fabre@luxe-immo.fr','Luxe Immo','org3',$1,NOW(),NOW()) RETURNING id`, [u4]);
+  const { rows: [l7] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l7','Lucie Morel','lucie@sport-elite.fr','Sport Elite','org3',$1,NOW(),NOW()) RETURNING id`, [u5]);
+  const { rows: [l8] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l8','Romain Blanc','r.blanc@fintech.io','FinTech Solutions','org3',$1,NOW(),NOW()) RETURNING id`, [u4]);
 
-  await prisma.proposal.createMany({
-    data: [
-      { title: "Campagne ads Luxe Immo",  templateId: "tpl", customData: { budget: 12000 }, token: tok(), slug: "ads-luxe-immo",       status: "WON",      organizationId: org3.id, leadId: l6.id, createdById: u4, sentAt: ago(30), openedAt: ago(29) },
-      { title: "Branding Sport Elite",    templateId: "tpl", customData: { budget: 5500  }, token: tok(), slug: "branding-sport",       status: "PENDING",  organizationId: org3.id, leadId: l7.id, createdById: u5, sentAt: ago(3),  openedAt: ago(3)  },
-      { title: "Audit UX FinTech",        templateId: "tpl", customData: { budget: 7200  }, token: tok(), slug: "audit-ux-fintech",     status: "LOST",     organizationId: org3.id, leadId: l8.id, createdById: u4, sentAt: ago(12), openedAt: ago(11) },
-      { title: "Dashboard FinTech",       templateId: "tpl", customData: { budget: 18500 }, token: tok(), slug: "dashboard-fintech",    status: "REVISION", organizationId: org3.id, leadId: l8.id, createdById: u5, sentAt: ago(7),  openedAt: ago(6), revisionMessage: "Périmètre trop large" },
-    ],
-  });
+  for (const [title, slug, status, lid, uid, sentD, openD, rev] of [
+    ["Campagne ads Luxe Immo", "ads-luxe-immo",      "WON",      l6.id, u4, 30, 29,   null],
+    ["Branding Sport Elite",   "branding-sport",     "PENDING",  l7.id, u5, 3,  3,    null],
+    ["Audit UX FinTech",       "audit-ux-fintech",   "LOST",     l8.id, u4, 12, 11,   null],
+    ["Dashboard FinTech",      "dashboard-fintech",  "REVISION", l8.id, u5, 7,  6,    "Perimetre trop large"],
+  ] as const) {
+    await db.query(
+      `INSERT INTO proposal (id,title,"templateId","customData",token,slug,status,"revisionMessage","organizationId","leadId","createdById","createdAt","updatedAt","sentAt","openedAt")
+       VALUES(gen_random_uuid(),$1,'tpl','{}'::jsonb,$2,$3,$4::"ProposalStatus",$5,'org3',$6,$7,NOW(),NOW(),$8,$9)`,
+      [title, tok(), slug, status, rev, lid, uid, ago(sentD as number), openD ? ago(openD as number) : null]
+    );
+  }
   console.log("✅ Org 3 — Agence Bolt (3 membres, 3 leads, 4 propals)");
 
+  await db.end();
+
   console.log("\n🎉 Seed terminé !");
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   console.log("Mot de passe pour tous : password123");
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("Studio Pixel    → alice@studio-pixel.com (owner)");
-  console.log("                  bob@studio-pixel.com   (member)");
-  console.log("Freelance Nova  → clara@freelance-nova.com (owner)");
-  console.log("Agence Bolt     → david@agence-bolt.com  (owner)");
-  console.log("                  emma@agence-bolt.com   (admin)");
-  console.log("                  thomas@agence-bolt.com (member)");
-  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+  console.log("alice@studio-pixel.com   — Studio Pixel (owner)");
+  console.log("bob@studio-pixel.com     — Studio Pixel (member)");
+  console.log("clara@freelance-nova.com — Freelance Nova (owner)");
+  console.log("david@agence-bolt.com    — Agence Bolt (owner)");
+  console.log("emma@agence-bolt.com     — Agence Bolt (admin)");
+  console.log("thomas@agence-bolt.com   — Agence Bolt (member)");
+  console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 }
 
-main()
-  .catch((e) => { console.error("❌ Seed failed:", e); process.exit(1); })
-  .finally(() => prisma.$disconnect());
+main().catch((e) => { console.error("❌", e.message); process.exit(1); });
