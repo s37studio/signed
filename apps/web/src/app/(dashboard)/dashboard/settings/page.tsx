@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 function RoleBadge({ role }: { role: string }) {
   const colors: Record<string, string> = {
@@ -29,6 +30,11 @@ export default function SettingsPage() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<"member" | "admin">("member");
   const [isInviting, setIsInviting] = useState(false);
+
+  // MCP Keys state
+  const [newKeyName, setNewKeyName] = useState("");
+  const [revealedKey, setRevealedKey] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const { data: org, isLoading } = useQuery(
     trpc.organization.getCurrent.queryOptions()
@@ -81,6 +87,38 @@ export default function SettingsPage() {
       }
     );
     setIsInviting(false);
+  }
+
+  const { data: mcpKeys, isLoading: isLoadingKeys } = useQuery(
+    trpc.mcpKey.listKeys.queryOptions()
+  );
+
+  const createKey = useMutation(
+    trpc.mcpKey.createKey.mutationOptions({
+      onSuccess: (data) => {
+        setRevealedKey(data.key);
+        setNewKeyName("");
+        queryClient.invalidateQueries({ queryKey: [["mcpKey", "listKeys"]] });
+      },
+      onError: (err) => { toast.error(err.message); },
+    })
+  );
+
+  const deleteKey = useMutation(
+    trpc.mcpKey.deleteKey.mutationOptions({
+      onSuccess: () => {
+        toast.success("Clé supprimée");
+        queryClient.invalidateQueries({ queryKey: [["mcpKey", "listKeys"]] });
+      },
+      onError: (err) => { toast.error(err.message); },
+    })
+  );
+
+  function handleCopyKey() {
+    if (!revealedKey) return;
+    navigator.clipboard.writeText(revealedKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   const currentMember = org?.members.find(
@@ -229,6 +267,98 @@ export default function SettingsPage() {
           </form>
         </section>
       )}
+
+      {/* Clés API MCP */}
+      <section>
+        <h2 className="text-sm font-semibold text-zinc-300 mb-1 uppercase tracking-wider">
+          Clés API MCP
+        </h2>
+        <p className="text-xs text-zinc-500 mb-3">
+          Utilisez ces clés pour connecter des agents IA (Claude, n8n, etc.) à votre espace Signed.
+        </p>
+
+        {/* Liste des clés */}
+        {isLoadingKeys ? (
+          <Skeleton className="h-16 w-full mb-3" />
+        ) : (mcpKeys?.length ?? 0) > 0 ? (
+          <div className="rounded-xl border border-zinc-800 overflow-hidden mb-4">
+            {mcpKeys?.map((key, i) => (
+              <div
+                key={key.id}
+                className={`flex items-center justify-between px-4 py-3 ${i !== 0 ? "border-t border-zinc-800" : ""}`}
+              >
+                <div>
+                  <p className="text-sm font-medium text-zinc-200">{key.name}</p>
+                  <p className="text-xs text-zinc-500">
+                    Créée le {new Date(key.createdAt).toLocaleDateString("fr-FR")}
+                    {key.lastUsedAt && (
+                      <> · Utilisée le {new Date(key.lastUsedAt).toLocaleDateString("fr-FR")}</>
+                    )}
+                  </p>
+                </div>
+                <button
+                  onClick={() => deleteKey.mutate({ id: key.id })}
+                  className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                >
+                  Supprimer
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-600 mb-4">Aucune clé pour le moment.</p>
+        )}
+
+        {/* Formulaire de création */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newKeyName.trim()) return;
+            createKey.mutate({ name: newKeyName.trim() });
+          }}
+          className="flex gap-2 items-end"
+        >
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="keyName" className="text-zinc-400">Nom de la clé</Label>
+            <Input
+              id="keyName"
+              value={newKeyName}
+              onChange={(e) => setNewKeyName(e.target.value)}
+              placeholder="Mon agent Claude"
+              className="bg-zinc-900 border-zinc-700 text-zinc-50 placeholder:text-zinc-600"
+              required
+            />
+          </div>
+          <Button type="submit" disabled={createKey.isPending}>
+            {createKey.isPending ? "Génération..." : "Générer une clé"}
+          </Button>
+        </form>
+      </section>
+
+      {/* Modal affichage clé en clair */}
+      <Dialog open={!!revealedKey} onOpenChange={(open) => { if (!open) setRevealedKey(null); }}>
+        <DialogContent className="bg-zinc-950 border-zinc-800 text-zinc-50">
+          <DialogHeader>
+            <DialogTitle className="text-zinc-50">Votre clé MCP</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-zinc-400">
+              Copiez cette clé maintenant. Elle ne sera plus affichée.
+            </p>
+            <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 font-mono text-sm text-zinc-200 break-all select-all">
+              {revealedKey}
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleCopyKey} className="flex-1">
+                {copied ? "Copié !" : "Copier la clé"}
+              </Button>
+              <Button variant="outline" onClick={() => setRevealedKey(null)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
+                Fermer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

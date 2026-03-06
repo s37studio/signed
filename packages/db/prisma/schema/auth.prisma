@@ -12,6 +12,7 @@ model User {
   proposalsCreated  Proposal[]   @relation("ProposalCreatedBy")
   memberships       Member[]
   invitationsSent   Invitation[]
+  mcpApiKeys        McpApiKey[]
 
   @@unique([email])
   @@map("user")

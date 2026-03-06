@@ -30,6 +30,7 @@ model Organization {
   invitations Invitation[]
   leads       Lead[]
   proposals   Proposal[]
+  mcpApiKeys  McpApiKey[]
 
   @@map("organization")
 }
@@ -118,6 +119,22 @@ model Proposal {
   @@index([createdById])
   @@index([token])
   @@map("proposal")
+}
+
+model McpApiKey {
+  id             String       @id @default(cuid())
+  keyHash        String       @unique
+  name           String
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  lastUsedAt     DateTime?
+
+  @@index([keyHash])
+  @@index([userId])
+  @@map("mcp_api_key")
 }
 
 model ProposalView {
