@@ -25,16 +25,96 @@ export const auth = betterAuth({
         to: user.email,
         subject: "Vérifie ton email — Signed",
         html: `
-          <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
-            <h2>Bienvenue sur Signed</h2>
-            <p>Clique sur le bouton ci-dessous pour vérifier ton adresse email et accéder à ton compte.</p>
-            <a href="${url}" style="display: inline-block; padding: 12px 24px; background: #18181b; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">
-              Vérifier mon email
-            </a>
-            <p style="margin-top: 16px; color: #71717a; font-size: 14px;">
-              Si tu n'as pas créé de compte sur Signed, ignore cet email.
-            </p>
-          </div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin:0;padding:0;background-color:#09090b;font-family:'Geist Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#09090b;padding:48px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+
+          <!-- Logo / Nom -->
+          <tr>
+            <td align="center" style="padding-bottom:32px;">
+              <span style="font-size:22px;font-weight:700;color:#fafafa;letter-spacing:-0.5px;">Signed</span>
+            </td>
+          </tr>
+
+          <!-- Card -->
+          <tr>
+            <td style="background-color:#18181b;border:1px solid #27272a;border-radius:12px;padding:40px 36px;">
+
+              <!-- Icone -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding-bottom:24px;">
+                    <div style="display:inline-block;background-color:#27272a;border-radius:50%;width:52px;height:52px;line-height:52px;text-align:center;">
+                      <span style="font-size:24px;">✉️</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Titre -->
+                <tr>
+                  <td align="center" style="padding-bottom:12px;">
+                    <h1 style="margin:0;font-size:22px;font-weight:700;color:#fafafa;letter-spacing:-0.3px;">
+                      Vérifie ton adresse email
+                    </h1>
+                  </td>
+                </tr>
+
+                <!-- Texte -->
+                <tr>
+                  <td align="center" style="padding-bottom:32px;">
+                    <p style="margin:0;font-size:15px;color:#a1a1aa;line-height:1.6;">
+                      Bienvenue${user.name ? `, <strong style="color:#d4d4d8;">${user.name}</strong>` : ""} ! Clique sur le bouton ci-dessous pour activer ton compte et commencer à créer tes propositions.
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Bouton -->
+                <tr>
+                  <td align="center" style="padding-bottom:32px;">
+                    <a href="${url}"
+                      style="display:inline-block;background-color:#fafafa;color:#09090b;text-decoration:none;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;letter-spacing:0.1px;">
+                      Vérifier mon email
+                    </a>
+                  </td>
+                </tr>
+
+                <!-- Séparateur -->
+                <tr>
+                  <td style="border-top:1px solid #27272a;padding-top:24px;">
+                    <p style="margin:0;font-size:13px;color:#52525b;text-align:center;line-height:1.5;">
+                      Si tu n'as pas créé de compte sur Signed, ignore cet email.<br/>
+                      Ce lien expire dans 24 heures.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top:24px;">
+              <p style="margin:0;font-size:12px;color:#3f3f46;">
+                © ${new Date().getFullYear()} Signed — Propositions commerciales
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
         `,
       });
     },
