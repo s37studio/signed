@@ -30,8 +30,15 @@ export const mcpKeyController = router({
   }),
 
   createKey: orgProcedure
-    .input(z.object({ name: z.string().min(1, "Le nom est requis") }))
+    .input(z.object({ name: z.string().min(1, "Le nom est requis").max(100) }))
     .mutation(async ({ input, ctx }) => {
+      const count = await prisma.mcpApiKey.count({
+        where: { organizationId: ctx.organizationId },
+      });
+      if (count >= 20) {
+        throw new TRPCError({ code: "FORBIDDEN", message: "Limite de 20 clés MCP atteinte" });
+      }
+
       const plainKey = generateApiKey();
       const keyHash = hashApiKey(plainKey);
 

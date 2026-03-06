@@ -9,6 +9,7 @@ import { env } from "@my-better-t-app/env/server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { z } from "zod";
 import { resolveMcpKey } from "./mcp-auth";
 
 const TEMPLATES = [
@@ -73,21 +74,21 @@ app.get("/api/mcp/leads", async (c) => {
   return c.json(leads);
 });
 
+const createLeadSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email().optional(),
+  company: z.string().optional(),
+  phone: z.string().optional(),
+});
+
 // POST /api/mcp/leads
 app.post("/api/mcp/leads", async (c) => {
   const userId = c.get("userId");
   const organizationId = c.get("organizationId");
-  const body = await c.req.json<{ name: string; email?: string; company?: string; phone?: string }>();
-  const lead = await leadService.create(
-    {
-      name: body.name,
-      email: body.email,
-      company: body.company,
-      phone: body.phone,
-    },
-    userId,
-    organizationId
-  );
+  const raw = await c.req.json().catch(() => null);
+  const parsed = createLeadSchema.safeParse(raw);
+  if (!parsed.success) return c.json({ error: "Invalid body", details: parsed.error.flatten() }, 400);
+  const lead = await leadService.create(parsed.data, userId, organizationId);
   return c.json(lead, 201);
 });
 
@@ -112,37 +113,52 @@ app.get("/api/mcp/proposals/viewed", async (c) => {
   return c.json(proposals.filter((p) => !!p.openedAt));
 });
 
+const TEMPLATE_IDS = TEMPLATES.map((t) => t.id) as [string, ...string[]];
+
+const createProposalSchema = z.object({
+  title: z.string().min(1),
+  templateId: z.enum(TEMPLATE_IDS),
+  customData: z.record(z.string(), z.unknown()).optional(),
+  leadId: z.string().min(1),
+  password: z.string().optional(),
+});
+
+const updateStatusSchema = z.object({
+  status: z.enum(["PENDING", "WON", "LOST", "REVISION"]),
+});
+
 // POST /api/mcp/proposals
 app.post("/api/mcp/proposals", async (c) => {
   const userId = c.get("userId");
   const organizationId = c.get("organizationId");
-  const body = await c.req.json<{
-    title: string;
-    templateId: string;
-    customData?: Record<string, unknown>;
-    leadId: string;
-    password?: string;
-  }>();
+  const raw = await c.req.json().catch(() => null);
+  const parsed = createProposalSchema.safeParse(raw);
+  if (!parsed.success) return c.json({ error: "Invalid body", details: parsed.error.flatten() }, 400);
   const proposal = await proposalService.create(
     {
-      title: body.title,
-      templateId: body.templateId,
-      customData: body.customData ?? {},
-      leadId: body.leadId,
-      password: body.password,
+      title: parsed.data.title,
+      templateId: parsed.data.templateId,
+      customData: parsed.data.customData ?? {},
+      leadId: parsed.data.leadId,
+      password: parsed.data.password,
     },
     userId,
     organizationId
   );
-  const publicUrl = `${env.APP_URL ?? ""}/p/${proposal.slug}`;
+  const publicUrl = `${env.APP_URL}/p/${proposal.slug}`;
   return c.json({ ...proposal, publicUrl }, 201);
 });
 
 // PATCH /api/mcp/proposals/:id/status
 app.patch("/api/mcp/proposals/:id/status", async (c) => {
+  const organizationId = c.get("organizationId");
   const id = c.req.param("id");
-  const body = await c.req.json<{ status: "PENDING" | "WON" | "LOST" | "REVISION" }>();
-  const updated = await proposalService.updateStatus(id, body.status);
+  const raw = await c.req.json().catch(() => null);
+  const parsed = updateStatusSchema.safeParse(raw);
+  if (!parsed.success) return c.json({ error: "Invalid status" }, 400);
+  // Vérification IDOR : la proposition doit appartenir à cette organisation
+  const proposal = await proposalService.getById(id, organizationId);
+  const updated = await proposalService.updateStatus(proposal.id, parsed.data.status);
   return c.json(updated);
 });
 
