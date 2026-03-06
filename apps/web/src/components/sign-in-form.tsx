@@ -29,15 +29,19 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
           onSuccess: async () => {
             toast.success("Connexion réussie");
             try {
-              const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/trpc/organization.hasOrganization`, {
-                credentials: "include",
-              });
-              const json = await res.json() as { result?: { data?: { organizationId?: string } | null } };
-              const orgId = json?.result?.data?.organizationId;
-              if (orgId) {
-                await authClient.organization.setActive({ organizationId: orgId });
+              const orgs = await authClient.organization.list();
+              console.log("[signin] orgs:", orgs);
+              const firstOrg = orgs?.data?.[0];
+              if (firstOrg?.id) {
+                console.log("[signin] setting active org:", firstOrg.id);
+                await authClient.organization.setActive({ organizationId: firstOrg.id });
+                console.log("[signin] active org set, redirecting to dashboard");
+              } else {
+                console.log("[signin] no org found, redirecting to onboarding");
               }
-            } catch {}
+            } catch (e) {
+              console.error("[signin] error setting active org:", e);
+            }
             window.location.href = "/dashboard";
           },
           onError: (error) => {

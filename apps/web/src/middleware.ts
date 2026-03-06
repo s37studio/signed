@@ -7,47 +7,32 @@ export async function middleware(request: NextRequest) {
 
   const isDashboard = pathname.startsWith("/dashboard");
   const isOnboarding = pathname.startsWith("/onboarding");
-  const isAcceptInvitation = pathname.startsWith("/accept-invitation");
 
   if (!isDashboard && !isOnboarding) return NextResponse.next();
+
+  console.log(`[middleware] ${pathname} — fetching session`);
 
   try {
     const response = await fetch(`${SERVER_URL}/api/auth/get-session`, {
       headers: { cookie: request.headers.get("cookie") ?? "" },
     });
 
-    if (!response.ok) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
     const session = await response.json() as {
-      user?: { emailVerified?: boolean };
-      session?: { activeOrganizationId?: string };
+      user?: { id: string; email: string };
+      session?: { activeOrganizationId?: string | null };
     } | null;
 
+    console.log(`[middleware] ${pathname} — user=${session?.user?.email ?? "none"} activeOrg=${session?.session?.activeOrganizationId ?? "none"}`);
+
     if (!session?.user) {
+      console.log(`[middleware] ${pathname} — no user, redirect /login`);
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // TODO: réactiver quand domaine Resend configuré
-    // if (!session.user.emailVerified) {
-    //   return NextResponse.redirect(new URL("/verify-email", request.url));
-    // }
-
-    const hasOrg = !!session.session?.activeOrganizationId;
-
-    // Dashboard sans org → onboarding
-    if (isDashboard && !hasOrg) {
-      return NextResponse.redirect(new URL("/onboarding", request.url));
-    }
-
-    // Onboarding avec org déjà active → dashboard
-    if (isOnboarding && hasOrg) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-
+    // Laisse passer — la gestion de l'org se fait côté client
     return NextResponse.next();
-  } catch {
+  } catch (err) {
+    console.error(`[middleware] ${pathname} — error:`, err);
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }

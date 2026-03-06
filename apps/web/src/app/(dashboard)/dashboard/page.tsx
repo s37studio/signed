@@ -24,8 +24,15 @@ export default function DashboardPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
-    if (!isPending && !session?.user) {
+    if (isPending) return;
+    if (!session?.user) {
       router.push("/login");
+      return;
+    }
+    const activeOrg = (session as any)?.session?.activeOrganizationId ?? (session as any)?.activeOrganizationId;
+    if (!activeOrg) {
+      console.log("[dashboard] no active org, redirecting to onboarding");
+      router.push("/onboarding" as any);
     }
   }, [session, isPending, router]);
 
