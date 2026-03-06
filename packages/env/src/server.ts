@@ -10,8 +10,8 @@ export const env = createEnv({
     CORS_ORIGIN: z.string().min(1), // Can be "*" or a URL
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
     APP_URL: z.string().url().optional(),
-    RESEND_API_KEY: z.string().min(1),
-    EMAIL_FROM: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1).optional(),
+    EMAIL_FROM: z.string().min(1).optional(),
     NODE_ENV: z
       .enum(["development", "production", "test"])
       .default("development"),
