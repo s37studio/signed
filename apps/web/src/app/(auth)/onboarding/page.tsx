@@ -31,11 +31,9 @@ export default function OnboardingPage() {
       { name: orgName.trim(), slug: `${slug}-${Math.random().toString(36).slice(2, 7)}` },
       {
         onSuccess: async (ctx) => {
-          // Définir comme org active
           await authClient.organization.setActive({ organizationId: ctx.data.id });
           toast.success(`Organisation "${orgName}" créée !`);
-          router.push("/dashboard");
-          router.refresh();
+          window.location.href = "/dashboard";
         },
         onError: (err) => {
           toast.error(err.error.message || "Erreur lors de la création");

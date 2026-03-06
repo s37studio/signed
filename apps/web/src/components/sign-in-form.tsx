@@ -27,7 +27,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
         },
         {
           onSuccess: async () => {
-            // Récupère l'org de l'user et la set comme active
+            toast.success("Connexion réussie");
             try {
               const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/trpc/organization.hasOrganization`, {
                 credentials: "include",
@@ -38,9 +38,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
                 await authClient.organization.setActive({ organizationId: orgId });
               }
             } catch {}
-            router.push("/dashboard");
-            router.refresh();
-            toast.success("Connexion réussie");
+            window.location.href = "/dashboard";
           },
           onError: (error) => {
             toast.error(error.error.message || error.error.statusText);

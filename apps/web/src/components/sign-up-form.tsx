@@ -1,5 +1,4 @@
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -11,7 +10,6 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
 export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () => void }) {
-  const router = useRouter();
   const { isPending } = authClient.useSession();
 
   const form = useForm({
@@ -29,8 +27,8 @@ export default function SignUpForm({ onSwitchToSignIn }: { onSwitchToSignIn: () 
         },
         {
           onSuccess: () => {
-            router.push("/onboarding" as any);
             toast.success("Compte créé !");
+            window.location.href = "/onboarding";
           },
           onError: (error) => {
             toast.error(error.error.message || error.error.statusText);
