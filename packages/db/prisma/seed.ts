@@ -23,6 +23,23 @@ function ago(days: number) {
   return new Date(Date.now() - days * 864e5).toISOString();
 }
 
+const designData = (title: string, desc: string) => JSON.stringify({
+  projectTitle: title,
+  projectDescription: desc,
+  brandName: "S37™",
+  ctaText: "Prêt à démarrer ?",
+  acceptUrl: "#contact",
+});
+
+const gtmData = (title: string, desc: string, videoUrl?: string) => JSON.stringify({
+  projectTitle: title,
+  projectDescription: desc,
+  brandName: "S37™",
+  ctaText: "Démarrons ensemble",
+  acceptUrl: "#contact",
+  videoUrl: videoUrl ?? "",
+});
+
 async function signUp(name: string, email: string): Promise<string> {
   const res = await fetch(`${SERVER_URL}/api/auth/sign-up/email`, {
     method: "POST",
@@ -68,16 +85,16 @@ async function main() {
   const { rows: [l2] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l2','Sophie Lambert','sophie@agence.io','Agence.io','org1',$1,NOW(),NOW()) RETURNING id`, [u1]);
   const { rows: [l3] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l3','Marc Girard','marc@startup.co','Startup.co','org1',$1,NOW(),NOW()) RETURNING id`, [u2]);
 
-  for (const [title, slug, status, lid, uid, sentD, openD, rev] of [
-    ["Refonte site TechCorp",       "refonte-techcorp",   "WON",      l1.id, u1, 10, 9,    null],
-    ["Identite visuelle Agence.io", "identite-agenceio",  "PENDING",  l2.id, u1, 2,  null, null],
-    ["App mobile Startup.co",       "app-startupco",      "REVISION", l3.id, u2, 5,  4,    "Budget a revoir"],
-    ["SEO TechCorp",                "seo-techcorp",       "LOST",     l1.id, u1, 20, 19,   null],
+  for (const [title, tplId, customData, slug, status, lid, uid, sentD, openD, rev] of [
+    ["Refonte site TechCorp",       "design", designData("Refonte site TechCorp", "Refonte complète du site vitrine avec une identité moderne et performante."),                            "refonte-techcorp",   "WON",      l1.id, u1, 10, 9,    null],
+    ["Identite visuelle Agence.io", "design", designData("Identité visuelle Agence.io", "Création d'une identité de marque cohérente : logo, charte graphique et supports."),             "identite-agenceio",  "PENDING",  l2.id, u1, 2,  null, null],
+    ["App mobile Startup.co",       "gtm",    gtmData("App mobile Startup.co", "Développement MVP iOS/Android avec stratégie de lancement go-to-market."),                               "app-startupco",      "REVISION", l3.id, u2, 5,  4,    "Budget a revoir"],
+    ["SEO & Analytics TechCorp",    "gtm",    gtmData("SEO & Analytics TechCorp", "Audit SEO complet, setup analytics et stratégie de contenu sur 3 mois."),                             "seo-techcorp",       "LOST",     l1.id, u1, 20, 19,   null],
   ] as const) {
     await db.query(
       `INSERT INTO proposal (id,title,"templateId","customData",token,slug,status,"revisionMessage","organizationId","leadId","createdById","createdAt","updatedAt","sentAt","openedAt")
-       VALUES(gen_random_uuid(),$1,'tpl','{}'::jsonb,$2,$3,$4::"ProposalStatus",$5,'org1',$6,$7,NOW(),NOW(),$8,$9)`,
-      [title, tok(), slug, status, rev, lid, uid, ago(sentD as number), openD ? ago(openD as number) : null]
+       VALUES(gen_random_uuid(),$1,$2,$3::jsonb,$4,$5,$6::"ProposalStatus",$7,'org1',$8,$9,NOW(),NOW(),$10,$11)`,
+      [title, tplId, customData, tok(), slug, status, rev, lid, uid, ago(sentD as number), openD ? ago(openD as number) : null]
     );
   }
   console.log("✅ Org 1 — Studio Pixel (2 membres, 3 leads, 4 propals)");
@@ -89,14 +106,14 @@ async function main() {
   const { rows: [l4] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l4','Paul Dumont','paul@restaurant.fr','Les Silos','org2',$1,NOW(),NOW()) RETURNING id`, [u3]);
   const { rows: [l5] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l5','Isabelle Roy','i.roy@cabinet.fr','Cabinet RH','org2',$1,NOW(),NOW()) RETURNING id`, [u3]);
 
-  for (const [title, slug, status, lid, sentD, openD] of [
-    ["Site Restaurant Les Silos", "site-les-silos",     "WON",     l4.id, 15, 14],
-    ["Newsletter Cabinet RH",     "newsletter-cabinet", "PENDING",  l5.id, 1,  null],
+  for (const [title, tplId, customData, slug, status, lid, sentD, openD] of [
+    ["Site Restaurant Les Silos", "design", designData("Site Restaurant Les Silos", "Site one-page élégant avec réservation en ligne, menu interactif et galerie photo."),    "site-les-silos",     "WON",    l4.id, 15, 14],
+    ["Newsletter & CRM Cabinet RH", "gtm",  gtmData("Newsletter & CRM Cabinet RH", "Setup Mailchimp, intégration CRM et stratégie de nurturing email sur 6 semaines."),     "newsletter-cabinet", "PENDING", l5.id, 1,  null],
   ] as const) {
     await db.query(
       `INSERT INTO proposal (id,title,"templateId","customData",token,slug,status,"organizationId","leadId","createdById","createdAt","updatedAt","sentAt","openedAt")
-       VALUES(gen_random_uuid(),$1,'tpl','{}'::jsonb,$2,$3,$4::"ProposalStatus",'org2',$5,$6,NOW(),NOW(),$7,$8)`,
-      [title, tok(), slug, status, lid, u3, ago(sentD as number), openD ? ago(openD as number) : null]
+       VALUES(gen_random_uuid(),$1,$2,$3::jsonb,$4,$5,$6::"ProposalStatus",'org2',$7,$8,NOW(),NOW(),$9,$10)`,
+      [title, tplId, customData, tok(), slug, status, lid, u3, ago(sentD as number), openD ? ago(openD as number) : null]
     );
   }
   console.log("✅ Org 2 — Freelance Nova (1 membre, 2 leads, 2 propals)");
@@ -109,16 +126,16 @@ async function main() {
   const { rows: [l7] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l7','Lucie Morel','lucie@sport-elite.fr','Sport Elite','org3',$1,NOW(),NOW()) RETURNING id`, [u5]);
   const { rows: [l8] } = await db.query(`INSERT INTO lead (id,name,email,company,"organizationId","createdById","createdAt","updatedAt") VALUES('l8','Romain Blanc','r.blanc@fintech.io','FinTech Solutions','org3',$1,NOW(),NOW()) RETURNING id`, [u4]);
 
-  for (const [title, slug, status, lid, uid, sentD, openD, rev] of [
-    ["Campagne ads Luxe Immo", "ads-luxe-immo",      "WON",      l6.id, u4, 30, 29,   null],
-    ["Branding Sport Elite",   "branding-sport",     "PENDING",  l7.id, u5, 3,  3,    null],
-    ["Audit UX FinTech",       "audit-ux-fintech",   "LOST",     l8.id, u4, 12, 11,   null],
-    ["Dashboard FinTech",      "dashboard-fintech",  "REVISION", l8.id, u5, 7,  6,    "Perimetre trop large"],
+  for (const [title, tplId, customData, slug, status, lid, uid, sentD, openD, rev] of [
+    ["Campagne ads Luxe Immo",  "gtm",    gtmData("Campagne ads Luxe Immo", "Stratégie Google Ads + Meta Ads sur 3 mois avec suivi hebdomadaire et reporting.", "https://www.youtube.com/embed/dQw4w9WgXcQ"), "ads-luxe-immo",     "WON",      l6.id, u4, 30, 29,   null],
+    ["Branding Sport Elite",    "design", designData("Branding Sport Elite", "Identité de marque complète : logo, typographie, palette de couleurs et charte graphique."),                                    "branding-sport",    "PENDING",  l7.id, u5, 3,  3,    null],
+    ["Audit UX FinTech",        "design", designData("Audit UX FinTech Solutions", "Audit complet de l'expérience utilisateur avec livrables UX research et recommandations."),                              "audit-ux-fintech",  "LOST",     l8.id, u4, 12, 11,   null],
+    ["Dashboard FinTech",       "gtm",    gtmData("Dashboard Analytics FinTech", "Tableau de bord data personnalisé avec KPIs temps réel et intégrations API."),                                            "dashboard-fintech", "REVISION", l8.id, u5, 7,  6,    "Perimetre trop large"],
   ] as const) {
     await db.query(
       `INSERT INTO proposal (id,title,"templateId","customData",token,slug,status,"revisionMessage","organizationId","leadId","createdById","createdAt","updatedAt","sentAt","openedAt")
-       VALUES(gen_random_uuid(),$1,'tpl','{}'::jsonb,$2,$3,$4::"ProposalStatus",$5,'org3',$6,$7,NOW(),NOW(),$8,$9)`,
-      [title, tok(), slug, status, rev, lid, uid, ago(sentD as number), openD ? ago(openD as number) : null]
+       VALUES(gen_random_uuid(),$1,$2,$3::jsonb,$4,$5,$6::"ProposalStatus",$7,'org3',$8,$9,NOW(),NOW(),$10,$11)`,
+      [title, tplId, customData, tok(), slug, status, rev, lid, uid, ago(sentD as number), openD ? ago(openD as number) : null]
     );
   }
   console.log("✅ Org 3 — Agence Bolt (3 membres, 3 leads, 4 propals)");
