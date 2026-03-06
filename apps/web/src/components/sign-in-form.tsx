@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-export default function SignInForm() {
+export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: () => void }) {
   const router = useRouter();
   const { isPending } = authClient.useSession();
 
@@ -122,6 +122,18 @@ export default function SignInForm() {
           )}
         </form.Subscribe>
       </form>
+
+      {onSwitchToSignUp && (
+        <div className="mt-4 text-center">
+          <Button
+            variant="link"
+            onClick={onSwitchToSignUp}
+            className="text-zinc-400 hover:text-zinc-50"
+          >
+            Pas encore de compte ? S'inscrire
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
