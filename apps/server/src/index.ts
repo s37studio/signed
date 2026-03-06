@@ -167,6 +167,24 @@ app.get("/api/mcp/proposals/:id", async (c) => {
   return c.json({ ...proposal, publicUrl });
 });
 
+const updateProposalSchema = z.object({
+  title: z.string().min(1).optional(),
+  password: z.string().optional(),
+  customData: z.record(z.string(), z.unknown()).optional(),
+});
+
+// PATCH /api/mcp/proposals/:id
+app.patch("/api/mcp/proposals/:id", async (c) => {
+  const organizationId = c.get("organizationId");
+  const id = c.req.param("id");
+  const raw = await c.req.json().catch(() => null);
+  const parsed = updateProposalSchema.safeParse(raw);
+  if (!parsed.success) return c.json({ error: "Invalid body", details: parsed.error.flatten() }, 400);
+  await proposalService.getById(id, organizationId);
+  const updated = await proposalService.update(id, organizationId, parsed.data);
+  return c.json(updated);
+});
+
 // DELETE /api/mcp/proposals/:id
 app.delete("/api/mcp/proposals/:id", async (c) => {
   const organizationId = c.get("organizationId");

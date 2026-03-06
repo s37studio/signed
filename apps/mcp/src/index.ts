@@ -12,6 +12,7 @@ import {
   updateLead,
   deleteLead,
   getLeadProposals,
+  updateProposal,
   listProposals,
   listProposalsNotViewed,
   listProposalsViewed,
@@ -253,6 +254,31 @@ function buildMcpServer(apiKey: string): McpServer {
       const proposal = await getProposal(client, id);
       return {
         content: [{ type: "text", text: JSON.stringify(proposal, null, 2) }],
+      };
+    }
+  );
+
+  server.tool(
+    "update_proposal",
+    "Modifie une proposition : titre, mot de passe, ou données custom",
+    {
+      id: z.string().describe("ID de la proposition"),
+      title: z.string().min(1).optional().describe("Nouveau titre"),
+      password: z.string().optional().describe("Nouveau mot de passe (chaîne vide pour le supprimer)"),
+      customData: z.string().optional().describe("Nouvelles données custom en JSON stringifié"),
+    },
+    async ({ id, title, password, customData }) => {
+      let parsedCustomData: Record<string, unknown> | undefined;
+      if (customData) {
+        try {
+          parsedCustomData = JSON.parse(customData) as Record<string, unknown>;
+        } catch {
+          parsedCustomData = undefined;
+        }
+      }
+      const updated = await updateProposal(client, id, { title, password, customData: parsedCustomData });
+      return {
+        content: [{ type: "text", text: `Proposition mise à jour :\n${JSON.stringify(updated, null, 2)}` }],
       };
     }
   );

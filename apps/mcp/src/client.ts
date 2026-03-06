@@ -95,6 +95,14 @@ export function getProposal(client: ApiClient, id: string) {
   return request<any>(client, "GET", `/api/mcp/proposals/${id}`);
 }
 
+export function updateProposal(
+  client: ApiClient,
+  id: string,
+  data: { title?: string; password?: string; customData?: Record<string, unknown> }
+) {
+  return request<any>(client, "PATCH", `/api/mcp/proposals/${id}`, data);
+}
+
 export function deleteProposal(client: ApiClient, id: string) {
   return request<{ success: boolean }>(client, "DELETE", `/api/mcp/proposals/${id}`);
 }
