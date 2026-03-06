@@ -14,7 +14,7 @@ export const auth = betterAuth({
   trustedOrigins: [env.CORS_ORIGIN],
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: false, // TODO: réactiver quand domaine Resend configuré
   },
   emailVerification: {
     sendOnSignUp: true,

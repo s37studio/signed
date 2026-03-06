@@ -26,9 +26,10 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if (!session.user.emailVerified) {
-      return NextResponse.redirect(new URL("/verify-email", request.url));
-    }
+    // TODO: réactiver quand domaine Resend configuré
+    // if (!session.user.emailVerified) {
+    //   return NextResponse.redirect(new URL("/verify-email", request.url));
+    // }
 
     return NextResponse.next();
   } catch {

@@ -26,12 +26,9 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp?: ()
           password: value.password,
         },
         {
-          onSuccess: (ctx) => {
-            if (!ctx.data.user.emailVerified) {
-              router.push("/verify-email");
-            } else {
-              router.push("/dashboard");
-            }
+          onSuccess: () => {
+            // TODO: réactiver redirect /verify-email quand domaine Resend configuré
+            router.push("/dashboard");
             toast.success("Sign in successful");
           },
           onError: (error) => {
