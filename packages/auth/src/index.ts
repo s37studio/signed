@@ -20,7 +20,7 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await resend.emails.send({
+      const result = await resend.emails.send({
         from: env.EMAIL_FROM,
         to: user.email,
         subject: "Vérifie ton email — Signed",
@@ -117,6 +117,11 @@ export const auth = betterAuth({
 </html>
         `,
       });
+      if (result.error) {
+        console.error("[Resend] Failed to send verification email:", result.error);
+      } else {
+        console.log("[Resend] Verification email sent to:", user.email, "id:", result.data?.id);
+      }
     },
   },
   advanced: {
