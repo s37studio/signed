@@ -9,7 +9,7 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.url(),
     CORS_ORIGIN: z.string().min(1), // Can be "*" or a URL
     DISCORD_WEBHOOK_URL: z.string().url().optional(),
-    APP_URL: z.string().url(),
+    APP_URL: z.string().url().default("http://localhost:3001"),
     RESEND_API_KEY: z.string().min(1).optional(),
     EMAIL_FROM: z.string().min(1).optional(),
     NODE_ENV: z

@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
 const SERVER_URL =
   process.env.SERVER_INTERNAL_URL ??
   process.env.NEXT_PUBLIC_SERVER_URL ??
-  "http://localhost:3000";
+  "http://localhost:3001";
 
 const nextConfig: NextConfig = {
   typedRoutes: true,

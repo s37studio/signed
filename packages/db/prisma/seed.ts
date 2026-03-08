@@ -1,7 +1,7 @@
 /**
  * Seed de développement local
  * Usage: bun run db:seed
- * Prérequis: le serveur doit tourner sur localhost:3000
+ * Prérequis: le serveur doit tourner sur localhost:3001
  */
 
 import { Client } from "pg";
@@ -11,7 +11,7 @@ const DATABASE_URL =
   process.env.DATABASE_URL ??
   "postgresql://postgres:password@localhost:5432/postgres";
 
-const SERVER_URL = "http://localhost:3000";
+const SERVER_URL = process.env.SERVER_URL ?? "http://localhost:3001";
 
 const db = new Client({ connectionString: DATABASE_URL });
 

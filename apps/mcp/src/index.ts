@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { z } from "zod";
@@ -28,12 +29,8 @@ import {
   updateProposalStatus,
 } from "./client.js";
 
-const SIGNED_API_URL = process.env.SIGNED_API_URL;
-
-if (!SIGNED_API_URL) {
-  console.error("Error: SIGNED_API_URL environment variable is required");
-  process.exit(1);
-}
+const SIGNED_API_URL =
+  process.env.SIGNED_API_URL ?? "http://localhost:3001";
 
 function buildMcpServer(apiKey: string): McpServer {
   const client = makeClient(apiKey, SIGNED_API_URL!);

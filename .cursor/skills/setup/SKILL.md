@@ -133,8 +133,9 @@ bun run check-types      # Vérifier les types TypeScript
 
 ## 🌐 URLs par Défaut
 
-- **Frontend** : http://localhost:3000
-- **Backend API** : http://localhost:3001
+- **Frontend (web)** : http://localhost:3000
+- **Backend API (server)** : http://localhost:3001
+- **MCP Server** : http://localhost:3002
 - **tRPC endpoint** : http://localhost:3001/trpc
 - **Auth endpoint** : http://localhost:3001/api/auth
 

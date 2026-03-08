@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "my-better-t-app",
@@ -20,13 +21,13 @@
       "version": "0.1.0",
       "dependencies": {
         "@modelcontextprotocol/sdk": "^1.27.1",
+        "dotenv": "catalog:",
         "hono": "^4.8.2",
-        "zod": "catalog:",
+        "zod": "^4.1.13",
       },
       "devDependencies": {
-        "@my-better-t-app/config": "workspace:*",
-        "@types/bun": "catalog:",
-        "typescript": "catalog:",
+        "@types/bun": "^1.2.0",
+        "typescript": "^5.8.2",
       },
     },
     "apps/server": {
