@@ -1,4 +1,4 @@
 *.js
 dist/
 mcp-server
-*.js
+.env
