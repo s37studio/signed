@@ -40,9 +40,12 @@ export default function EditProposalPage() {
 
       // Convert customData from Prisma Json type to plain object
       const proposalData = proposal as any;
-      const prefilled: Record<string, any> = proposalData.customData
-        ? JSON.parse(JSON.stringify(proposalData.customData))
-        : {};
+      let prefilled: Record<string, any> = {};
+      
+      // Safely handle customData - it's already an object from Prisma
+      if (proposalData.customData && typeof proposalData.customData === 'object') {
+        prefilled = { ...proposalData.customData };
+      }
 
       // Pre-fill from lead data if field is empty
       template.fields.forEach((field) => {

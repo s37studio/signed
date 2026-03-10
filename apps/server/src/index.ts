@@ -34,6 +34,18 @@ type McpVariables = {
 
 const app = new Hono<{ Variables: McpVariables }>();
 
+// Global error handler to return JSON errors
+app.onError((err, c) => {
+  console.error("Server error:", err);
+  return c.json(
+    {
+      error: err.message || "Internal Server Error",
+      stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    },
+    500
+  );
+});
+
 app.use(logger());
 app.use(
   "/*",
@@ -290,6 +302,7 @@ app.patch("/api/mcp/proposals/:id/status", async (c) => {
 app.use(
   "/trpc/*",
   trpcServer({
+    endpoint: "/trpc",
     router: appRouter,
     createContext: (_opts, context) => {
       return createContext({ context });
