@@ -13,12 +13,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ProposalForm } from "@/components/proposals/proposal-form";
-
-import Dashboard from "./dashboard";
+import { ProposalsChart } from "@/components/proposals/proposals-chart";
+import { ProposalsTable } from "@/components/proposals/proposals-table";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useProposals } from "@/features/proposals/hooks/use-proposals";
 
 export default function DashboardPage() {
   const { data: session, isPending } = authClient.useSession();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { data: proposals, isLoading } = useProposals();
 
   if (isPending) {
     return (
@@ -36,33 +39,50 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-7xl px-8 py-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-[26px] font-medium text-zinc-50 font-display">Dashboard</h1>
-          <p className="text-zinc-400 text-sm pt-1">
-            Retrouvez ici un aperçu de votre activité commerciale.
-          </p>
+    <div className="flex flex-col">
+      <div className="w-[94%] mx-auto pt-6 pb-8">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-[18px] font-semibold text-zinc-50 font-sans tracking-[-0.002em]">Activity</h1>
+            <p className="text-zinc-400 text-xs pt-1">
+              Retrouvez ici un aperçu de votre activité commerciale.
+            </p>
+          </div>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger
+              render={
+                <Button className="rounded-[12px]">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouvelle proposition
+                </Button>
+              }
+            />
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Créer une Proposition</DialogTitle>
+              </DialogHeader>
+              <ProposalForm />
+            </DialogContent>
+          </Dialog>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger
-            render={
-              <Button className="rounded-full">
-                <Plus className="h-4 w-4 mr-2" />
-                Nouvelle proposition
-              </Button>
-            }
-          />
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Créer une Proposition</DialogTitle>
-            </DialogHeader>
-            <ProposalForm />
-          </DialogContent>
-        </Dialog>
+        <div className="space-y-6">
+          {isLoading ? (
+            <Skeleton className="h-[200px] w-full rounded-[20px]" />
+          ) : (
+            <ProposalsChart proposals={proposals || []} />
+          )}
+        </div>
       </div>
-      <Dashboard session={session} />
+
+      <div className="w-full mt-4 pb-8">
+        {isLoading ? (
+          <Skeleton className="h-[400px] w-full" />
+        ) : (
+          <ProposalsTable proposals={proposals || []} />
+        )}
+      </div>
     </div>
   );
 }

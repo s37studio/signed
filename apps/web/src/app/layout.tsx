@@ -1,18 +1,31 @@
 import type { Metadata } from "next";
 
-import { Geist, Geist_Mono, Faculty_Glyphic } from "next/font/google";
+import localFont from "next/font/local";
+import { Faculty_Glyphic } from "next/font/google";
 
 import "../index.css";
 import Providers from "@/components/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const openRunde = localFont({
+  variable: "--font-open-runde",
+  src: [
+    {
+      path: "../../public/fonts/OpenRunde-Regular.woff2",
+      weight: "400",
+    },
+    {
+      path: "../../public/fonts/OpenRunde-Medium.woff2",
+      weight: "500",
+    },
+    {
+      path: "../../public/fonts/OpenRunde-Semibold.woff2",
+      weight: "600",
+    },
+    {
+      path: "../../public/fonts/OpenRunde-Bold.woff2",
+      weight: "700",
+    },
+  ],
 });
 
 const facultyGlyphic = Faculty_Glyphic({
@@ -34,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${facultyGlyphic.variable} antialiased`}
+        className={`${openRunde.variable} ${facultyGlyphic.variable} antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

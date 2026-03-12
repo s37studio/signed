@@ -26,12 +26,14 @@ interface LeadEditDialogProps {
     data: { name?: string; email?: string; company?: string; phone?: string }
   ) => void;
   isUpdating: boolean;
+  trigger?: React.ReactElement;
 }
 
 export function LeadEditDialog({
   lead,
   onUpdate,
   isUpdating,
+  trigger,
 }: LeadEditDialogProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -49,9 +51,7 @@ export function LeadEditDialog({
 
   return (
     <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
-      <DialogTrigger render={<Button variant="outline" size="sm" />}>
-        Modifier
-      </DialogTrigger>
+      <DialogTrigger render={trigger || <Button variant="outline" size="sm">Modifier</Button>} />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Modifier le lead</DialogTitle>

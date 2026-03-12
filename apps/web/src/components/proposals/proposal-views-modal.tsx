@@ -1,6 +1,7 @@
 "use client";
 
-import { Eye, Clock, MapPin, Calendar } from "lucide-react";
+import { EyeIcon } from "@heroicons/react/24/solid";
+import { Clock, MapPin, Calendar } from "lucide-react";
 
 import { useProposalViews } from "@/features/proposals/hooks/use-proposal-views";
 
@@ -109,7 +110,7 @@ export function ProposalViewsModal({
           <button className="inline-flex items-center justify-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
         }
       >
-        <Eye className="h-3 w-3" />
+        <EyeIcon className="h-3 w-3" />
         <span>{viewCount}</span>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -135,7 +136,7 @@ export function ProposalViewsModal({
           </div>
         ) : (
           <div className="text-center py-12 text-muted-foreground">
-            <Eye className="h-12 w-12 mx-auto mb-4 opacity-20" />
+            <EyeIcon className="h-12 w-12 mx-auto mb-4 opacity-20" />
             <p>Aucune visite enregistrée</p>
           </div>
         )}

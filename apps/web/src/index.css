@@ -34,8 +34,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans), sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: var(--font-open-runde), sans-serif;
+  --font-mono: var(--font-open-runde), monospace;
   --font-display: var(--font-faculty-glyphic), serif;
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);

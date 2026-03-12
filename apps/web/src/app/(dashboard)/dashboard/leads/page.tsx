@@ -57,15 +57,15 @@ export default function LeadsPage() {
     <div className="container mx-auto max-w-7xl px-8 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-[28px] font-medium text-zinc-50 font-display">
+          <h1 className="text-[20px] font-semibold text-zinc-50 font-sans tracking-[-0.002em]">
             Leads
           </h1>
-          <p className="text-zinc-400">Gérer vos clients potentiels</p>
+          <p className="text-zinc-400 text-xs pt-1">Gérer vos clients potentiels</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger
             render={
-              <Button className="rounded-full">
+              <Button className="rounded-[12px]">
                 <Plus className="h-4 w-4 mr-2" />
                 Nouveau Lead
               </Button>

@@ -18,10 +18,26 @@ import {
 import { ProposalForm } from "../proposals/proposal-form";
 
 const STATUS_CONFIG = {
-  PENDING: { label: "En attente", color: "bg-yellow-500" },
-  WON: { label: "Acceptée", color: "bg-green-500" },
-  LOST: { label: "Refusée", color: "bg-red-500" },
-  REVISION: { label: "En révision", color: "bg-blue-500" },
+  PENDING: {
+    label: "En attente",
+    className: "bg-[#0E0E10] text-white px-2 py-1",
+    dotClassName: "bg-amber-500",
+  },
+  WON: {
+    label: "Acceptée",
+    className: "bg-[#0E0E10] text-white px-2 py-1",
+    dotClassName: "bg-emerald-500",
+  },
+  LOST: {
+    label: "Refusée",
+    className: "bg-[#0E0E10] text-white px-2 py-1",
+    dotClassName: "bg-red-500",
+  },
+  REVISION: {
+    label: "En révision",
+    className: "bg-[#0E0E10] text-white px-2 py-1",
+    dotClassName: "bg-blue-500",
+  },
 };
 
 type LeadProposalsHistoryProps = {
@@ -95,8 +111,11 @@ export function LeadProposalsHistory({
                           {proposal.title}
                         </h3>
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium text-white ${statusConfig.color}`}
+                          className={`inline-flex items-center gap-1.5 rounded-full text-xs font-normal ${statusConfig.className}`}
                         >
+                          <span
+                            className={`h-2 w-2 shrink-0 rounded-full ${statusConfig.dotClassName}`}
+                          />
                           {statusConfig.label}
                         </span>
                       </div>

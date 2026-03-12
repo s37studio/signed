@@ -1,8 +1,16 @@
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Edit, Trash2, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { LeadEditDialog } from "./lead-edit-dialog";
 
@@ -21,68 +29,106 @@ export function LeadList({
 }) {
   if (leads.length === 0) {
     return (
-      <Card>
-        <CardContent className="p-6">
-          <p className="text-muted-foreground">
-            Aucun lead. Créez-en un pour commencer !
-          </p>
+      <Card className="bg-[#0E0E10] rounded-[16px] border-none">
+        <CardContent className="py-12 text-center text-muted-foreground">
+          <p>Aucun lead. Créez-en un pour commencer !</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {leads.map((lead) => (
-        <Card key={lead.id} className="hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-start justify-between">
-              <Link
-                href={`/dashboard/leads/${lead.id}`}
-                className="space-y-1 flex-1 cursor-pointer hover:opacity-80 transition-opacity"
-              >
-                <h3 className="text-lg font-semibold">{lead.name}</h3>
-                {lead.company && (
-                  <p className="text-sm text-muted-foreground">
-                    {lead.company}
-                  </p>
-                )}
-                {lead.email && (
-                  <p className="text-sm text-muted-foreground">{lead.email}</p>
-                )}
-                {lead.phone && (
-                  <p className="text-sm text-muted-foreground">{lead.phone}</p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  {lead._count.proposals} proposition(s) • Créé par{" "}
-                  {lead.createdBy?.name || "Inconnu"}
-                </p>
-              </Link>
-              <div className="flex gap-2">
-                <Link href={`/dashboard/leads/${lead.id}`}>
-                  <Button variant="outline" size="sm">
-                    <Eye className="h-4 w-4 mr-2" />
-                    Voir
-                  </Button>
-                </Link>
-                <LeadEditDialog
-                  lead={lead}
-                  onUpdate={onUpdate}
-                  isUpdating={isUpdating}
-                />
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => onDelete(lead.id)}
-                  disabled={isDeleting}
+    <Card className="bg-transparent rounded-[16px] border-none">
+      <CardContent className="p-0">
+        <div className="rounded-md">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent border-b border-zinc-800/50">
+                <TableHead className="uppercase text-zinc-400">Nom</TableHead>
+                <TableHead className="uppercase text-zinc-400">Entreprise</TableHead>
+                <TableHead className="uppercase text-zinc-400">Email</TableHead>
+                <TableHead className="uppercase text-zinc-400">Téléphone</TableHead>
+                <TableHead className="text-center uppercase text-zinc-400 min-w-[120px]">
+                  Propositions
+                </TableHead>
+                <TableHead className="uppercase text-zinc-400">Créé par</TableHead>
+                <TableHead className="text-right uppercase text-zinc-400"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {leads.map((lead) => (
+                <TableRow
+                  key={lead.id}
+                  className="hover:bg-zinc-900/50 border-b border-zinc-800/50"
                 >
-                  Supprimer
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+                  <TableCell className="text-[14px]">
+                    <Link
+                      href={`/dashboard/leads/${lead.id}`}
+                      className="hover:no-underline font-medium"
+                    >
+                      {lead.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {lead.company || "-"}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {lead.email || "-"}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {lead.phone || "-"}
+                  </TableCell>
+                  <TableCell className="text-center min-w-[120px] text-sm text-muted-foreground">
+                    {lead._count.proposals}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {lead.createdBy?.name || "Inconnu"}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex gap-2 justify-end">
+                      <Link href={`/dashboard/leads/${lead.id}`}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="rounded-full size-9 p-0"
+                          aria-label="Voir le lead"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <LeadEditDialog
+                        lead={lead}
+                        onUpdate={onUpdate}
+                        isUpdating={isUpdating}
+                        trigger={
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="rounded-full size-9 p-0"
+                            aria-label="Modifier le lead"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        }
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="rounded-full size-9 p-0 hover:bg-red-500/10 hover:text-red-500"
+                        onClick={() => onDelete(lead.id)}
+                        disabled={isDeleting}
+                        aria-label="Supprimer le lead"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

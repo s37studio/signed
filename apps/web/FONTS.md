@@ -5,9 +5,8 @@
 This project now includes:
 
 1. **Framer Motion** - Animation library
-2. **Geist Sans** - Modern sans-serif font from Vercel
-3. **Geist Mono** - Monospace font from Vercel
-4. **Faculty Glyphic** - Display serif font from Google Fonts
+2. **Open Runde** - Rounded sans-serif font (body and UI), from [lauridskern/open-runde](https://github.com/lauridskern/open-runde)
+3. **Faculty Glyphic** - Display serif font from Google Fonts
 
 ## Usage
 
@@ -16,10 +15,10 @@ This project now includes:
 The fonts are available through Tailwind utility classes:
 
 ```tsx
-// Geist Sans (default body font)
+// Open Runde (default body font)
 <div className="font-sans">Default text</div>
 
-// Geist Mono
+// Open Runde (monospace fallback)
 <div className="font-mono">Code or monospace text</div>
 
 // Faculty Glyphic (display font)
@@ -32,9 +31,7 @@ You can also use the CSS variables directly:
 
 ```css
 .custom-class {
-  font-family: var(--font-geist-sans);
-  /* or */
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-open-runde);
   /* or */
   font-family: var(--font-faculty-glyphic);
 }
@@ -76,7 +73,7 @@ export function Hero() {
         Beautiful Heading
       </h1>
       <p className="font-sans text-lg">
-        Body text using Geist Sans
+        Body text using Open Runde
       </p>
       <code className="font-mono text-sm">
         const code = "example";
@@ -88,6 +85,5 @@ export function Hero() {
 
 ## Font Characteristics
 
-- **Geist Sans**: Clean, modern sans-serif ideal for body text and UI elements
-- **Geist Mono**: Optimized monospace font for code blocks
+- **Open Runde**: Soft, rounded variant of Inter ideal for body text and UI elements
 - **Faculty Glyphic**: Elegant display serif font perfect for headings and emphasis
