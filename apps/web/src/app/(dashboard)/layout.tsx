@@ -19,7 +19,7 @@ export default function DashboardLayout({
 
   if (isPending) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#0E0E10]">
+      <div className="flex h-screen items-center justify-center bg-black">
         <div className="text-zinc-400 text-sm">Chargement...</div>
       </div>
     );
@@ -30,10 +30,10 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen bg-[#0E0E10]">
+    <div className="flex h-screen bg-black">
       <Sidebar />
       <main className="flex-1 py-4 pr-4 overflow-hidden">
-        <div className="h-full w-full bg-[#0C0C0D] rounded-[12px] overflow-auto">
+        <div className="h-full w-full bg-[#0C0C0C]/50 rounded-[12px] overflow-auto">
           {children}
         </div>
       </main>

@@ -8,7 +8,7 @@ import {
   UsersIcon,
   DocumentTextIcon,
   Cog6ToothIcon,
-  EllipsisHorizontalIcon,
+  ChevronDownIcon,
   BellIcon,
 } from "@heroicons/react/24/solid";
 
@@ -57,59 +57,62 @@ export default function Sidebar() {
   return (
     <aside
       className={cn(
-        "h-screen bg-[#0E0E10] flex flex-col shrink-0 transition-all duration-300 ease-in-out",
+        "h-screen bg-black flex flex-col shrink-0 transition-all duration-300 ease-in-out",
         isCollapsed ? "w-[80px]" : "w-[280px]"
       )}
     >
       {/* User profile */}
-      <div className="p-4 space-y-4">
-        <div className={cn("flex items-center gap-3 px-2", isCollapsed && "justify-center px-0")}>
-          <div className="size-8 rounded-full bg-zinc-800 flex items-center justify-center text-sm font-medium text-zinc-400 shrink-0">
-            {session.user.name?.[0]?.toUpperCase() || "U"}
-          </div>
-          {!isCollapsed && (
-            <>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-zinc-50 truncate">
-                  {session.user.name}
-                </p>
-                <p className="text-xs text-zinc-500 truncate">
-                  {session.user.email}
-                </p>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="size-8 text-zinc-400 hover:text-zinc-50"
-                  >
-                    <EllipsisHorizontalIcon className="size-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="w-56 bg-[#0E0E10] border-zinc-800"
-                >
-                  <DropdownMenuItem
-                    className="text-red-400 focus:text-red-400 focus:bg-red-900/10"
-                    onClick={() =>
-                      authClient.signOut({
-                        fetchOptions: {
-                          onSuccess: () => {
-                            window.location.replace("/login");
-                          },
-                        },
-                      })
-                    }
-                  >
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
-          )}
-        </div>
+      <div className={cn("space-y-4", isCollapsed ? "flex justify-center px-0 py-4 pb-2" : "pt-4 px-4 pb-2")}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className={cn(
+                "flex w-full items-center gap-3 px-2 pt-2 rounded-lg transition-colors cursor-pointer",
+                "text-zinc-400",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <img
+                src="https://www.tapback.co/api/avatar.webp"
+                alt={session.user.name ?? "Avatar"}
+                className={cn("rounded-full object-cover shrink-0", isCollapsed ? "size-6" : "size-8")}
+              />
+              {!isCollapsed && (
+                <>
+                  <div className="flex-1 min-w-0 text-left">
+                    <p className="text-sm font-medium text-zinc-50 truncate">
+                      {session.user.name}
+                    </p>
+                    <p className="text-xs text-zinc-500 truncate">
+                      {session.user.email}
+                    </p>
+                  </div>
+                  <ChevronDownIcon className="size-4 shrink-0" />
+                </>
+              )}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-56 bg-[#0E0E10] border-zinc-800"
+          >
+            <DropdownMenuItem
+              className="text-red-400 focus:text-red-400 focus:bg-red-900/10"
+              onClick={() =>
+                authClient.signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      window.location.replace("/login");
+                    },
+                  },
+                })
+              }
+            >
+              Sign Out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Navigation */}
@@ -127,7 +130,7 @@ export default function Sidebar() {
                     className={cn(
                       "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium",
                       isActive
-                        ? "text-zinc-50 bg-[#0C0C0D]/50"
+                        ? "text-zinc-50 bg-[#0C0C0C]/50"
                         : "text-zinc-400 hover:text-white",
                       isCollapsed && "justify-center px-2"
                     )}

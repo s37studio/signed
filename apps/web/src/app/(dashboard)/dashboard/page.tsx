@@ -40,8 +40,8 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col">
-      <div className="w-[96%] mx-auto pt-6 pb-8">
-        <div className="mb-8 flex items-center justify-between">
+      <div className="w-[96%] mx-auto pt-5 pb-8">
+        <div className="mb-10 flex items-center justify-between">
           <div>
             <h1 className="text-[18px] font-semibold text-zinc-50 font-sans tracking-[-0.002em]">Activity</h1>
             <p className="text-zinc-400 text-xs pt-1">

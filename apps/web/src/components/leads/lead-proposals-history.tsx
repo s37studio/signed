@@ -20,22 +20,22 @@ import { ProposalForm } from "../proposals/proposal-form";
 const STATUS_CONFIG = {
   PENDING: {
     label: "En attente",
-    className: "bg-[#0E0E10] text-white px-2 py-1",
+    className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
     dotClassName: "bg-amber-500",
   },
   WON: {
     label: "Acceptée",
-    className: "bg-[#0E0E10] text-white px-2 py-1",
+    className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
     dotClassName: "bg-emerald-500",
   },
   LOST: {
     label: "Refusée",
-    className: "bg-[#0E0E10] text-white px-2 py-1",
+    className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
     dotClassName: "bg-red-500",
   },
   REVISION: {
     label: "En révision",
-    className: "bg-[#0E0E10] text-white px-2 py-1",
+    className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
     dotClassName: "bg-blue-500",
   },
 };
