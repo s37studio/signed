@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -7,8 +8,8 @@ import {
   UsersIcon,
   DocumentTextIcon,
   Cog6ToothIcon,
-  SparklesIcon,
   EllipsisHorizontalIcon,
+  BellIcon,
 } from "@heroicons/react/24/solid";
 
 import { authClient } from "@/lib/auth-client";
@@ -47,22 +48,72 @@ const NAV_ITEMS = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (!session?.user) {
     return null;
   }
 
   return (
-    <aside className="w-[280px] h-screen bg-[#0E0E10] flex flex-col shrink-0">
-      {/* Logo */}
-      <div className="p-6 pb-2">
-        <div className="text-zinc-50 font-display select-none text-[16px] tracking-tight">
-          S37™ Studio
+    <aside
+      className={cn(
+        "h-screen bg-[#0E0E10] flex flex-col shrink-0 transition-all duration-300 ease-in-out",
+        isCollapsed ? "w-[80px]" : "w-[280px]"
+      )}
+    >
+      {/* User profile */}
+      <div className="p-4 space-y-4">
+        <div className={cn("flex items-center gap-3 px-2", isCollapsed && "justify-center px-0")}>
+          <div className="size-8 rounded-full bg-zinc-800 flex items-center justify-center text-sm font-medium text-zinc-400 shrink-0">
+            {session.user.name?.[0]?.toUpperCase() || "U"}
+          </div>
+          {!isCollapsed && (
+            <>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-zinc-50 truncate">
+                  {session.user.name}
+                </p>
+                <p className="text-xs text-zinc-500 truncate">
+                  {session.user.email}
+                </p>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 text-zinc-400 hover:text-zinc-50"
+                  >
+                    <EllipsisHorizontalIcon className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-56 bg-[#0E0E10] border-zinc-800"
+                >
+                  <DropdownMenuItem
+                    className="text-red-400 focus:text-red-400 focus:bg-red-900/10"
+                    onClick={() =>
+                      authClient.signOut({
+                        fetchOptions: {
+                          onSuccess: () => {
+                            window.location.replace("/login");
+                          },
+                        },
+                      })
+                    }
+                  >
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
         </div>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto pt-2 pb-6">
+      <div className="flex-1 overflow-y-auto pt-2 pb-6 flex flex-col justify-between">
         <div className="mb-2">
           <ul className="space-y-0.5 px-3">
             {NAV_ITEMS.map((item) => {
@@ -77,63 +128,47 @@ export default function Sidebar() {
                       "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium",
                       isActive
                         ? "text-zinc-50 bg-[#0C0C0D]/50"
-                        : "text-zinc-400 hover:text-white"
+                        : "text-zinc-400 hover:text-white",
+                      isCollapsed && "justify-center px-2"
                     )}
+                    title={isCollapsed ? item.title : undefined}
                   >
-                    <Icon className="size-4" />
-                    {item.title}
+                    <Icon className="size-4 shrink-0" />
+                    {!isCollapsed && <span>{item.title}</span>}
                   </Link>
                 </li>
               );
             })}
           </ul>
         </div>
-      </div>
 
-      {/* Footer */}
-      <div className="p-4 space-y-4">
-        <div className="flex items-center gap-3 px-2">
-          <div className="size-8 rounded-full bg-zinc-800 flex items-center justify-center text-sm font-medium text-zinc-400">
-            {session.user.name?.[0]?.toUpperCase() || "U"}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-zinc-50 truncate">
-              {session.user.name}
-            </p>
-            <p className="text-xs text-zinc-500 truncate">
-              {session.user.email}
-            </p>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8 text-zinc-400 hover:text-zinc-50"
-              >
-                <EllipsisHorizontalIcon className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-56 bg-[#0E0E10] border-zinc-800"
-            >
-              <DropdownMenuItem
-                className="text-red-400 focus:text-red-400 focus:bg-red-900/10"
-                onClick={() =>
-                  authClient.signOut({
-                    fetchOptions: {
-                      onSuccess: () => {
-                        window.location.replace("/login");
-                      },
-                    },
-                  })
-                }
-              >
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        {/* Collapse Toggle */}
+        <div className="px-3 mt-auto space-y-0.5">
+          <button
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium text-zinc-400 hover:text-white w-full",
+              isCollapsed && "justify-center px-2"
+            )}
+            title={isCollapsed ? "Notifications" : undefined}
+          >
+            <BellIcon className="size-4 shrink-0" />
+            {!isCollapsed && <span>Notifications</span>}
+          </button>
+
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium text-zinc-400 hover:text-white w-full",
+              isCollapsed && "justify-center px-2"
+            )}
+          >
+            {isCollapsed ? (
+              <i className="ri-side-bar-fill text-base shrink-0 leading-none rotate-180" />
+            ) : (
+              <i className="ri-side-bar-fill text-base shrink-0 leading-none" />
+            )}
+            {!isCollapsed && <span>Collapse</span>}
+          </button>
         </div>
       </div>
     </aside>

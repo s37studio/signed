@@ -40,7 +40,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col">
-      <div className="w-[94%] mx-auto pt-6 pb-8">
+      <div className="w-[96%] mx-auto pt-6 pb-8">
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-[18px] font-semibold text-zinc-50 font-sans tracking-[-0.002em]">Activity</h1>

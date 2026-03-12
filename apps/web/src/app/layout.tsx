@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Faculty_Glyphic } from "next/font/google";
 
+import "remixicon/fonts/remixicon.css";
 import "../index.css";
 import Providers from "@/components/providers";
 
