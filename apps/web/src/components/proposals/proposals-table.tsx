@@ -26,22 +26,22 @@ const STATUS_CONFIG = {
   PENDING: {
     label: "En attente",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-amber-500",
+    dotClassName: "bg-amber-400",
   },
   WON: {
     label: "Acceptée",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-emerald-500",
+    dotClassName: "bg-emerald-400",
   },
   LOST: {
     label: "Refusée",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-red-500",
+    dotClassName: "bg-red-400",
   },
   REVISION: {
     label: "En révision",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-blue-500",
+    dotClassName: "bg-sky-500",
   },
 };
 
@@ -67,13 +67,13 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-zinc-800/30">
-                <TableHead className="uppercase text-zinc-500 font-medium pl-8 tracking-[0.002em]">Titre</TableHead>
-                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.002em] min-w-[180px]">Client</TableHead>
-                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.002em] min-w-[100px]">Prix</TableHead>
-                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.002em]">Statut</TableHead>
-                <TableHead className="text-center uppercase text-zinc-500 font-medium min-w-[80px] tracking-[0.002em]">Vues</TableHead>
-                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.002em]">Date</TableHead>
-                <TableHead className="text-right uppercase text-zinc-500 font-medium tracking-[0.002em]" />
+                <TableHead className="uppercase text-zinc-500 font-medium pl-8 tracking-[0.004em]">Titre</TableHead>
+                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.004em] min-w-[180px]">Client</TableHead>
+                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.004em] min-w-[100px]">Prix</TableHead>
+                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.004em]">Statut</TableHead>
+                <TableHead className="text-center uppercase text-zinc-500 font-medium min-w-[80px] tracking-[0.004em]">Vues</TableHead>
+                <TableHead className="uppercase text-zinc-500 font-medium tracking-[0.004em]">Date</TableHead>
+                <TableHead className="text-right uppercase text-zinc-500 font-medium tracking-[0.004em]" />
               </TableRow>
             </TableHeader>
             <TableBody>

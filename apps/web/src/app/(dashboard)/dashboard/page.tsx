@@ -6,12 +6,12 @@ import { Plus } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { ProposalForm } from "@/components/proposals/proposal-form";
 import { ProposalsChart } from "@/components/proposals/proposals-chart";
 import { ProposalsTable } from "@/components/proposals/proposals-table";
@@ -49,8 +49,8 @@ export default function DashboardPage() {
             </p>
           </div>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger
+          <Sheet open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <SheetTrigger
               render={
                 <Button className="rounded-[12px]">
                   <Plus className="h-4 w-4 mr-2" />
@@ -58,13 +58,13 @@ export default function DashboardPage() {
                 </Button>
               }
             />
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Créer une Proposition</DialogTitle>
-              </DialogHeader>
+            <SheetContent side="right" className="sm:max-w-[600px] rounded-l-[20px] bg-[#060606] border-l border-zinc-800/10 pt-8 pb-8 pr-8">
+              <SheetHeader>
+                <SheetTitle>Créer une Proposition</SheetTitle>
+              </SheetHeader>
               <ProposalForm />
-            </DialogContent>
-          </Dialog>
+            </SheetContent>
+          </Sheet>
         </div>
 
         <div className="space-y-6">

@@ -107,11 +107,11 @@ export function ProposalViewsModal({
     <Dialog>
       <DialogTrigger
         render={
-          <button className="inline-flex items-center justify-center gap-1 rounded-md px-2 py-1 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
+          <button className="inline-flex items-center justify-center gap-1 rounded-md px-2 py-1 font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
         }
       >
         <EyeIcon className="h-3 w-3" />
-        <span>{viewCount}</span>
+        <span className="text-xs">{viewCount}</span>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>

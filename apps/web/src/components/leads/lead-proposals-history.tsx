@@ -21,22 +21,22 @@ const STATUS_CONFIG = {
   PENDING: {
     label: "En attente",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-amber-500",
+    dotClassName: "bg-amber-400",
   },
   WON: {
     label: "Acceptée",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-emerald-500",
+    dotClassName: "bg-emerald-400",
   },
   LOST: {
     label: "Refusée",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-red-500",
+    dotClassName: "bg-red-400",
   },
   REVISION: {
     label: "En révision",
     className: "border-[0.5px] border-zinc-800/50 text-zinc-300 px-2 py-1",
-    dotClassName: "bg-blue-500",
+    dotClassName: "bg-sky-500",
   },
 };
 

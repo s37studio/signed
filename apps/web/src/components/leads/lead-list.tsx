@@ -44,7 +44,7 @@ export function LeadList({
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-zinc-800/50">
-                <TableHead className="uppercase text-zinc-400">Nom</TableHead>
+                <TableHead className="uppercase text-zinc-400 pl-6">Nom</TableHead>
                 <TableHead className="uppercase text-zinc-400">Entreprise</TableHead>
                 <TableHead className="uppercase text-zinc-400">Email</TableHead>
                 <TableHead className="uppercase text-zinc-400">Téléphone</TableHead>
@@ -61,7 +61,7 @@ export function LeadList({
                   key={lead.id}
                   className="hover:bg-zinc-900/50 border-b border-zinc-800/50"
                 >
-                  <TableCell className="text-[14px]">
+                  <TableCell className="text-[14px] pl-6">
                     <Link
                       href={`/dashboard/leads/${lead.id}`}
                       className="hover:no-underline font-medium"
