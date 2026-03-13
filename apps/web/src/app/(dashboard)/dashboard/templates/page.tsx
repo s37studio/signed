@@ -4,13 +4,22 @@ import { useState } from "react";
 import { getAllTemplates } from "@/templates/registry";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Code } from "lucide-react";
+import { Plus, Eye, Code } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ProposalForm } from "@/components/proposals/proposal-form";
 
 export default function TemplatesPage() {
   const templates = getAllTemplates();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [newTemplateSheetOpen, setNewTemplateSheetOpen] = useState(false);
 
   const selectedTemplateData = templates.find((t) => t.id === selectedTemplate);
 
@@ -24,133 +33,107 @@ export default function TemplatesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-zinc-50">
-      <div className="max-w-7xl mx-auto p-8">
+    <div className="flex flex-col">
+      <div className="w-[96%] mx-auto pt-5 pb-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-[28px] font-medium text-zinc-50 font-display mb-2">
-            Templates
-          </h1>
-          <p className="text-zinc-400">
-            Visualisez et modifiez vos templates de propositions
-          </p>
+        <div className="mb-10 flex items-center justify-between">
+          <div>
+            <h1 className="text-[18px] font-semibold text-zinc-50 font-sans tracking-[-0.002em]">
+              Templates
+            </h1>
+            <p className="text-zinc-400 text-xs pt-1">
+              Visualisez et modifiez vos templates de propositions
+            </p>
+          </div>
+
+          <Sheet open={newTemplateSheetOpen} onOpenChange={setNewTemplateSheetOpen}>
+            <SheetTrigger
+              render={
+                <Button className="rounded-[12px]">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouveau template
+                </Button>
+              }
+            />
+            <SheetContent side="right" className="sm:max-w-[600px] rounded-l-[20px] bg-[#060606] border-none pt-8 pb-8 pr-8">
+              <SheetHeader>
+                <SheetTitle>Ajouter un nouveau template</SheetTitle>
+              </SheetHeader>
+              <div className="space-y-6">
+                <div className="p-4 rounded-xl bg-zinc-900/50">
+                  <h3 className="font-medium text-zinc-200 mb-2">Architecture No-CMS</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">
+                    Nous avons fait le choix d'une architecture sans CMS pour vous offrir une flexibilité totale.
+                    Grâce à notre serveur MCP, vous pouvez générer et modifier vos templates directement dans votre codebase local.
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-zinc-300">Comment créer un template ?</h4>
+                  <ol className="text-sm text-zinc-400 space-y-4 list-decimal list-inside">
+                    <li className="pl-2">
+                      <span className="block mb-1">Créez votre composant React :</span>
+                      <code className="text-xs text-zinc-300 bg-zinc-900 px-2 py-1 rounded block w-fit mt-1">
+                        apps/web/src/templates/template-nom.tsx
+                      </code>
+                    </li>
+                    <li className="pl-2">
+                      <span className="block mb-1">Enregistrez-le dans le registre :</span>
+                      <code className="text-xs text-zinc-300 bg-zinc-900 px-2 py-1 rounded block w-fit mt-1">
+                        apps/web/src/templates/registry.ts
+                      </code>
+                    </li>
+                  </ol>
+                  <p className="text-xs text-zinc-500 italic mt-4">
+                    Le template apparaîtra automatiquement dans votre dashboard une fois ces fichiers créés.
+                  </p>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
         {/* Templates Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {templates.map((template) => (
-            <Card
-              key={template.id}
-              className="bg-zinc-900 border-zinc-800 overflow-hidden hover:border-zinc-700 transition-colors"
-            >
-              {/* Thumbnail */}
-              <div className="aspect-video bg-zinc-800 relative overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <div className="text-6xl mb-2">
-                      {template.id === "modern" ? "🎨" : "📄"}
-                    </div>
-                    <p className="text-sm text-zinc-500">Preview</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2">{template.name}</h3>
-                <p className="text-sm text-zinc-400 mb-4">
-                  {template.description}
-                </p>
-
-                {/* File Path */}
-                <div className="mb-4 p-3 bg-zinc-950 rounded border border-zinc-800">
-                  <p className="text-xs text-zinc-500 mb-1">Fichier:</p>
-                  <code className="text-xs text-zinc-300 break-all">
-                    {getTemplateFilePath(template.id)}
-                  </code>
+            <div key={template.id} className="group flex flex-col gap-3">
+              {/* Image Container */}
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[24px] bg-zinc-900">
+                {/* Background/Preview */}
+                <div className="absolute inset-0 bg-white group-hover:brightness-90 transition-all duration-200 flex items-center justify-center">
                 </div>
 
-                {/* Fields Info */}
-                <div className="mb-4">
-                  <p className="text-xs text-zinc-500 mb-2">
-                    {template.fields.length} champs configurables
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    {template.fields.slice(0, 3).map((field) => (
-                      <span
-                        key={field.key}
-                        className="text-xs bg-zinc-800 text-zinc-400 px-2 py-1 rounded"
-                      >
-                        {field.label}
-                      </span>
-                    ))}
-                    {template.fields.length > 3 && (
-                      <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-1 rounded">
-                        +{template.fields.length - 3}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
+                {/* Hover Overlay with Buttons */}
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-4 backdrop-blur-[2px]">
+                  <button
                     onClick={() => openPreview(template.id)}
+                    className="size-12 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform duration-200"
+                    title="Aperçu"
                   >
-                    <Eye className="h-4 w-4 mr-2" />
-                    Aperçu
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1 bg-zinc-800 border-zinc-700 hover:bg-zinc-700"
-                    onClick={() => {
-                      // This will be handled by Cursor - just show the path
-                      alert(
-                        `Ouvrez ce fichier dans votre éditeur:\n\n${getTemplateFilePath(template.id)}`,
-                      );
-                    }}
+                    <Eye className="size-5" />
+                  </button>
+                  <button
+                    onClick={() => setNewTemplateSheetOpen(true)}
+                    className="size-12 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform duration-200"
+                    title="Éditer"
                   >
-                    <Code className="h-4 w-4 mr-2" />
-                    Éditer
-                  </Button>
+                    <Code className="size-5" />
+                  </button>
                 </div>
               </div>
-            </Card>
+
+              {/* Info */}
+              <div className="flex flex-col px-1">
+                <h3 className="font-medium text-zinc-100 text-sm">
+                  {template.name}
+                </h3>
+                <p className="text-xs text-zinc-500">Template</p>
+              </div>
+            </div>
           ))}
         </div>
 
         {/* Add New Template Info */}
-        <Card className="mt-8 bg-zinc-900 border-zinc-800 p-6">
-          <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-            <Code className="h-5 w-5" />
-            Ajouter un nouveau template
-          </h3>
-          <p className="text-sm text-zinc-400 mb-4">
-            Pour créer un nouveau template, suivez le guide dans{" "}
-            <code className="text-zinc-300 bg-zinc-950 px-2 py-1 rounded">
-              apps/web/src/templates/GUIDE.md
-            </code>
-          </p>
-          <ol className="text-sm text-zinc-400 space-y-2 list-decimal list-inside">
-            <li>
-              Créer un nouveau fichier{" "}
-              <code className="text-zinc-300 bg-zinc-950 px-2 py-1 rounded">
-                template-nom.tsx
-              </code>
-            </li>
-            <li>
-              Ajouter le composant au{" "}
-              <code className="text-zinc-300 bg-zinc-950 px-2 py-1 rounded">
-                registry.ts
-              </code>
-            </li>
-            <li>Le template sera automatiquement disponible</li>
-          </ol>
-        </Card>
       </div>
 
       {/* Preview Dialog - Full Screen */}

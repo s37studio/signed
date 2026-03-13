@@ -250,7 +250,7 @@ export function TemplateGTM({ data }: TemplateGTMProps) {
 
       {/* Case Studies Section */}
       <section id="case-studies" className="scroll-mt-24">
-        <h2 className="text-2xl font-display font-medium text-zinc-100 mb-8">
+        <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-8">
           Case Studies
         </h2>
 
@@ -259,10 +259,10 @@ export function TemplateGTM({ data }: TemplateGTMProps) {
             <a
               key={index}
               href={`/work/${study.slug}`}
-              className="group block bg-zinc-900/50 rounded-2xl overflow-hidden hover:bg-zinc-900 transition-colors duration-300"
+              className="group block bg-zinc-50 border border-zinc-200 rounded-2xl overflow-hidden hover:bg-zinc-100 transition-colors duration-300"
             >
               <div className="flex flex-col md:flex-row gap-6 p-6">
-                <div className="w-full md:w-[200px] shrink-0 aspect-video md:aspect-[4/3] relative rounded-lg overflow-hidden bg-zinc-800">
+                <div className="w-full md:w-[200px] shrink-0 aspect-video md:aspect-[4/3] relative rounded-lg overflow-hidden bg-zinc-200">
                   <Image
                     src={study.image}
                     alt={study.title}
@@ -272,27 +272,27 @@ export function TemplateGTM({ data }: TemplateGTMProps) {
                 </div>
                 <div className="flex flex-col flex-1">
                   <div className="flex items-start justify-between gap-4 mb-3">
-                    <h3 className="text-xl font-display font-medium text-zinc-100">
+                    <h3 className="text-xl font-sans font-medium text-zinc-900">
                       {study.title}
                     </h3>
                     <div className="flex flex-wrap gap-2 justify-end">
                       {study.tags.map((tag, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-zinc-400 bg-zinc-800/50 rounded-md"
+                          className="px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-zinc-600 bg-zinc-200 rounded-md"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <p className="text-zinc-400 text-sm leading-relaxed mb-6 flex-grow">
+                  <p className="text-zinc-600 text-sm leading-relaxed mb-6 flex-grow">
                     {highlightKeywords(
                       study.description.substring(0, 150) + "...",
                       study.keywords || []
                     )}
                   </p>
-                  <div className="flex items-center text-sm font-medium text-zinc-300 group-hover:text-zinc-100 transition-colors">
+                  <div className="flex items-center text-sm font-medium text-zinc-700 group-hover:text-zinc-900 transition-colors">
                     View Case Study
                     <svg
                       className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
@@ -329,11 +329,11 @@ export function TemplateGTM({ data }: TemplateGTMProps) {
 
       {/* FAQ Section */}
       <section id="faq" className="scroll-mt-24">
-        <h2 className="text-2xl font-display font-medium text-zinc-100 mb-8">
+        <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-8">
           Frequently Asked Questions
         </h2>
 
-        <p className="text-zinc-400 text-left max-w-2xl mb-12">
+        <p className="text-zinc-600 text-left max-w-2xl mb-12">
           Everything you need to know before getting started.
         </p>
 

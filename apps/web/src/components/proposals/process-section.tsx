@@ -31,11 +31,11 @@ type ProcessSectionProps = {
 export function ProcessSection({ steps = DEFAULT_PROCESS }: ProcessSectionProps) {
   return (
     <section id="process" className="scroll-mt-24">
-      <h2 className="text-2xl font-display font-medium text-zinc-100 mb-4">
+      <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-4">
         Process
       </h2>
 
-      <p className="text-zinc-400 text-left max-w-2xl mb-12">
+      <p className="text-zinc-600 text-left max-w-2xl mb-12">
         A structured process focused on clarity, collaboration, and execution.
       </p>
 
@@ -43,15 +43,15 @@ export function ProcessSection({ steps = DEFAULT_PROCESS }: ProcessSectionProps)
         {steps.map((step, index) => (
           <div
             key={index}
-            className="bg-zinc-900/50 rounded-2xl p-6 flex flex-col items-start"
+            className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 flex flex-col items-start"
           >
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg text-sm font-display font-bold mb-4 bg-zinc-800/50 text-zinc-300">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg text-sm font-sans font-bold mb-4 bg-zinc-100 text-zinc-700">
               {step.step}
             </div>
-            <h3 className="text-lg font-display font-medium text-zinc-100 mb-2">
+            <h3 className="text-lg font-sans font-medium text-zinc-900 mb-2">
               {step.title}
             </h3>
-            <p className="text-zinc-400 text-sm leading-relaxed">
+            <p className="text-zinc-600 text-sm leading-relaxed">
               {step.description}
             </p>
           </div>

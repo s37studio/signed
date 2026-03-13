@@ -11,19 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-function RoleBadge({ role }: { role: string }) {
-  const colors: Record<string, string> = {
-    owner: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-    admin: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-    member: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
-  };
-  return (
-    <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${colors[role] ?? colors.member}`}>
-      {role}
-    </span>
-  );
-}
-
 export default function SettingsPage() {
   const queryClient = useQueryClient();
   const { data: session } = authClient.useSession();
@@ -137,34 +124,42 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-6 max-w-2xl space-y-8">
-      <div>
-        <h1 className="text-xl font-bold text-zinc-50">Paramètres</h1>
-        <p className="text-sm text-zinc-500 mt-1">{org?.name}</p>
-      </div>
+    <div className="flex flex-col">
+      <div className="w-[96%] mx-auto pt-5 pb-8 max-w-2xl">
+        <div className="mb-10 flex items-center justify-between">
+          <div>
+            <h1 className="text-[18px] font-semibold text-zinc-50 font-sans tracking-[-0.002em]">
+              Paramètres
+            </h1>
+            <p className="text-zinc-400 text-xs pt-1">{org?.name}</p>
+          </div>
+        </div>
 
+        <div className="space-y-14">
       {/* Membres */}
       <section>
-        <h2 className="text-sm font-semibold text-zinc-300 mb-3 uppercase tracking-wider">
+        <h2 className="text-sm font-medium text-zinc-300 mb-3">
           Membres ({org?.members.length ?? 0})
         </h2>
-        <div className="rounded-xl border border-zinc-800 overflow-hidden">
+        <div className="rounded-xl border border-zinc-800/50 overflow-hidden">
           {org?.members.map((member, i) => (
             <div
               key={member.id}
               className={`flex items-center justify-between px-4 py-3 ${
-                i !== 0 ? "border-t border-zinc-800" : ""
+                i !== 0 ? "border-t border-zinc-800/50" : ""
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-zinc-800 flex items-center justify-center text-sm font-medium text-zinc-300">
-                  {member.user.name?.[0]?.toUpperCase() ?? "?"}
-                </div>
+                <img
+                  src={`https://www.tapback.co/api/avatar/${encodeURIComponent(member.user.email ?? "user")}.webp`}
+                  alt={member.user.name ?? "Avatar"}
+                  className="h-8 w-8 rounded-full object-cover shrink-0"
+                />
                 <div>
                   <p className="text-sm font-medium text-zinc-200">
                     {member.user.name}
                     {member.userId === session?.user.id && (
-                      <span className="ml-2 text-xs text-zinc-500">(toi)</span>
+                      <span className="ml-2 text-xs text-zinc-500">{member.role.charAt(0).toUpperCase() + member.role.slice(1)}</span>
                     )}
                   </p>
                   <p className="text-xs text-zinc-500">{member.user.email}</p>
@@ -177,21 +172,23 @@ export default function SettingsPage() {
                     onChange={(e) =>
                       updateRole.mutate({ memberId: member.id, role: e.target.value as "admin" | "member" })
                     }
-                    className="text-xs bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-md px-2 py-1"
+                    className="h-10 text-xs bg-zinc-900/50 border-none text-zinc-300 rounded-[12px] px-3"
                   >
                     <option value="member">member</option>
                     <option value="admin">admin</option>
                   </select>
-                ) : (
-                  <RoleBadge role={member.role} />
-                )}
+                ) : member.userId !== session?.user.id ? (
+                  <span className="text-xs text-zinc-400 capitalize">{member.role}</span>
+                ) : null}
                 {isOwnerOrAdmin && member.role !== "owner" && member.userId !== session?.user.id && (
-                  <button
+                  <Button
+                    type="button"
+                    variant="outline"
                     onClick={() => removeMember.mutate({ memberId: member.id })}
-                    className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                    className="h-10 rounded-[12px] border-none bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300"
                   >
                     Retirer
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>
@@ -202,15 +199,15 @@ export default function SettingsPage() {
       {/* Invitations en attente */}
       {(org?.invitations?.length ?? 0) > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-zinc-300 mb-3 uppercase tracking-wider">
+          <h2 className="text-sm font-medium text-zinc-300 mb-3">
             Invitations en attente
           </h2>
-          <div className="rounded-xl border border-zinc-800 overflow-hidden">
+          <div className="rounded-xl border border-zinc-800/50 overflow-hidden">
             {org?.invitations.map((inv, i) => (
               <div
                 key={inv.id}
                 className={`flex items-center justify-between px-4 py-3 ${
-                  i !== 0 ? "border-t border-zinc-800" : ""
+                  i !== 0 ? "border-t border-zinc-800/50" : ""
                 }`}
               >
                 <div>
@@ -234,7 +231,7 @@ export default function SettingsPage() {
       {/* Inviter un membre */}
       {isOwnerOrAdmin && (
         <section>
-          <h2 className="text-sm font-semibold text-zinc-300 mb-3 uppercase tracking-wider">
+          <h2 className="text-sm font-medium text-zinc-300 mb-3">
             Inviter un membre
           </h2>
           <form onSubmit={handleInvite} className="flex gap-2 items-end">
@@ -246,7 +243,7 @@ export default function SettingsPage() {
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
                 placeholder="collaborateur@exemple.com"
-                className="bg-zinc-900 border-zinc-700 text-zinc-50 placeholder:text-zinc-600"
+                className="h-10 bg-zinc-900/50 border-none rounded-[12px] text-zinc-50 placeholder:text-zinc-600"
                 required
               />
             </div>
@@ -255,13 +252,13 @@ export default function SettingsPage() {
               <select
                 value={inviteRole}
                 onChange={(e) => setInviteRole(e.target.value as "member" | "admin")}
-                className="h-10 bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-md px-3 text-sm"
+                className="h-10 bg-zinc-900/50 border-none text-zinc-300 rounded-[12px] px-3 text-xs"
               >
                 <option value="member">Member</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
-            <Button type="submit" disabled={isInviting}>
+            <Button type="submit" disabled={isInviting} className="h-10 rounded-[12px]">
               {isInviting ? "Envoi..." : "Inviter"}
             </Button>
           </form>
@@ -270,7 +267,7 @@ export default function SettingsPage() {
 
       {/* Clés API MCP */}
       <section>
-        <h2 className="text-sm font-semibold text-zinc-300 mb-1 uppercase tracking-wider">
+        <h2 className="text-sm font-medium text-zinc-300 mb-1">
           Clés API MCP
         </h2>
         <p className="text-xs text-zinc-500 mb-3">
@@ -281,11 +278,11 @@ export default function SettingsPage() {
         {isLoadingKeys ? (
           <Skeleton className="h-16 w-full mb-3" />
         ) : (mcpKeys?.length ?? 0) > 0 ? (
-          <div className="rounded-xl border border-zinc-800 overflow-hidden mb-4">
+          <div className="rounded-xl border border-zinc-800/50 overflow-hidden mb-4">
             {mcpKeys?.map((key, i) => (
               <div
                 key={key.id}
-                className={`flex items-center justify-between px-4 py-3 ${i !== 0 ? "border-t border-zinc-800" : ""}`}
+                className={`flex items-center justify-between px-4 py-3 ${i !== 0 ? "border-t border-zinc-800/50" : ""}`}
               >
                 <div>
                   <p className="text-sm font-medium text-zinc-200">{key.name}</p>
@@ -325,15 +322,17 @@ export default function SettingsPage() {
               value={newKeyName}
               onChange={(e) => setNewKeyName(e.target.value)}
               placeholder="Mon agent Claude"
-              className="bg-zinc-900 border-zinc-700 text-zinc-50 placeholder:text-zinc-600"
+              className="h-10 bg-zinc-900/50 border-none rounded-[12px] text-zinc-50 placeholder:text-zinc-600"
               required
             />
           </div>
-          <Button type="submit" disabled={createKey.isPending}>
+          <Button type="submit" disabled={createKey.isPending} className="h-10 rounded-[12px]">
             {createKey.isPending ? "Génération..." : "Générer une clé"}
           </Button>
         </form>
       </section>
+        </div>
+      </div>
 
       {/* Modal affichage clé en clair */}
       <Dialog open={!!revealedKey} onOpenChange={(open) => { if (!open) setRevealedKey(null); }}>
@@ -349,10 +348,10 @@ export default function SettingsPage() {
               {revealedKey}
             </div>
             <div className="flex gap-2">
-              <Button onClick={handleCopyKey} className="flex-1">
+              <Button onClick={handleCopyKey} className="flex-1 rounded-[12px]">
                 {copied ? "Copié !" : "Copier la clé"}
               </Button>
-              <Button variant="outline" onClick={() => setRevealedKey(null)} className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
+              <Button variant="outline" onClick={() => setRevealedKey(null)} className="rounded-[12px] border-none text-zinc-300 hover:bg-zinc-800">
                 Fermer
               </Button>
             </div>

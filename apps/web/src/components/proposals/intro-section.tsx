@@ -49,16 +49,16 @@ export function IntroSection({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-display font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-left">
+        <h2 className="text-xl md:text-2xl font-sans font-medium leading-tight tracking-tight text-zinc-900 mb-3 text-left">
           {title}
         </h2>
         {description && (
-          <p className="text-sm text-zinc-400 leading-relaxed mb-12 max-w-[650px] text-left">
+          <p className="text-sm text-zinc-600 leading-relaxed mb-12 max-w-[650px] text-left">
             {description}
           </p>
         )}
 
-        <div className="relative w-full overflow-hidden rounded-xl bg-[#0E0E10] flex items-center justify-center">
+        <div className="relative w-full overflow-hidden rounded-xl bg-zinc-100 flex items-center justify-center">
           <div className="relative w-full h-[min(55vh,552px)]">
             {hasVideo ? (
               <div className="absolute inset-0 flex items-center justify-center">
@@ -72,7 +72,7 @@ export function IntroSection({
               </div>
             ) : showPlaceholder ? (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex flex-col items-center justify-center gap-3 text-zinc-500">
+                <div className="flex flex-col items-center justify-center gap-3 text-zinc-400">
                   <svg
                     className="w-12 h-12"
                     fill="none"
@@ -87,7 +87,7 @@ export function IntroSection({
                     />
                   </svg>
                   <p className="text-sm font-medium">Loom video placeholder</p>
-                  <p className="text-xs text-zinc-600">
+                  <p className="text-xs text-zinc-500">
                     Add your Loom video URL in the template settings
                   </p>
                 </div>

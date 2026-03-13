@@ -40,16 +40,16 @@ export function DesignCarousel({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-display font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-left">
+        <h2 className="text-xl md:text-2xl font-sans font-medium leading-tight tracking-tight text-zinc-900 mb-3 text-left">
           {title}
         </h2>
-        <p className="text-sm text-zinc-400 leading-relaxed mb-12 max-w-[650px] text-left">
+        <p className="text-sm text-zinc-600 leading-relaxed mb-12 max-w-[650px] text-left">
           {description}
         </p>
 
         <div className="relative group/carousel">
           {/* Main Carousel Container */}
-          <div className="relative w-full overflow-hidden rounded-xl bg-[#0E0E10] flex items-center justify-center">
+          <div className="relative w-full overflow-hidden rounded-xl bg-zinc-100 flex items-center justify-center">
             <div className="relative w-full h-[min(55vh,552px)]">
               <div className="absolute inset-0 flex items-center justify-center">
                 <Image
@@ -69,14 +69,14 @@ export function DesignCarousel({
               <>
                 <button
                   onClick={goToPrevious}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center text-zinc-100 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-zinc-900 focus:outline-none"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-zinc-900 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-white focus:outline-none shadow-lg"
                   aria-label="Previous image"
                 >
                   <ChevronLeftIcon className="w-5 h-5" strokeWidth={2} />
                 </button>
                 <button
                   onClick={goToNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center text-zinc-100 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-zinc-900 focus:outline-none"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-zinc-900 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 hover:bg-white focus:outline-none shadow-lg"
                   aria-label="Next image"
                 >
                   <ChevronRightIcon className="w-5 h-5" strokeWidth={2} />
@@ -98,8 +98,8 @@ export function DesignCarousel({
                   <div
                     className={`h-1.5 rounded-full transition-all duration-300 ${
                       index === currentIndex
-                        ? "w-8 bg-zinc-100"
-                        : "w-1.5 bg-zinc-600 group-hover/dot:bg-zinc-400"
+                        ? "w-8 bg-zinc-900"
+                        : "w-1.5 bg-zinc-300 group-hover/dot:bg-zinc-500"
                     }`}
                   />
                 </button>

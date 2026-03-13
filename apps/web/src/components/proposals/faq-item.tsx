@@ -28,8 +28,8 @@ export function FAQItem({
         onClick={onToggle}
         className="flex items-center justify-between w-full py-4 px-4 text-left group focus:outline-none rounded-full cursor-pointer"
       >
-        <span className="text-base font-display font-medium text-zinc-100">{question}</span>
-        <div className="relative w-5 h-5 text-zinc-500">
+        <span className="text-base font-sans font-medium text-zinc-900">{question}</span>
+        <div className="relative w-5 h-5 text-zinc-400">
           <motion.span
             animate={{ rotate: isOpen ? 90 : 0, opacity: isOpen ? 0 : 1 }}
             className="absolute inset-0 flex items-center justify-center"
@@ -53,7 +53,7 @@ export function FAQItem({
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-4 text-zinc-400 leading-relaxed text-sm md:text-base">
+            <p className="pb-4 px-4 text-zinc-600 leading-relaxed text-sm md:text-base">
               {answer}
             </p>
           </motion.div>

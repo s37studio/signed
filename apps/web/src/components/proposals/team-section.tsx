@@ -30,10 +30,10 @@ export function TeamSection({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-display font-medium leading-tight tracking-tight text-zinc-100 mb-3 text-center">
+        <h2 className="text-xl md:text-2xl font-sans font-medium leading-tight tracking-tight text-zinc-900 mb-3 text-center">
           {title}
         </h2>
-        <p className="text-sm text-zinc-400 leading-relaxed mb-12 max-w-[650px] mx-auto text-center">
+        <p className="text-sm text-zinc-600 leading-relaxed mb-12 max-w-[650px] mx-auto text-center">
           {description}
         </p>
 
@@ -41,10 +41,10 @@ export function TeamSection({
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="bg-[#0E0E10] rounded-xl overflow-hidden transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 focus-within:!opacity-100"
+              className="bg-zinc-50 border border-zinc-200 rounded-xl overflow-hidden transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 focus-within:!opacity-100"
             >
               {/* Team Member Image */}
-              <div className="relative w-full aspect-[16/10] bg-zinc-900/40 overflow-hidden">
+              <div className="relative w-full aspect-[16/10] bg-zinc-100 overflow-hidden">
                 <Image
                   src={member.image}
                   alt={member.name}
@@ -59,14 +59,14 @@ export function TeamSection({
               {/* Team Member Info */}
               <div className="p-6">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-display font-medium text-zinc-100">
+                  <h3 className="text-lg font-sans font-medium text-zinc-900">
                     {member.name}
                   </h3>
-                  <span className="text-sm text-zinc-400 font-display">
+                  <span className="text-sm text-zinc-600 font-sans">
                     {member.role}
                   </span>
                 </div>
-                <p className="text-sm text-zinc-400 leading-relaxed">
+                <p className="text-sm text-zinc-600 leading-relaxed">
                   {member.description}
                 </p>
               </div>

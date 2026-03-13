@@ -5,32 +5,6 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ProposalNavbarS37 } from "./proposal-navbar-s37";
 
-function S37Logo({
-  className,
-  "aria-label": ariaLabel,
-}: {
-  className?: string;
-  "aria-label"?: string;
-}) {
-  return (
-    <div
-      role="img"
-      className={cn("shrink-0 bg-zinc-100", className)}
-      style={{
-        maskImage: "url('/s37_new_logo.svg')",
-        WebkitMaskImage: "url('/s37_new_logo.svg')",
-        maskSize: "contain",
-        maskRepeat: "no-repeat",
-        maskPosition: "center",
-        WebkitMaskSize: "contain",
-        WebkitMaskRepeat: "no-repeat",
-        WebkitMaskPosition: "center",
-      }}
-      aria-hidden={!ariaLabel}
-      {...(ariaLabel ? { "aria-label": ariaLabel } : {})}
-    />
-  );
-}
 
 type NavSection = {
   id: string;
@@ -85,7 +59,7 @@ export function ProposalLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#0E0E11] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row font-sans">
       {/* Mobile Navigation (Floating Pill) */}
       <div className="lg:hidden">
         <ProposalNavbarS37
@@ -96,12 +70,8 @@ export function ProposalLayout({
       </div>
 
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] flex-col bg-[#0E0E11] z-50">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] flex-col bg-zinc-50 border-r border-zinc-200 z-50">
         <div className="p-8">
-          <div className="flex items-center gap-2 mb-12">
-            <S37Logo className="h-16 w-16 bg-zinc-600/50" aria-label={brandName} />
-          </div>
-
           <div className="space-y-6">
             <nav className="flex flex-col space-y-1">
               {sections.map((section) => {
@@ -113,8 +83,8 @@ export function ProposalLayout({
                     className={cn(
                       "w-full text-left text-[13px] rounded-full px-3 py-2 transition-colors duration-200",
                       isActive
-                        ? "text-zinc-100 font-medium"
-                        : "text-zinc-500 hover:text-zinc-300"
+                        ? "text-zinc-900 font-medium bg-zinc-200"
+                        : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
                     )}
                   >
                     {section.label}
