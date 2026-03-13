@@ -25,25 +25,25 @@ import {
 const NAV_ITEMS = [
   {
     title: "Activity",
-    href: "/dashboard",
+    href: "/dashboard" as const,
     icon: Squares2X2Icon,
   },
   {
     title: "Leads",
-    href: "/dashboard/leads",
+    href: "/dashboard/leads" as const,
     icon: UsersIcon,
   },
   {
     title: "Templates",
-    href: "/dashboard/templates",
+    href: "/dashboard/templates" as const,
     icon: DocumentTextIcon,
   },
   {
     title: "Paramètres",
-    href: "/dashboard/settings",
+    href: "/dashboard/settings" as const,
     icon: Cog6ToothIcon,
   },
-];
+] as const;
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -64,15 +64,18 @@ export default function Sidebar() {
       {/* User profile */}
       <div className={cn("space-y-4", isCollapsed ? "flex justify-center px-0 py-4 pb-2" : "pt-4 px-4 pb-2")}>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className={cn(
-                "flex w-full items-center gap-3 px-2 pt-2 rounded-lg transition-colors cursor-pointer",
-                "text-zinc-400",
-                isCollapsed && "justify-center px-0"
-              )}
-            >
+          <DropdownMenuTrigger
+            render={
+              <button
+                type="button"
+                className={cn(
+                  "flex w-full items-center gap-3 px-2 pt-2 rounded-lg transition-colors cursor-pointer",
+                  "text-zinc-400",
+                  isCollapsed && "justify-center px-0"
+                )}
+              />
+            }
+          >
               <img
                 src="https://www.tapback.co/api/avatar.webp"
                 alt={session.user.name ?? "Avatar"}
@@ -91,7 +94,6 @@ export default function Sidebar() {
                   <ChevronDownIcon className="size-4 shrink-0" />
                 </>
               )}
-            </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
