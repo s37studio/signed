@@ -27,7 +27,6 @@ export function ProposalNavbarS37({
               {[
                 { label: "Process", href: "#process" },
                 { label: "Work", href: "#work" },
-                { label: "Case Studies", href: "#case-studies" },
                 { label: "FAQ", href: "#faq" },
               ].map((item) => (
                 <a

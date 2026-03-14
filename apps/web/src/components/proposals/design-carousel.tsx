@@ -40,19 +40,20 @@ export function DesignCarousel({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-sans font-medium leading-tight tracking-tight text-zinc-900 mb-3 text-left">
+        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2 text-left">
           {title}
         </h2>
-        <p className="text-sm text-zinc-600 leading-relaxed mb-12 max-w-[650px] text-left">
+        <p className="text-sm text-zinc-600 text-left w-full mb-8">
           {description}
         </p>
 
         <div className="relative group/carousel">
           {/* Main Carousel Container */}
-          <div className="relative w-full overflow-hidden rounded-xl bg-zinc-100 flex items-center justify-center">
+          <div className="relative w-full overflow-hidden rounded-xl bg-zinc-50 flex items-center justify-center">
             <div className="relative w-full h-[min(55vh,552px)]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Image
+              <div className="absolute inset-8 flex items-center justify-center">
+                <div className="relative w-full h-full">
+                  <Image
                   src={images[currentIndex]}
                   alt={`Design ${currentIndex + 1}`}
                   fill
@@ -60,7 +61,8 @@ export function DesignCarousel({
                   quality={90}
                   sizes="(max-width: 768px) 100vw, 1200px"
                   priority={currentIndex === 0}
-                />
+                  />
+                </div>
               </div>
             </div>
 

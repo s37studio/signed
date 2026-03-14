@@ -32,15 +32,15 @@ export function PricingSection({
 }: PricingSectionProps) {
   return (
     <section id="pricing" className="scroll-mt-24">
-      <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-4">
+      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
         Pricing
       </h2>
 
-      <p className="text-zinc-600 text-left max-w-2xl mb-12">
+      <p className="text-sm text-zinc-600 text-left w-full mb-8">
         Transparent pricing based on scope and complexity.
       </p>
 
-      <div className="w-full max-w-4xl bg-zinc-50 border border-zinc-200 rounded-2xl p-8 relative overflow-hidden group">
+      <div className="w-full bg-zinc-50 rounded-2xl p-8 relative overflow-hidden group">
         <div className="mb-8">
           <h3 className="text-lg font-sans font-medium text-zinc-900 uppercase tracking-wide mb-2">
             {item.title}
@@ -48,7 +48,7 @@ export function PricingSection({
           <p className="text-zinc-600 text-sm">{item.description}</p>
         </div>
 
-        <div className="mb-8 pb-8">
+        <div className="mb-4 pb-4">
           <span className="text-4xl font-sans font-bold text-zinc-900">
             {item.price}
           </span>

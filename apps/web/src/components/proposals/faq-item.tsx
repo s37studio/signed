@@ -26,7 +26,7 @@ export function FAQItem({
     >
       <button
         onClick={onToggle}
-        className="flex items-center justify-between w-full py-4 px-4 text-left group focus:outline-none rounded-full cursor-pointer"
+        className="flex items-center justify-between w-full py-4 pr-4 pl-0 text-left group focus:outline-none rounded-full cursor-pointer"
       >
         <span className="text-base font-sans font-medium text-zinc-900">{question}</span>
         <div className="relative w-5 h-5 text-zinc-400">
@@ -53,7 +53,7 @@ export function FAQItem({
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-4 px-4 text-zinc-600 leading-relaxed text-sm md:text-base">
+            <p className="pb-4 pr-4 pl-0 text-zinc-600 leading-relaxed text-sm md:text-base">
               {answer}
             </p>
           </motion.div>

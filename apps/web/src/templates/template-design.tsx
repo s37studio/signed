@@ -1,18 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { CheckIcon } from "@heroicons/react/24/outline";
 import { ProposalLayout } from "@/components/proposals/proposal-layout";
 import { IntroSection } from "@/components/proposals/intro-section";
 import { DesignCarousel } from "@/components/proposals/design-carousel";
 import { ProjectGoals } from "@/components/proposals/project-goals";
 import { ScopeOfWork } from "@/components/proposals/scope-of-work";
 import { ProcessSection } from "@/components/proposals/process-section";
+import { CaseStudiesSection } from "@/components/proposals/case-studies-section";
+import { TestimonialsSection } from "@/components/proposals/testimonials-section";
 import { PricingSection } from "@/components/proposals/pricing-section";
 import { TeamSection } from "@/components/proposals/team-section";
 import { FAQItem } from "@/components/proposals/faq-item";
-import { highlightKeywords } from "@/lib/highlight-keywords";
 
 const DEFAULT_DESIGN_SHOTS = [
   "/design-shots/shot-4.webp",
@@ -72,65 +71,6 @@ const DEFAULT_PROCESS_STEPS = [
     title: "Launch & Optimize",
     description:
       "We deploy your site, monitor performance, and make data-driven adjustments.",
-  },
-];
-
-const DEFAULT_CASE_STUDIES = [
-  {
-    slug: "flex-ai",
-    title: "Flex AI",
-    description:
-      "We helped Flex AI redefine their brand identity from the ground up, creating a visual language that resonates with modern tech audiences. The project culminated in the launch of a high-converting landing page that increased sign-ups by 65% within the first 4 weeks.",
-    keywords: [
-      "brand identity",
-      "visual language",
-      "modern tech audiences",
-      "high-converting",
-      "landing page",
-      "increased sign-ups",
-      "65%",
-      "4 weeks",
-    ],
-    tags: ["Startup", "GTM"],
-    image: "/case-studies/flex-logo.webp",
-  },
-  {
-    slug: "chataigne",
-    title: "Chataigne",
-    description:
-      "Chataigne required a custom internal management tool to streamline their complex logistics operations. We developed a full-stack application that centralizes their data, automates repetitive tasks, and has resulted in a 40% measurable increase in overall team productivity.",
-    keywords: [
-      "custom",
-      "internal management tool",
-      "streamline",
-      "complex logistics",
-      "full-stack application",
-      "centralizes",
-      "automates repetitive tasks",
-      "40%",
-      "team productivity",
-    ],
-    tags: ["Startup", "Design"],
-    image: "/case-studies/chataigne.webp",
-  },
-  {
-    slug: "o-communication",
-    title: "O Communication",
-    description:
-      "For O Communication, we built a robust, scalable communication platform designed for global teams. The solution features real-time collaboration tools, end-to-end encryption, and an intuitive dashboard that has significantly reduced operational overhead for their 10,000+ users.",
-    keywords: [
-      "robust",
-      "scalable",
-      "communication platform",
-      "global teams",
-      "real-time collaboration",
-      "end-to-end encryption",
-      "intuitive dashboard",
-      "reduced operational overhead",
-      "10,000+ users",
-    ],
-    tags: ["Agency", "GTM"],
-    image: "/case-studies/ocom.webp",
   },
 ];
 
@@ -220,7 +160,6 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
   const designCarouselDescription =
     data.designCarouselDescription ||
     "This proposal outlines a strategic branding process designed to clarify your positioning, strengthen your identity, and create a brand that drives long-term growth.";
-  const caseStudies = data.caseStudies || DEFAULT_CASE_STUDIES;
   const teamMembers = data.teamMembers || [];
   const teamTitle = data.teamTitle || "Our Team";
   const teamDescription =
@@ -237,6 +176,7 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
     { id: "scope", label: "Scope of Work" },
     { id: "process", label: "Process" },
     { id: "case-studies", label: "Case Studies" },
+    { id: "testimonials", label: "Testimonials" },
     ...(teamMembers.length > 0 ? [{ id: "team", label: "Our Team" }] : []),
     { id: "pricing", label: "Pricing" },
     { id: "faq", label: "FAQ" },
@@ -276,71 +216,10 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
       <ProcessSection steps={processSteps} />
 
       {/* Case Studies Section */}
-      <section id="case-studies" className="scroll-mt-24">
-        <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-8">
-          Case Studies
-        </h2>
+      <CaseStudiesSection />
 
-        <div className="grid grid-cols-1 gap-6">
-          {caseStudies.map((study, index) => (
-            <a
-              key={index}
-              href={`/work/${study.slug}`}
-              className="group block bg-zinc-50 border border-zinc-200 rounded-2xl overflow-hidden hover:bg-zinc-100 transition-colors duration-300"
-            >
-              <div className="flex flex-col md:flex-row gap-6 p-6">
-                <div className="w-full md:w-[200px] shrink-0 aspect-video md:aspect-[4/3] relative rounded-lg overflow-hidden bg-zinc-200">
-                  <Image
-                    src={study.image}
-                    alt={study.title}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <div className="flex flex-col flex-1">
-                  <div className="flex items-start justify-between gap-4 mb-3">
-                    <h3 className="text-xl font-sans font-medium text-zinc-900">
-                      {study.title}
-                    </h3>
-                    <div className="flex flex-wrap gap-2 justify-end">
-                      {study.tags.map((tag, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-zinc-600 bg-zinc-200 rounded-md"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-zinc-600 text-sm leading-relaxed mb-6 flex-grow">
-                    {highlightKeywords(
-                      study.description.substring(0, 150) + "...",
-                      study.keywords || []
-                    )}
-                  </p>
-                  <div className="flex items-center text-sm font-medium text-zinc-700 group-hover:text-zinc-900 transition-colors">
-                    View Case Study
-                    <svg
-                      className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
+      {/* Testimonials Section */}
+      <TestimonialsSection />
 
       {/* Team Section */}
       {teamMembers.length > 0 && (
@@ -356,15 +235,15 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
 
       {/* FAQ Section */}
       <section id="faq" className="scroll-mt-24">
-        <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-8">
+        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
           Frequently Asked Questions
         </h2>
 
-        <p className="text-zinc-600 text-left max-w-2xl mb-12">
+        <p className="text-sm text-zinc-600 text-left w-full mb-8">
           Everything you need to know before getting started.
         </p>
 
-        <div className="w-full max-w-4xl space-y-4">
+        <div className="w-full space-y-4">
           {faqs.map((faq, index) => (
             <FAQItem
               key={index}

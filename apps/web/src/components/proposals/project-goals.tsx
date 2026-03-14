@@ -30,11 +30,11 @@ type ProjectGoalsProps = {
 export function ProjectGoals({ goals = DEFAULT_GOALS }: ProjectGoalsProps) {
   return (
     <section id="goals" className="scroll-mt-24">
-      <h2 className="text-2xl font-sans font-medium text-zinc-900 mb-4">
+      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
         Project Goals
       </h2>
 
-      <p className="text-zinc-600 text-left max-w-2xl mb-12">
+      <p className="text-sm text-zinc-600 text-left w-full mb-8">
         The goal of this project is to build a clear, cohesive, and scalable
         brand foundation aligned with your business strategy.
       </p>
@@ -43,10 +43,10 @@ export function ProjectGoals({ goals = DEFAULT_GOALS }: ProjectGoalsProps) {
         {goals.map((goal, index) => (
           <div
             key={index}
-            className="group relative bg-zinc-50 border border-zinc-200 rounded-2xl p-6"
+            className="group relative bg-zinc-50 rounded-2xl p-6"
           >
             <div className="flex items-start gap-6">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl text-lg font-sans font-bold bg-zinc-100 text-zinc-700">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl text-lg font-sans font-bold bg-white text-zinc-700">
                 0{index + 1}
               </div>
               <div>

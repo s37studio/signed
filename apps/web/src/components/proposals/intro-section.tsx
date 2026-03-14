@@ -49,11 +49,11 @@ export function IntroSection({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-sans font-medium leading-tight tracking-tight text-zinc-900 mb-3 text-left">
+        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2 text-left">
           {title}
         </h2>
         {description && (
-          <p className="text-sm text-zinc-600 leading-relaxed mb-12 max-w-[650px] text-left">
+          <p className="text-sm text-zinc-600 text-left w-full mb-8">
             {description}
           </p>
         )}

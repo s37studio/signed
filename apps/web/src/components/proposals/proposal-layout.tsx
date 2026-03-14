@@ -70,7 +70,7 @@ export function ProposalLayout({
       </div>
 
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] flex-col bg-zinc-50 border-r border-zinc-200 z-50">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-[280px] flex-col bg-white z-50">
         <div className="p-8">
           <div className="space-y-6">
             <nav className="flex flex-col space-y-1">
@@ -98,7 +98,7 @@ export function ProposalLayout({
 
       {/* Main Content */}
       <main className="flex-1 lg:ml-[280px] w-full min-h-screen relative">
-        <div className="w-full max-w-[1200px] mx-auto p-4 md:p-8 lg:p-12 space-y-24 pb-32">
+        <div className="w-full max-w-[1200px] mx-auto p-4 md:p-8 lg:p-12 space-y-24 pb-32 text-left">
           {children}
         </div>
       </main>

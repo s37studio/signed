@@ -30,10 +30,10 @@ export function TeamSection({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-xl md:text-2xl font-sans font-medium leading-tight tracking-tight text-zinc-900 mb-3 text-center">
+        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2 text-left">
           {title}
         </h2>
-        <p className="text-sm text-zinc-600 leading-relaxed mb-12 max-w-[650px] mx-auto text-center">
+        <p className="text-sm text-zinc-600 text-left w-full mb-8">
           {description}
         </p>
 
@@ -41,7 +41,7 @@ export function TeamSection({
           {teamMembers.map((member, index) => (
             <div
               key={index}
-              className="bg-zinc-50 border border-zinc-200 rounded-xl overflow-hidden transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 focus-within:!opacity-100"
+              className="bg-zinc-50 rounded-xl overflow-hidden transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 focus-within:!opacity-100"
             >
               {/* Team Member Image */}
               <div className="relative w-full aspect-[16/10] bg-zinc-100 overflow-hidden">
