@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { BlurInHeading } from "../ui/blur-in-heading";
 
 type TeamMember = {
   name: string;
@@ -30,17 +32,21 @@ export function TeamSection({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2 text-left">
+        <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2 text-left">
           {title}
-        </h2>
+        </BlurInHeading>
         <p className="text-sm text-zinc-600 text-left w-full mb-8">
           {description}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 group">
           {teamMembers.map((member, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
               className="bg-zinc-50 rounded-xl overflow-hidden transition-all duration-300 group-hover:opacity-50 hover:!opacity-100 focus-within:!opacity-100"
             >
               {/* Team Member Image */}
@@ -70,7 +76,7 @@ export function TeamSection({
                   {member.description}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

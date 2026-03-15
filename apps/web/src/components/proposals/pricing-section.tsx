@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { CheckIcon } from "@heroicons/react/24/outline";
+import { BlurInHeading } from "../ui/blur-in-heading";
 
 type PricingItem = {
   title: string;
@@ -32,44 +34,46 @@ export function PricingSection({
 }: PricingSectionProps) {
   return (
     <section id="pricing" className="scroll-mt-24">
-      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
+      <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2">
         Pricing
-      </h2>
+      </BlurInHeading>
 
       <p className="text-sm text-zinc-600 text-left w-full mb-8">
         Transparent pricing based on scope and complexity.
       </p>
 
-      <div className="w-full bg-zinc-50 rounded-2xl p-8 relative overflow-hidden group">
-        <div className="mb-8">
-          <h3 className="text-lg font-sans font-medium text-zinc-900 uppercase tracking-wide mb-2">
+      <motion.div
+        initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+        className="w-full bg-white border border-zinc-100 rounded-2xl p-8 relative overflow-hidden group"
+      >
+        <div className="mb-4">
+          <h3 className="text-lg font-sans font-medium text-zinc-900 mb-2">
             {item.title}
           </h3>
           <p className="text-zinc-600 text-sm">{item.description}</p>
         </div>
 
         <div className="mb-4 pb-4">
-          <span className="text-4xl font-sans font-bold text-zinc-900">
+          <span className="text-[34px] font-sans font-semibold text-zinc-900">
             {item.price}
           </span>
         </div>
 
-        <ul className="space-y-4 mb-10">
-          {item.features.map((feature, index) => (
-            <li key={index} className="flex items-start gap-3">
-              <CheckIcon className="w-5 h-5 text-zinc-900 shrink-0 mt-0.5" />
-              <span className="text-zinc-700 text-sm">{feature}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="bg-zinc-50 rounded-xl p-6">
+          <ul className="space-y-4">
+            {item.features.map((feature, index) => (
+              <li key={index} className="flex items-start gap-3">
+                <CheckIcon className="w-5 h-5 text-zinc-900 shrink-0 mt-0.5" />
+                <span className="text-zinc-700 text-sm">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-        <button
-          onClick={onAccept}
-          className="w-full py-3 bg-zinc-900 text-white font-medium rounded-full hover:bg-zinc-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white"
-        >
-          Get Started
-        </button>
-      </div>
+      </motion.div>
     </section>
   );
 }

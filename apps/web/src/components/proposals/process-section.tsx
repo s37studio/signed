@@ -1,5 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { BlurInHeading } from "../ui/blur-in-heading";
+
 type ProcessStep = {
   step: string;
   title: string;
@@ -31,9 +34,9 @@ type ProcessSectionProps = {
 export function ProcessSection({ steps = DEFAULT_PROCESS }: ProcessSectionProps) {
   return (
     <section id="process" className="scroll-mt-24">
-      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
+      <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2">
         Process
-      </h2>
+      </BlurInHeading>
 
       <p className="text-sm text-zinc-600 text-left w-full mb-8">
         A structured process focused on clarity, collaboration, and execution.
@@ -41,11 +44,15 @@ export function ProcessSection({ steps = DEFAULT_PROCESS }: ProcessSectionProps)
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {steps.map((step, index) => (
-          <div
+          <motion.div
             key={index}
-            className="bg-zinc-50 rounded-2xl p-6 flex flex-col items-start"
+            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            className="bg-white border border-zinc-100 rounded-2xl p-6 flex flex-col items-start"
           >
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg text-sm font-sans font-bold mb-4 bg-white text-zinc-700">
+            <div className="flex items-center justify-center w-10 h-10 rounded-lg text-sm font-sans font-bold mb-4 bg-zinc-50 text-zinc-700">
               {step.step}
             </div>
             <h3 className="text-lg font-sans font-medium text-zinc-900 mb-2">
@@ -54,7 +61,7 @@ export function ProcessSection({ steps = DEFAULT_PROCESS }: ProcessSectionProps)
             <p className="text-zinc-600 text-sm leading-relaxed">
               {step.description}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

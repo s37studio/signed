@@ -1,5 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { BlurInHeading } from "../ui/blur-in-heading";
+
 type Goal = {
   title: string;
   description: string;
@@ -30,9 +33,9 @@ type ProjectGoalsProps = {
 export function ProjectGoals({ goals = DEFAULT_GOALS }: ProjectGoalsProps) {
   return (
     <section id="goals" className="scroll-mt-24">
-      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
+      <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2">
         Project Goals
-      </h2>
+      </BlurInHeading>
 
       <p className="text-sm text-zinc-600 text-left w-full mb-8">
         The goal of this project is to build a clear, cohesive, and scalable
@@ -41,12 +44,16 @@ export function ProjectGoals({ goals = DEFAULT_GOALS }: ProjectGoalsProps) {
 
       <div className="grid grid-cols-1 gap-6">
         {goals.map((goal, index) => (
-          <div
+          <motion.div
             key={index}
-            className="group relative bg-zinc-50 rounded-2xl p-6"
+            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            className="group relative bg-white border border-zinc-100 rounded-2xl p-6"
           >
             <div className="flex items-start gap-6">
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl text-lg font-sans font-bold bg-white text-zinc-700">
+              <div className="flex items-center justify-center w-12 h-12 rounded-xl text-lg font-sans font-bold bg-zinc-50 text-zinc-700">
                 0{index + 1}
               </div>
               <div>
@@ -58,7 +65,7 @@ export function ProjectGoals({ goals = DEFAULT_GOALS }: ProjectGoalsProps) {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

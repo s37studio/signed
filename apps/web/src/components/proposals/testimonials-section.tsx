@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { StarIcon } from "@heroicons/react/20/solid";
+import { BlurInHeading } from "../ui/blur-in-heading";
 
 type Testimonial = {
   quote: string;
@@ -38,9 +40,9 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
 export function TestimonialsSection() {
   return (
     <section id="testimonials" className="scroll-mt-24">
-      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
+      <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2">
         Testimonials
-      </h2>
+      </BlurInHeading>
 
       <p className="text-sm text-zinc-600 text-left w-full mb-8">
         Don't just take our word for it. Here's what our clients have to say.
@@ -48,17 +50,21 @@ export function TestimonialsSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {DEFAULT_TESTIMONIALS.map((testimonial, index) => (
-          <div
+          <motion.div
             key={index}
-            className="bg-zinc-50 rounded-2xl p-6 flex flex-col justify-between"
+            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            className="bg-white border border-zinc-100 rounded-2xl p-6 flex flex-col justify-between"
           >
             <p className="text-sm text-zinc-600 leading-relaxed mb-6">
               “{testimonial.quote}”
             </p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative w-8 h-8 rounded-full overflow-hidden bg-zinc-200">
-                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-300 to-zinc-400" />
+                <div className="relative w-9 h-9 rounded-full overflow-hidden bg-zinc-200">
+                  <div className="absolute inset-0 bg-black" />
                 </div>
                 <div>
                   <div className="text-sm font-sans font-medium text-zinc-900">
@@ -73,7 +79,7 @@ export function TestimonialsSection() {
                 ))}
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

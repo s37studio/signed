@@ -11,6 +11,7 @@ import { TestimonialsSection } from "@/components/proposals/testimonials-section
 import { PricingSection } from "@/components/proposals/pricing-section";
 import { TeamSection } from "@/components/proposals/team-section";
 import { FAQItem } from "@/components/proposals/faq-item";
+import { BlurInHeading } from "@/components/ui/blur-in-heading";
 
 const DEFAULT_GOALS = [
   {
@@ -208,9 +209,9 @@ export function TemplateGTM({ data }: TemplateGTMProps) {
 
       {/* FAQ Section */}
       <section id="faq" className="scroll-mt-24">
-        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
+        <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2">
           Frequently Asked Questions
-        </h2>
+        </BlurInHeading>
 
         <p className="text-sm text-zinc-600 text-left w-full mb-8">
           Everything you need to know before getting started.

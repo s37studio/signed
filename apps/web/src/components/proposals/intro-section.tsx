@@ -1,5 +1,7 @@
 "use client";
 
+import { BlurInHeading } from "../ui/blur-in-heading";
+
 type IntroSectionProps = {
   videoUrl?: string;
   title?: string;
@@ -49,9 +51,9 @@ export function IntroSection({
       className="w-[98%] flex flex-col items-center py-12 md:py-16"
     >
       <div className="w-full max-w-[1200px] px-6">
-        <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2 text-left">
+        <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2 text-left">
           {title}
-        </h2>
+        </BlurInHeading>
         {description && (
           <p className="text-sm text-zinc-600 text-left w-full mb-8">
             {description}

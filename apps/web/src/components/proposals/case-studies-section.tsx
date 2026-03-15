@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { BlurInHeading } from "../ui/blur-in-heading";
 
 type CaseStudy = {
   title: string;
@@ -62,9 +64,9 @@ const RESULTS = [
 export function CaseStudiesSection() {
   return (
     <section id="case-studies" className="scroll-mt-24">
-      <h2 className="text-[26px] font-sans font-medium text-zinc-900 mb-2">
+      <BlurInHeading className="text-[24px] font-sans font-medium text-zinc-900 mb-2">
         Case Studies
-      </h2>
+      </BlurInHeading>
 
       <p className="text-sm text-zinc-600 text-left w-full mb-8">
         See how we've helped other companies achieve their goals through
@@ -73,9 +75,13 @@ export function CaseStudiesSection() {
 
       <div className="space-y-6 mb-6">
         {CASE_STUDIES.map((study, index) => (
-          <div
+          <motion.div
             key={index}
-            className="group relative bg-zinc-50 rounded-2xl p-8 overflow-hidden"
+            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            className="group relative bg-white border border-zinc-100 rounded-2xl p-8 overflow-hidden"
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div className="flex flex-col h-full justify-between">
@@ -88,14 +94,14 @@ export function CaseStudiesSection() {
                   </p>
                 </div>
 
-                <div className="bg-white rounded-xl p-6">
+                <div className="bg-zinc-50 rounded-xl p-6">
                   <p className="text-zinc-800 font-medium italic mb-4">
                     "{study.testimonial}"
                   </p>
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-zinc-200 overflow-hidden relative">
+                    <div className="w-9 h-9 rounded-full bg-zinc-200 overflow-hidden relative">
                        {/* Placeholder avatar */}
-                       <div className="absolute inset-0 bg-gradient-to-br from-zinc-300 to-zinc-400" />
+                       <div className="absolute inset-0 bg-black" />
                     </div>
                     <div>
                       <div className="text-sm font-medium text-zinc-900">
@@ -116,23 +122,27 @@ export function CaseStudiesSection() {
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {RESULTS.map((result, index) => (
-          <div
+          <motion.div
             key={index}
-            className="bg-zinc-50 rounded-2xl p-8 flex flex-col items-center justify-center text-center"
+            initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            className="bg-white border border-zinc-100 rounded-2xl p-6 flex flex-col items-center justify-center text-center"
           >
-            <div className="text-4xl font-sans font-bold text-zinc-900 mb-2">
+            <div className="text-[34px] font-sans font-semibold text-zinc-900 mb-2">
               {result.value}
             </div>
             <div className="text-sm text-zinc-600 font-medium">
               {result.label}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>
