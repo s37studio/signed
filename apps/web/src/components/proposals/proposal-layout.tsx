@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useState, type ReactNode, Children, isValidElement } from "react";
+import {
+  useEffect,
+  useState,
+  type ReactNode,
+  Children,
+  isValidElement,
+} from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ProposalNavbarS37 } from "./proposal-navbar-s37";
@@ -39,7 +45,7 @@ export function ProposalLayout({
       {
         rootMargin: "-20% 0px -50% 0px",
         threshold: 0.1,
-      }
+      },
     );
 
     sections.forEach((section) => {

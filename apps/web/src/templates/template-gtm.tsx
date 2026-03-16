@@ -169,10 +169,7 @@ export function TemplateGTM({ data }: TemplateGTMProps) {
       {/* Intro / Loom Video Section */}
       <IntroSection
         videoUrl={videoUrl}
-        title={
-          introTitle ||
-          `Go-to-Market Strategy – ${brandName}`
-        }
+        title={introTitle || `Go-to-Market Strategy – ${brandName}`}
         description={
           introDescription ||
           "This proposal outlines a strategic approach to accelerate your pipeline, optimize conversions, and scale your revenue operations."

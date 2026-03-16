@@ -25,7 +25,8 @@ export const TEMPLATE_REGISTRY: Record<string, Template> = {
   design: {
     id: "design",
     name: "S37 Design",
-    description: "Modern dark-themed design proposal with animations and case studies",
+    description:
+      "Modern dark-themed design proposal with animations and case studies",
     thumbnail: "/templates/design-thumb.png",
     component: TemplateDesign,
     fields: [
@@ -40,7 +41,8 @@ export const TEMPLATE_REGISTRY: Record<string, Template> = {
         key: "projectDescription",
         label: "Project Description",
         type: "textarea",
-        placeholder: "A custom proposal crafted specifically for your project needs.",
+        placeholder:
+          "A custom proposal crafted specifically for your project needs.",
       },
       {
         key: "brandName",
@@ -81,7 +83,8 @@ export const TEMPLATE_REGISTRY: Record<string, Template> = {
         key: "projectDescription",
         label: "Project Description",
         type: "textarea",
-        placeholder: "A custom go-to-market proposal crafted specifically for your needs.",
+        placeholder:
+          "A custom go-to-market proposal crafted specifically for your needs.",
       },
       {
         key: "brandName",

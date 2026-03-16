@@ -7,7 +7,7 @@ import { usePublicProposal } from "@/features/proposals/hooks/use-public-proposa
 import { useTrackProposalView } from "@/features/proposals/hooks/use-track-proposal-view";
 
 import { PublicPasswordForm } from "@/components/proposals/public-password-form";
-import { PublicProposalActions } from "@/components/proposals/public-proposal-actions";
+import { PublicProposalActionBar } from "@/components/proposals/public-proposal-action-bar";
 import { PublicProposalContent } from "@/components/proposals/public-proposal-content";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,7 +21,7 @@ export default function PublicProposalPage() {
 
   const { data, isLoading, error, refetch } = usePublicProposal(
     token,
-    password
+    password,
   );
 
   // Check if password is required
@@ -92,19 +92,12 @@ export default function PublicProposalPage() {
   return (
     <div className="min-h-screen">
       <PublicProposalContent proposal={proposal} />
-      
-      {/* Actions floating button */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <Card className="shadow-2xl">
-          <CardContent className="p-4">
-            <PublicProposalActions
-              token={token}
-              status={proposal?.status}
-              onSuccess={() => refetch()}
-            />
-          </CardContent>
-        </Card>
-      </div>
+
+      <PublicProposalActionBar
+        token={token}
+        status={proposal?.status}
+        onSuccess={() => refetch()}
+      />
     </div>
   );
 }

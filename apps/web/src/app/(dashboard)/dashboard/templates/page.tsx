@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ProposalForm } from "@/components/proposals/proposal-form";
+import { PublicProposalActionBar } from "@/components/proposals/public-proposal-action-bar";
 
 export default function TemplatesPage() {
   const templates = getAllTemplates();
@@ -146,6 +147,11 @@ export default function TemplatesPage() {
             <div className="overflow-auto h-full">
               <selectedTemplateData.component
                 data={getExampleData(selectedTemplateData.id)}
+              />
+              <PublicProposalActionBar
+                token="preview"
+                status="PENDING"
+                onSuccess={() => {}}
               />
             </div>
           )}
