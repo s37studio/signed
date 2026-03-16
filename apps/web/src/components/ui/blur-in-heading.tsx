@@ -30,7 +30,7 @@ export function BlurInHeading({
       y: 0,
       filter: "blur(0px)",
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 20,
         stiffness: 90,
       },
@@ -40,7 +40,7 @@ export function BlurInHeading({
       y: 10,
       filter: "blur(8px)",
       transition: {
-        type: "spring",
+        type: "spring" as const,
         damping: 20,
         stiffness: 90,
       },

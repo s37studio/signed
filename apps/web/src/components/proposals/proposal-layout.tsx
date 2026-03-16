@@ -73,7 +73,7 @@ export function ProposalLayout({
       filter: "blur(0px)",
       transition: {
         duration: 0.8,
-        ease: [0.25, 0.4, 0.25, 1],
+        ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number],
       },
     },
   };
@@ -86,7 +86,7 @@ export function ProposalLayout({
       filter: "blur(0px)",
       transition: {
         duration: 0.5,
-        ease: [0.25, 0.4, 0.25, 1],
+        ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number],
       },
     },
   };
