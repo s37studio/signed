@@ -15,13 +15,13 @@ import { resolveMcpKey } from "./mcp-auth";
 const TEMPLATES = [
   {
     id: "design",
-    name: "S37 Design",
+    name: "Design",
     description: "Modern dark-themed design proposal with animations and case studies",
     fields: ["projectTitle", "projectDescription", "brandName", "ctaText", "acceptUrl"],
   },
   {
     id: "gtm",
-    name: "S37 GTM",
+    name: "GTM",
     description: "Go-to-market proposal with process phases and video section",
     fields: ["projectTitle", "projectDescription", "brandName", "videoUrl", "ctaText", "acceptUrl"],
   },

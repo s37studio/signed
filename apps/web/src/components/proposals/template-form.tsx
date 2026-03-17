@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
 export function TemplateForm() {
-  const { templateId, customData, updateField } = useTemplateEditor();
+  const { templateId, customData, price, updateField, setPrice } = useTemplateEditor();
   const template = getTemplate(templateId);
 
   if (!template) {
@@ -26,6 +26,26 @@ export function TemplateForm() {
       </div>
 
       <div className="space-y-4">
+        {/* Price field */}
+        <div className="space-y-2">
+          <Label htmlFor="price">
+            Prix (€)
+            <span className="text-red-500 ml-1">*</span>
+          </Label>
+          <Input
+            id="price"
+            type="number"
+            min="0"
+            step="0.01"
+            value={price}
+            onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+            placeholder="Ex: 5000"
+            required
+          />
+        </div>
+
+        <div className="border-t border-zinc-800 my-4" />
+
         {template.fields.map((field) => (
           <div key={field.key} className="space-y-2">
             <Label htmlFor={field.key}>

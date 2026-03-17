@@ -21,6 +21,7 @@ export const proposalController = router({
         title: z.string().min(2, "Le titre doit faire au moins 2 caractères"),
         templateId: z.string(),
         customData: z.any(),
+        price: z.number().min(0, "Le prix doit être positif"),
         password: z.string().optional(),
         leadId: z.string(),
       })
@@ -35,6 +36,7 @@ export const proposalController = router({
         id: z.string(),
         title: z.string().min(2, "Le titre doit faire au moins 2 caractères").optional(),
         customData: z.any().optional(),
+        price: z.number().min(0, "Le prix doit être positif").optional(),
         password: z.string().optional(),
       })
     )

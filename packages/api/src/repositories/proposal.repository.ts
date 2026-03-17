@@ -55,6 +55,7 @@ export const proposalRepository = {
     title: string;
     templateId: string;
     customData: any;
+    price: number;
     password: string | null;
     token: string;
     slug: string;
@@ -72,6 +73,7 @@ export const proposalRepository = {
     data: {
       title?: string;
       customData?: any;
+      price?: number;
       password?: string | null;
       openedAt?: Date;
       lastOpenedAt?: Date;

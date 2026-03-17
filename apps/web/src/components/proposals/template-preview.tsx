@@ -4,7 +4,7 @@ import { useTemplateEditor } from "@/contexts/template-editor-context";
 import { getTemplate } from "@/templates/registry";
 
 export function TemplatePreview() {
-  const { templateId, customData } = useTemplateEditor();
+  const { templateId, customData, price } = useTemplateEditor();
   const template = getTemplate(templateId);
 
   if (!template) {
@@ -26,7 +26,7 @@ export function TemplatePreview() {
       </div>
       <div className="border rounded-lg overflow-hidden bg-background shadow-lg">
         <div className="scale-75 origin-top-left w-[133.33%]">
-          <TemplateComponent data={customData} />
+          <TemplateComponent data={{ ...customData, price }} />
         </div>
       </div>
     </div>

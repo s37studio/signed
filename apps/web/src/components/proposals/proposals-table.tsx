@@ -1,15 +1,10 @@
 "use client";
 
-import {
-  CheckCircleIcon,
-  ClockIcon,
-  PencilSquareIcon,
-  XCircleIcon,
-  EllipsisVerticalIcon,
-} from "@heroicons/react/24/solid";
-import Link from "next/link";
+import { useState } from "react";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 import { ProposalViewsModal } from "./proposal-views-modal";
+import { ProposalForm } from "./proposal-form";
 
 import {
   Table,
@@ -21,6 +16,12 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 const STATUS_CONFIG = {
   PENDING: {
@@ -50,6 +51,20 @@ type ProposalsTableProps = {
 };
 
 export function ProposalsTable({ proposals }: ProposalsTableProps) {
+  const [editingProposal, setEditingProposal] = useState<any>(null);
+  const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
+
+  const handleEditClick = (proposal: any, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditingProposal(proposal);
+    setIsEditSheetOpen(true);
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditSheetOpen(false);
+    setEditingProposal(null);
+  };
+
   if (proposals.length === 0) {
     return (
       <Card className="w-full bg-[#0E0E10] rounded-[16px] border-none">
@@ -61,10 +76,11 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
   }
 
   return (
-    <Card className="w-full bg-transparent rounded-[16px] border-none pt-0">
-      <CardContent className="p-0">
-        <div className="rounded-md">
-          <Table>
+    <>
+      <Card className="w-full bg-transparent rounded-[16px] border-none pt-0">
+        <CardContent className="p-0">
+          <div className="rounded-md">
+            <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent border-b border-zinc-800/30">
                 <TableHead className="uppercase text-zinc-500 font-medium pl-8 tracking-[0.004em]">Titre</TableHead>
@@ -108,23 +124,18 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                         )}
                       </TableCell>
                       <TableCell className="min-w-[180px]">
-                        <Link
-                          href={`/dashboard/leads/${proposal.leadId}`}
-                          className="hover:no-underline"
-                        >
-                          <div>{proposal.lead?.name}</div>
-                          {proposal.lead?.company && (
-                            <div className="text-xs text-muted-foreground">
-                              {proposal.lead.company}
-                            </div>
-                          )}
-                        </Link>
+                        <div>{proposal.lead?.name}</div>
+                        {proposal.lead?.company && (
+                          <div className="text-xs text-muted-foreground">
+                            {proposal.lead.company}
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground min-w-[100px]">
                         {new Intl.NumberFormat("fr-FR", {
                           style: "currency",
                           currency: "EUR",
-                        }).format(proposal.customData?.price || 0)}
+                        }).format(proposal.price || 0)}
                       </TableCell>
                       <TableCell>
                         <span
@@ -153,19 +164,16 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
-                          <Link
-                            href={`/dashboard/proposals/${proposal.id}/edit`}
+                        <div className="flex gap-2 justify-end">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="rounded-full size-9 p-0"
+                            aria-label="Modifier la proposition"
+                            onClick={(e) => handleEditClick(proposal, e)}
                           >
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="rounded-full size-9 p-0"
-                              aria-label="Modifier la proposition"
-                            >
-                              <EllipsisVerticalIcon className="h-[18px] w-[18px]" />
-                            </Button>
-                          </Link>
+                            <PencilSquareIcon className="h-[18px] w-[18px]" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -173,8 +181,23 @@ export function ProposalsTable({ proposals }: ProposalsTableProps) {
                 })}
             </TableBody>
           </Table>
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Sheet open={isEditSheetOpen} onOpenChange={setIsEditSheetOpen}>
+        <SheetContent side="right" className="sm:max-w-[600px] rounded-l-[20px] bg-[#060606] border-l border-zinc-800/10 pt-8 pb-8 pr-8">
+          <SheetHeader>
+            <SheetTitle>Modifier la Proposition</SheetTitle>
+          </SheetHeader>
+          {editingProposal && (
+            <ProposalForm 
+              proposal={editingProposal}
+              onSuccess={handleEditSuccess}
+            />
+          )}
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }

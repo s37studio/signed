@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useLeads } from "@/features/leads/hooks/use-leads";
 import { useCreateProposal } from "@/features/proposals/hooks/use-create-proposal";
+import { useUpdateProposal } from "@/features/proposals/hooks/use-update-proposal";
 import { getAllTemplates } from "@/templates/registry";
 
 import { Button } from "../ui/button";
@@ -12,16 +13,36 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
+type ProposalFormProps = {
+  initialLeadId?: string;
+  proposal?: any;
+  onSuccess?: () => void;
+};
+
+export function ProposalForm({ initialLeadId, proposal, onSuccess }: ProposalFormProps) {
   const router = useRouter();
+  const isEditMode = !!proposal;
+  
   const [title, setTitle] = useState("");
   const [templateId, setTemplateId] = useState("");
   const [leadId, setLeadId] = useState(initialLeadId || "");
+  const [priceInput, setPriceInput] = useState("");
   const [password, setPassword] = useState("");
 
   const { data: leads } = useLeads();
   const createProposal = useCreateProposal();
+  const updateProposal = useUpdateProposal();
   const templates = getAllTemplates();
+
+  // Initialize form with proposal data in edit mode
+  useEffect(() => {
+    if (proposal) {
+      setTitle(proposal.title || "");
+      setTemplateId(proposal.templateId || "");
+      setLeadId(proposal.leadId || "");
+      setPriceInput(proposal.price?.toString() || "");
+    }
+  }, [proposal]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,21 +51,40 @@ export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
       return;
     }
 
-    createProposal.mutate(
-      {
-        title,
-        templateId,
-        leadId,
-        customData: {},
-        password: password || undefined,
-      },
-      {
-        onSuccess: (data) => {
-          // Redirect to edit page to configure template
-          router.push(`/dashboard/proposals/${data.id}/edit`);
+    if (isEditMode) {
+      // Update existing proposal
+      updateProposal.mutate(
+        {
+          id: proposal.id,
+          title,
+          price: parseFloat(priceInput) || 0,
+          password: password || undefined,
         },
-      }
-    );
+        {
+          onSuccess: () => {
+            onSuccess?.();
+          },
+        }
+      );
+    } else {
+      // Create new proposal
+      createProposal.mutate(
+        {
+          title,
+          templateId,
+          leadId,
+          customData: {},
+          price: parseFloat(priceInput) || 0,
+          password: password || undefined,
+        },
+        {
+          onSuccess: (data) => {
+            // Redirect to edit page to configure template
+            router.push(`/dashboard/proposals/${data.id}/edit`);
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -57,8 +97,9 @@ export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
             id="leadId"
             value={leadId}
             onChange={(e) => setLeadId(e.target.value)}
-            className="w-full rounded-[12px] bg-zinc-900/50 pl-3 pr-10 py-2 text-sm h-10 outline-none focus:ring-1 focus:ring-zinc-700 appearance-none"
+            className="w-full rounded-[12px] bg-zinc-900/50 pl-3 pr-10 py-2 text-sm h-10 outline-none focus:ring-1 focus:ring-zinc-700 appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
             required
+            disabled={isEditMode}
           >
             <option value="">Sélectionner un client</option>
             {leads?.map((lead) => (
@@ -95,8 +136,9 @@ export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
             id="templateId"
             value={templateId}
             onChange={(e) => setTemplateId(e.target.value)}
-            className="w-full rounded-[12px] bg-zinc-900/50 pl-3 pr-10 py-2 text-sm h-10 outline-none focus:ring-1 focus:ring-zinc-700 appearance-none"
+            className="w-full rounded-[12px] bg-zinc-900/50 pl-3 pr-10 py-2 text-sm h-10 outline-none focus:ring-1 focus:ring-zinc-700 appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
             required
+            disabled={isEditMode}
           >
             <option value="">Sélectionner un template</option>
             {templates.map((template) => (
@@ -109,6 +151,22 @@ export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="m6 9 6 6 6-6"/></svg>
           </div>
         </div>
+      </div>
+
+      {/* Prix */}
+      <div>
+        <Label htmlFor="price" className="mb-2 block">Prix (€)</Label>
+        <Input
+          id="price"
+          type="number"
+          min="0"
+          step="0.01"
+          value={priceInput}
+          onChange={(e) => setPriceInput(e.target.value)}
+          placeholder="Ex: 5000"
+          className="rounded-[12px] bg-zinc-900/50 border-none h-10"
+          required
+        />
       </div>
 
       {/* Separator */}
@@ -129,10 +187,12 @@ export function ProposalForm({ initialLeadId }: { initialLeadId?: string }) {
 
       <Button
         type="submit"
-        disabled={createProposal.isPending}
+        disabled={createProposal.isPending || updateProposal.isPending}
         className="w-full rounded-[12px] text-sm h-10 mt-6"
       >
-        {createProposal.isPending ? "Création..." : "Créer la proposition"}
+        {isEditMode
+          ? updateProposal.isPending ? "Enregistrement..." : "Enregistrer"
+          : createProposal.isPending ? "Création..." : "Créer la proposition"}
       </Button>
     </form>
   );

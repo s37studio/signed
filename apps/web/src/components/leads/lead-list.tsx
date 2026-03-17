@@ -1,5 +1,7 @@
-import Link from "next/link";
-import { Edit, Trash2, Eye } from "lucide-react";
+import {
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -61,13 +63,8 @@ export function LeadList({
                   key={lead.id}
                   className="hover:bg-zinc-900/50 border-b border-zinc-800/50"
                 >
-                  <TableCell className="text-[14px] pl-6">
-                    <Link
-                      href={`/dashboard/leads/${lead.id}`}
-                      className="hover:no-underline font-medium"
-                    >
-                      {lead.name}
-                    </Link>
+                  <TableCell className="text-[14px] pl-6 font-medium">
+                    {lead.name}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {lead.company || "-"}
@@ -86,16 +83,6 @@ export function LeadList({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 justify-end">
-                      <Link href={`/dashboard/leads/${lead.id}`}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="rounded-full size-9 p-0"
-                          aria-label="Voir le lead"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </Link>
                       <LeadEditDialog
                         lead={lead}
                         onUpdate={onUpdate}
@@ -107,7 +94,7 @@ export function LeadList({
                             className="rounded-full size-9 p-0"
                             aria-label="Modifier le lead"
                           >
-                            <Edit className="h-4 w-4" />
+                            <PencilSquareIcon className="h-4 w-4" />
                           </Button>
                         }
                       />
@@ -119,7 +106,7 @@ export function LeadList({
                         disabled={isDeleting}
                         aria-label="Supprimer le lead"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <TrashIcon className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>

@@ -24,7 +24,7 @@ export type Template = {
 export const TEMPLATE_REGISTRY: Record<string, Template> = {
   design: {
     id: "design",
-    name: "S37 Design",
+    name: "Design",
     description:
       "Modern dark-themed design proposal with animations and case studies",
     thumbnail: "/templates/design-thumb.png",
@@ -67,7 +67,7 @@ export const TEMPLATE_REGISTRY: Record<string, Template> = {
 
   gtm: {
     id: "gtm",
-    name: "S37 GTM",
+    name: "GTM",
     description: "Go-to-market proposal with process phases and video section",
     thumbnail: "/templates/gtm-thumb.png",
     component: TemplateGTM,

@@ -6,19 +6,19 @@ import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type ProposalsChartProps = {
-  proposals: any[];
+  proposals: { createdAt: string | Date; price?: number }[];
 };
 
 export function ProposalsChart({ proposals }: ProposalsChartProps) {
   const data = useMemo(() => {
-    // Group proposals by date
+    // Group proposals by date and sum their prices
     const grouped = proposals.reduce((acc, proposal) => {
       const date = new Date(proposal.createdAt).toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
         year: "numeric",
       });
-      acc[date] = (acc[date] || 0) + 1; // Count proposals for now, as we don't have value
+      acc[date] = (acc[date] || 0) + (proposal.price || 0);
       return acc;
     }, {} as Record<string, number>);
 

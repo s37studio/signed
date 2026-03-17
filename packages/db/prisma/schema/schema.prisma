@@ -94,6 +94,7 @@ model Proposal {
   title           String
   templateId      String
   customData      Json
+  price           Float          @default(0)
   password        String?
   token           String         @unique
   slug            String

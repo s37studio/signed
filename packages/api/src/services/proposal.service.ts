@@ -61,6 +61,7 @@ export const proposalService = {
       title: string;
       templateId: string;
       customData: any;
+      price: number;
       password?: string;
       leadId: string;
     },
@@ -84,6 +85,7 @@ export const proposalService = {
       title: input.title,
       templateId: input.templateId,
       customData: input.customData,
+      price: input.price,
       password: hashedPassword,
       token,
       slug,
@@ -97,16 +99,18 @@ export const proposalService = {
   update: async (
     id: string,
     organizationId: string,
-    input: { title?: string; customData?: any; password?: string }
+    input: { title?: string; customData?: any; price?: number; password?: string }
   ) => {
     const updateData: {
       title?: string;
       customData?: any;
+      price?: number;
       password?: string | null;
     } = {};
 
     if (input.title !== undefined) updateData.title = input.title;
     if (input.customData !== undefined) updateData.customData = input.customData;
+    if (input.price !== undefined) updateData.price = input.price;
     if (input.password !== undefined) {
       updateData.password = input.password ? await hashPassword(input.password) : null;
     }

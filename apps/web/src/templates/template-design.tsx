@@ -143,6 +143,10 @@ type TemplateDesignProps = {
     }>;
     ctaText?: string;
     acceptUrl?: string;
+    price?: number;
+    pricingTitle?: string;
+    pricingDescription?: string;
+    pricingFeatures?: string[];
   };
 };
 
@@ -232,7 +236,19 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
       )}
 
       {/* Pricing Section */}
-      <PricingSection />
+      <PricingSection
+        item={data.price !== undefined ? {
+          title: data.pricingTitle || "Project Investment",
+          description: data.pricingDescription || "Fixed price for the complete project scope.",
+          price: `€${data.price.toLocaleString("fr-FR")}`,
+          features: data.pricingFeatures || [
+            "Complete project delivery",
+            "All revisions included",
+            "Source files included",
+            "Post-launch support",
+          ],
+        } : undefined}
+      />
 
       {/* FAQ Section */}
       <section id="faq" className="scroll-mt-24">
