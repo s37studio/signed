@@ -30,5 +30,5 @@ export function PublicProposalContent({
     );
   }
 
-  return <template.component data={{ ...proposal.customData, price: proposal.price }} />;
+  return <template.component data={{ ...proposal.customData, price: proposal.price, title: proposal.title }} />;
 }

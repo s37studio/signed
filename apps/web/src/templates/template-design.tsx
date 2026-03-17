@@ -143,6 +143,7 @@ type TemplateDesignProps = {
     }>;
     ctaText?: string;
     acceptUrl?: string;
+    title?: string;
     price?: number;
     pricingTitle?: string;
     pricingDescription?: string;
@@ -161,6 +162,7 @@ export function TemplateDesign({ data }: TemplateDesignProps) {
   const designShots = data.designShots || DEFAULT_DESIGN_SHOTS;
   const designCarouselTitle =
     data.designCarouselTitle ||
+    data.title ||
     `Website Design & Development – ${data.brandName || "Your Company"}`;
   const designCarouselDescription =
     data.designCarouselDescription ||

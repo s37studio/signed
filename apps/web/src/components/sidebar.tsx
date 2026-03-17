@@ -8,7 +8,6 @@ import {
   UsersIcon,
   DocumentTextIcon,
   Cog6ToothIcon,
-  ChevronDownIcon,
   BellIcon,
 } from "@heroicons/react/24/solid";
 
@@ -65,7 +64,7 @@ export default function Sidebar() {
       <div
         className={cn(
           "space-y-4",
-          isCollapsed ? "flex justify-center px-0 py-4 pb-2" : "pt-4 px-4 pb-2",
+          isCollapsed ? "flex justify-center px-0 py-4 pb-2" : "pt-4 px-2 pb-2",
         )}
       >
         <DropdownMenu>
@@ -92,14 +91,13 @@ export default function Sidebar() {
             {!isCollapsed && (
               <>
                 <div className="flex-1 min-w-0 text-left">
-                  <p className="text-sm font-medium text-zinc-50 truncate">
-                    {session.user.name}
-                  </p>
-                  <p className="text-xs text-zinc-500 truncate">
-                    {session.user.email}
-                  </p>
-                </div>
-                <ChevronDownIcon className="size-4 shrink-0" />
+                    <p className="text-sm font-medium text-zinc-50 truncate">
+                      {session.user.name}
+                    </p>
+                    <p className="text-xs text-zinc-500 truncate">
+                      {session.user.email}
+                    </p>
+                  </div>
               </>
             )}
           </DropdownMenuTrigger>
@@ -128,7 +126,7 @@ export default function Sidebar() {
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto pt-2 pb-6 flex flex-col justify-between">
         <div className="mb-2">
-          <ul className="space-y-0.5 px-3">
+          <ul className="space-y-0.5 px-2">
             {NAV_ITEMS.map((item) => {
               const isActive = pathname === item.href;
               const Icon = item.icon;
@@ -138,7 +136,7 @@ export default function Sidebar() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium",
+                      "flex items-center gap-3 px-2 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium",
                       isActive
                         ? "text-zinc-50 bg-[#0C0C0C]/50"
                         : "text-zinc-400 hover:text-white",
@@ -156,10 +154,10 @@ export default function Sidebar() {
         </div>
 
         {/* Collapse Toggle */}
-        <div className="px-3 mt-auto space-y-0.5">
+        <div className="px-2 mt-auto space-y-0.5">
           <button
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium text-zinc-400 hover:text-white w-full",
+              "flex items-center gap-3 px-2 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium text-zinc-400 hover:text-white w-full",
               isCollapsed && "justify-center px-2",
             )}
             title={isCollapsed ? "Notifications" : undefined}
@@ -171,7 +169,7 @@ export default function Sidebar() {
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
             className={cn(
-              "flex items-center gap-3 px-3 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium text-zinc-400 hover:text-white w-full",
+              "flex items-center gap-3 px-2 py-2.5 rounded-[12px] transition-colors duration-200 group text-sm font-medium text-zinc-400 hover:text-white w-full",
               isCollapsed && "justify-center px-2",
             )}
           >
